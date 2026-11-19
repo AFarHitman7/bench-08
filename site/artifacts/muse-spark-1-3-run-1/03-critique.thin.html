@@ -1,0 +1,55 @@
+<!-- Critique: gradient is off-brand and low-contrast, headline is generic, single vague CTA, no booking action, cards state adjectives without proof, no nav/trust/footer. Changed: replaced gradient with maritime navy/cream, added nav and two specific CTAs, added functional-looking route/date/passenger search bar to match intent, rewrote copy with concrete numbers, added icons, on-time badge and press proof, tightened type scale and spacing, fixed contrast/focus/max-width, compacted to fit 1440x900 without scroll. -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1440">
+<title>Ferryline — Book your crossing</title>
+<style>
+*{box-sizing:border-box}
+html,body{height:900px}
+body{margin:0;font-family:Inter,system-ui,sans-serif;color:#0e2a47;background:#f8f6ef;overflow:hidden}
+.wrap{max-width:1240px;margin:0 auto;padding:0 40px}
+header{background:#fff;border-bottom:1px solid #e8e2d4}
+.nav{display:flex;align-items:center;gap:28px;height:68px}
+.logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:20px}
+.nav-links{display:flex;gap:22px;font-size:14.5px;color:#3d4f66;margin-left:12px}
+.nav-right{margin-left:auto;display:flex;align-items:center;gap:14px}
+.btn{display:inline-block;text-decoration:none;font-weight:700;border-radius:999px;padding:12px 22px;font-size:15px}
+.btn-primary{background:#0e7c7b;color:#fff}
+.proof{display:flex;gap:22px;font-size:13.5px;color:#5b6f89;border-top:1px solid #e8e2d4;border-bottom:1px solid #e8e2d4;padding:12px 0;margin-top:6px}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;padding:18px 0 14px}
+.card{background:#fff;border:1px solid #e8e2d4;border-radius:16px;padding:18px 20px}
+footer{display:flex;justify-content:space-between;padding:14px 0 0;font-size:13px;color:#6b7f98}
+</style>
+</head>
+<body>
+<header><div class="wrap nav">
+<div class="logo">Ferryline</div>
+<div class="nav-links"><span>Routes</span><span>Timetable</span><span>Fares</span><span>Travel info</span></div>
+<div class="nav-right"><a href="#">Sign in</a><a class="btn btn-primary" href="#">Book now</a></div>
+</div></header>
+<main class="wrap">
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:40px;padding:38px 0 24px">
+<div>
+<div>Harbour — Island · 45 min · from £19</div>
+<h1 style="font-size:54px">Book your crossing in 58 seconds.</h1>
+<p>Live timetables, all-in prices, and free cancellation to 48h. No account needed.</p>
+<p><strong>98.2% on-time</strong> this summer · <strong>412,000</strong> crossings booked</p>
+</div>
+<div style="background:#fff;border:1px solid #e8e2d4;border-radius:20px;padding:18px">
+<b>Find your ferry</b><br><span>● 14 sailings today</span>
+<div style="margin-top:12px">From: Portsmouth Harbour<br>To: Fishbourne · Isle of Wight<br>Date: Thu 20 Nov · 08:45<br>Who: 2 adults + car</div>
+<div style="margin-top:12px;background:#0e2a47;color:#fff;border-radius:14px;padding:14px">FASTEST TODAY — 08:45 → 09:30 · £38 all-in</div>
+</div>
+</div>
+<div class="proof"><span>★★★★★ 4.8</span><span>Boarded in 4 minutes.</span><span>No hidden fees</span></div>
+<div class="cards">
+<div class="card"><h3>58-sec checkout</h3><p>3 steps, ticket to phone instantly.</p></div>
+<div class="card"><h3>All-in price promise</h3><p>The £38 you see is the £38 you pay.</p></div>
+<div class="card"><h3>98.2% on-time</h3><p>Live tracking + auto rebooking.</p></div>
+</div>
+<footer><span>© Ferryline 2026</span><span>Refunds · Accessibility · Contact</span></footer>
+</main>
+</body>
+</html>

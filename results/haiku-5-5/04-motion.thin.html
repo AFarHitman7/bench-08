@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1280">
+<title>DRIFT</title>
+<style>
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#0b0d12;}
+.stage{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.word{display:flex;font-family:"Segoe UI",Helvetica,Arial,sans-serif;font-weight:800;font-size:200px;letter-spacing:.04em;color:#f2efe8;line-height:1;}
+.ch{display:inline-block;will-change:transform,opacity;}
+.rule{width:520px;height:2px;background:#e0a84f;margin-top:36px;transform-origin:center;}
+.sub{margin-top:24px;font-family:"Segoe UI",Arial,sans-serif;font-weight:500;font-size:22px;letter-spacing:.4em;color:#8a8f9c;text-transform:uppercase;}
+</style>
+</head>
+<body>
+<div class="stage">
+  <div class="word" id="w"></div>
+  <div class="rule" id="r"></div>
+  <div class="sub">in motion</div>
+</div>
+<script>
+(function () {
+  var D = 8;
+  var word = document.getElementById('w');
+  var rule = document.getElementById('r');
+  var chars = 'DRIFT'.split('');
+  var els = chars.map(function (c) {
+    var s = document.createElement('span');
+    s.className = 'ch';
+    s.textContent = c;
+    word.appendChild(s);
+    return s;
+  });
+  var cur = 0, running = false, t0 = 0, raf = 0;
+
+  function clamp(x) { return x < 0 ? 0 : x > 1 ? 1 : x; }
+  function ease(x) { x = clamp(x); return 1 - Math.pow(1 - x, 3); }
+
+  function seek(t) {
+    t = ((t % D) + D) % D;
+    cur = t;
+    var p = t / D;
+    var inK = ease(t / 1.6);
+    var outK = 1 - ease((t - 6.6) / 1.4);
+    var env = Math.min(inK, clamp(outK));
+    var spread = ease((t - 6.6) / 1.4);
+    for (var i = 0; i < els.length; i++) {
+      var enter = 1 - ease((t - i * 0.12) / 1.2);
+      var x = Math.sin(2 * Math.PI * p + i * 0.7) * 36 * env + (i - 2) * 60 * spread;
+      var y = enter * 60 + Math.cos(2 * Math.PI * p * 2 + i * 0.5) * 10 * env;
+      var r = Math.sin(2 * Math.PI * p + i) * 4 * env;
+      els[i].style.transform = 'translate(' + x.toFixed(3) + 'px,' + y.toFixed(3) + 'px) rotate(' + r.toFixed(3) + 'deg)';
+      els[i].style.opacity = env.toFixed(4);
+    }
+    rule.style.transform = 'scaleX(' + env.toFixed(4) + ')';
+  }
+
+  function loop(now) {
+    if (!running) return;
+    seek((now - t0) / 1000);
+    raf = requestAnimationFrame(loop);
+  }
+
+  function play() {
+    if (running) return;
+    running = true;
+    t0 = performance.now() - cur * 1000;
+    raf = requestAnimationFrame(loop);
+  }
+
+  function pause() {
+    running = false;
+    cancelAnimationFrame(raf);
+  }
+
+  window.__anim = { duration: D, seek: seek, play: play, pause: pause };
+  seek(0);
+  play();
+})();
+</script>
+</body>
+</html>

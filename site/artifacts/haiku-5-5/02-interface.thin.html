@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1440">
+<title>Inkwell: handwritten notes to LaTeX</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1440px; height: 900px; overflow: hidden; background: #f6f2ea; }
+  body {
+    font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    color: #1d2233;
+  }
+  .page {
+    width: 1440px; height: 900px;
+    display: flex; flex-direction: column;
+    padding: 0 96px;
+  }
+  nav {
+    height: 88px; display: flex; align-items: center; justify-content: space-between;
+    border-bottom: 1px solid #ddd5c6;
+  }
+  .brand { display: flex; align-items: center; gap: 12px; font-weight: 700; font-size: 22px; letter-spacing: -0.01em; }
+  .brand-mark {
+    width: 30px; height: 30px; border-radius: 9px; background: #1f3a68;
+    display: grid; place-items: center; color: #f6f2ea; font-family: Georgia, serif; font-style: italic; font-size: 18px;
+  }
+  .nav-links { display: flex; gap: 36px; font-size: 16px; color: #4a5168; }
+  .nav-cta {
+    padding: 11px 20px; border-radius: 999px; background: #1f3a68; color: #f6f2ea;
+    font-size: 15px; font-weight: 600;
+  }
+
+  .hero {
+    flex: 0 0 auto; height: 512px;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 72px; align-items: center;
+    padding-top: 24px;
+  }
+  .eyebrow {
+    display: inline-block; font-size: 14px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
+    color: #9a4f2c; background: #efe3d3; padding: 8px 14px; border-radius: 999px; margin-bottom: 24px;
+  }
+  h1 {
+    font-family: Georgia, "Times New Roman", serif; font-weight: 400;
+    font-size: 66px; line-height: 1.04; letter-spacing: -0.02em; margin-bottom: 24px;
+  }
+  h1 em { color: #9a4f2c; font-style: italic; }
+  .lede { font-size: 20px; line-height: 1.55; color: #4a5168; max-width: 560px; margin-bottom: 36px; }
+  .actions { display: flex; gap: 14px; align-items: center; }
+  .btn-primary {
+    padding: 16px 28px; border-radius: 12px; background: #1f3a68; color: #f6f2ea; font-size: 17px; font-weight: 600;
+  }
+  .btn-ghost {
+    padding: 16px 28px; border-radius: 12px; border: 1px solid #c9bfab; color: #1d2233; font-size: 17px; font-weight: 600;
+  }
+  .note { margin-top: 22px; font-size: 14px; color: #7a8091; }
+
+  .demo {
+    background: #fffdf8; border: 1px solid #e2d9c8; border-radius: 22px; padding: 28px;
+    box-shadow: 0 24px 48px -28px rgba(31,58,104,0.35);
+  }
+  .demo-row { display: grid; grid-template-columns: 1fr; gap: 14px; }
+  .panel-label { font-size: 12px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #8a8f9e; margin-bottom: 10px; }
+  .ink {
+    height: 200px; border-radius: 14px; background: #fbf8f1; border: 1px dashed #d8cdb8;
+    display: flex; align-items: center; justify-content: center;
+    font-family: "Segoe Script", "Bradley Hand", "Comic Sans MS", cursive; font-size: 46px; color: #1f2a4a;
+    padding: 0 24px; text-align: center;
+  }
+  .arrow { text-align: center; color: #9a4f2c; font-size: 22px; line-height: 1; }
+  .tex {
+    height: 150px; border-radius: 14px; background: #1d2233; color: #e8e4d9; padding: 22px 26px;
+    font-family: Consolas, "Courier New", monospace; font-size: 18px; line-height: 1.7; overflow: hidden;
+  }
+  .tex .k { color: #e7a77a; }
+  .tex .c { color: #7f8aa6; }
+  .meta { display: flex; justify-content: space-between; margin-top: 14px; font-size: 13px; color: #7a8091; }
+  .badge { color: #2f6b4f; font-weight: 600; }
+
+  .value {
+    flex: 1; border-top: 1px solid #ddd5c6;
+    display: grid; grid-template-columns: 360px 1fr; gap: 72px; align-items: center;
+    padding: 40px 0 48px;
+  }
+  .value h2 { font-family: Georgia, "Times New Roman", serif; font-weight: 400; font-size: 40px; line-height: 1.12; letter-spacing: -0.015em; }
+  .value h2 em { color: #9a4f2c; }
+  .value-sub { margin-top: 14px; font-size: 16px; line-height: 1.55; color: #4a5168; }
+  .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  .card { background: #fffdf8; border: 1px solid #e2d9c8; border-radius: 18px; padding: 26px; }
+  .num {
+    width: 38px; height: 38px; border-radius: 10px; background: #efe3d3; color: #9a4f2c;
+    display: grid; place-items: center; font-weight: 700; font-size: 16px; margin-bottom: 18px;
+  }
+  .card h3 { font-size: 19px; font-weight: 700; margin-bottom: 10px; }
+  .card p { font-size: 15px; line-height: 1.55; color: #4a5168; }
+</style>
+</head>
+<body>
+<div class="page">
+  <nav>
+    <div class="brand"><span class="brand-mark">I</span>Inkwell</div>
+    <div class="nav-links">
+      <span>Product</span><span>Examples</span><span>Pricing</span><span>Docs</span>
+    </div>
+    <div class="nav-cta">Get started</div>
+  </nav>
+
+  <section class="hero">
+    <div>
+      <span class="eyebrow">Handwriting to LaTeX</span>
+      <h1>Write it by hand.<br><em>Typeset it</em> in seconds.</h1>
+      <p class="lede">Inkwell reads your handwritten equations, diagrams and notes, then returns clean LaTeX you can paste straight into your paper, thesis or problem set.</p>
+      <div class="actions">
+        <div class="btn-primary">Try Inkwell free</div>
+        <div class="btn-ghost">See how it works</div>
+      </div>
+      <p class="note">No account needed for your first 20 pages.</p>
+    </div>
+
+    <div class="demo">
+      <div class="demo-row">
+        <div>
+          <div class="panel-label">Your notes</div>
+          <div class="ink">∫₀^∞ e^(−x²) dx = √π / 2</div>
+        </div>
+        <div class="arrow">↓</div>
+        <div>
+          <div class="panel-label">Inkwell output</div>
+          <div class="tex"><span class="c">% recognised in 0.4s</span><br><span class="k">\int_{0}^{\infty}</span> e^{-x^{2}}\,dx <br>= <span class="k">\frac{\sqrt{\pi}}{2}</span></div>
+        </div>
+      </div>
+      <div class="meta"><span>Equation detected</span><span class="badge">98% confidence</span></div>
+    </div>
+  </section>
+
+  <section class="value">
+    <div>
+      <h2>Keep your <em>thinking</em>, lose the typing.</h2>
+      <p class="value-sub">Inkwell is built for the way people actually take notes: fast, messy and mixed with diagrams.</p>
+    </div>
+    <div class="cards">
+      <div class="card">
+        <div class="num">1</div>
+        <h3>Reads real handwriting</h3>
+        <p>Trained on messy margins, crossed-out lines and cramped subscripts, not just neat print.</p>
+      </div>
+      <div class="card">
+        <div class="num">2</div>
+        <h3>Preserves structure</h3>
+        <p>Multi-line derivations, matrices and aligned equations come back with their layout intact.</p>
+      </div>
+      <div class="card">
+        <div class="num">3</div>
+        <h3>Works everywhere</h3>
+        <p>Copy as LaTeX, Markdown or MathML, or export directly to Overleaf, Notion and Obsidian.</p>
+      </div>
+    </div>
+  </section>
+</div>
+</body>
+</html>

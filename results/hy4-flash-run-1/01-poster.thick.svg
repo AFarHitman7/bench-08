@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1350" viewBox="0 0 1080 1350">
+  <style>
+    .paper  { fill:#E8E1D3; }
+    .ink    { fill:#14171E; }
+    .accent { fill:#D6381F; }
+    .disp   { font-family:'Arial Narrow','Roboto Condensed','Helvetica Neue',Arial,sans-serif; font-stretch:condensed; font-weight:800; }
+    .mono   { font-family:Consolas,'Courier New',monospace; }
+  </style>
+
+  <!-- paper -->
+  <rect class="paper" width="1080" height="1350"/>
+
+  <!-- masthead -->
+  <text class="mono ink" x="96" y="126" font-size="22" font-weight="700" letter-spacing="4">VELL LINE</text>
+  <text class="mono ink" x="984" y="126" text-anchor="end" font-size="18" letter-spacing="1">NIGHT SERVICE  /  No. 1140</text>
+  <line x1="96" y1="148" x2="984" y2="148" stroke="#14171E" stroke-width="3"/>
+
+  <!-- display title -->
+  <text class="disp ink" x="96" y="300" font-size="158" letter-spacing="-2">THE LAST</text>
+  <text class="disp ink" x="96" y="452" font-size="158" letter-spacing="-2">FERRY</text>
+  <text class="mono accent" x="984" y="300" text-anchor="end" font-size="20" letter-spacing="2">SR / VL</text>
+
+  <!-- hero time -->
+  <text class="disp accent" x="96" y="600" font-size="160">11:40</text>
+  <text class="mono ink" x="505" y="600" font-size="42" font-weight="700">PM</text>
+  <text class="mono ink" x="96" y="642" font-size="20" letter-spacing="3">LAST DEPARTURE OF THE NIGHT</text>
+
+  <!-- separator -->
+  <rect class="accent" x="96" y="678" width="888" height="6"/>
+
+  <!-- departure board -->
+  <text class="mono ink" x="96" y="716" font-size="18" letter-spacing="2">DEPARTURE BOARD  ·  LAST SERVICE</text>
+  <line x1="96" y1="732" x2="984" y2="732" stroke="#14171E" stroke-width="2"/>
+
+  <text class="mono ink" x="120" y="762" font-size="16" letter-spacing="2">FROM</text>
+  <text class="mono ink" x="470" y="762" font-size="16" letter-spacing="2">TO</text>
+  <text class="mono ink" x="760" y="762" font-size="16" letter-spacing="2">DEP</text>
+  <text class="mono ink" x="880" y="762" font-size="16" letter-spacing="2">ARR</text>
+  <line x1="96" y1="780" x2="984" y2="780" stroke="#14171E" stroke-width="2"/>
+
+  <!-- row 1 -->
+  <text class="mono ink" x="120" y="852" font-size="36" font-weight="700">SAN REMO</text>
+  <line x1="398" y1="840" x2="440" y2="840" stroke="#D6381F" stroke-width="4"/>
+  <polygon class="accent" points="440,832 452,840 440,448"/>
+  <polygon class="accent" points="440,833 452,840 440,847"/>
+  <text class="mono ink" x="470" y="852" font-size="36" font-weight="700">VELL</text>
+  <text class="mono accent" x="760" y="852" font-size="36" font-weight="700">23:40</text>
+  <text class="mono ink" x="880" y="852" font-size="36">00:15</text>
+  <line x1="96" y1="880" x2="984" y2="880" stroke="#14171E" stroke-width="2"/>
+
+  <!-- row 2 -->
+  <text class="mono ink" x="120" y="952" font-size="36" font-weight="700">VELL</text>
+  <line x1="398" y1="940" x2="440" y2="940" stroke="#D6381F" stroke-width="4"/>
+  <polygon class="accent" points="440,933 452,940 440,947"/>
+  <text class="mono ink" x="470" y="952" font-size="36" font-weight="700">SAN REMO</text>
+  <text class="mono accent" x="760" y="952" font-size="36" font-weight="700">00:20</text>
+  <text class="mono ink" x="880" y="952" font-size="36">00:55</text>
+  <line x1="96" y1="980" x2="984" y2="980" stroke="#14171E" stroke-width="2"/>
+
+  <line x1="715" y1="732" x2="715" y2="980" stroke="#14171E" stroke-width="2"/>
+
+  <!-- copy -->
+  <text class="disp ink" x="96" y="1064" font-size="42" font-weight="600" letter-spacing="0.5">For the ones still going home after midnight.</text>
+
+  <!-- footer -->
+  <rect class="ink" x="96" y="1120" width="888" height="100"/>
+  <text class="mono paper" x="124" y="1188" font-size="48" font-weight="700" letter-spacing="1">ferry.vell/1140</text>
+  <text class="mono paper" x="956" y="1178" text-anchor="end" font-size="20" letter-spacing="2">SAN REMO / VELL</text>
+</svg>

@@ -1,0 +1,41 @@
+<!-- Fixes (5 by impact: 1 Added viewport + fluid type and stacking so it works on phones. 2 Replaced vague "Get started" with "See times & prices" linking to #times, larger 48px tap target. 3 Rewrote inflated hero sub into concrete duration, frequency and ticket delivery. 4 Fixed low-contrast gradient text with darker overlay, solid CTA, and darker footer. 5 Made cards specific (minute booking, fee, e-ticket). Left alone: brand/hero/cards/footer structure, no new sections, kept product and defensible copy, kept palette. -->
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Ferryline — Book your crossing</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:#111;background:#fff;line-height:1.45}
+.hero{position:relative;padding:64px 24px 52px;text-align:center;color:#fff;background:#4c1d95;overflow:hidden}
+.hero::before{content:"";position:absolute;inset:0;background:linear-gradient(135deg,#5b21b6 0%,#9d174d 100%)}
+.hero-inner{position:relative;max-width:760px;margin:0 auto}
+.eyebrow{display:inline-block;font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.4);padding:8px 14px;border-radius:999px;margin-bottom:18px}
+h1{font-size:clamp(32px,4.6vw,54px);line-height:1.05;margin:0 0 14px;letter-spacing:-.02em}
+.sub{font-size:clamp(16px,1.8vw,19px);opacity:1;color:#fff;max-width:620px;margin:0 auto 26px}
+.sub strong{white-space:nowrap}
+.cta{display:inline-block;padding:16px 36px;min-height:52px;border-radius:999px;background:#fff;color:#4c1d95;font-weight:800;font-size:18px;text-decoration:none;box-shadow:0 6px 20px rgba(0,0,0,.25)}
+.cta:focus-visible,.cta:hover{background:#fef3c7;outline:3px solid #fde68a;outline-offset:2px}
+.micro{margin:14px 0 0;font-size:14px;color:#f5f3ff;opacity:1}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;padding:36px 40px 20px;max-width:1200px;margin:0 auto}
+.card{border:1px solid #e7e7e7;border-radius:16px;padding:24px;background:#fafafa}
+.card h3{margin:0 0 8px;font-size:18px}
+.card p{font-size:15.5px;margin:0;color:#222;opacity:1;max-width:none}
+.card .big{display:block;font-size:13px;font-weight:700;color:#6d28d9;margin-bottom:6px;text-transform:uppercase;letter-spacing:.06em}
+footer{padding:22px;text-align:center;color:#444;font-size:14px}
+footer a{color:#4c1d95}
+@media(max-width:720px){.cards{grid-template-columns:1fr;padding:20px 16px}.hero{padding:48px 16px 40px;text-align:left}.hero-inner{margin:0}.sub{margin:0 0 22px}.cta{width:100%;text-align:center}}
+</style></head>
+<body>
+<section class="hero"><div class="hero-inner">
+<span class="eyebrow">Daily sailings &middot; 45 min crossing</span>
+<h1>Book your ferry crossing in seconds</h1>
+<p class="sub">Ferries every hour, <strong>from $19 per adult</strong>. Pay online, show your e-ticket at the gate — no printing.</p>
+<a class="cta" href="#times" id="times">See times &amp; prices</a>
+<p class="micro">Free cancellation up to 24h before &middot; No booking fees</p>
+</div></section>
+<section class="cards">
+<div class="card"><span class="big">Fast</span><h3>Done in under a minute</h3><p>Pick a sailing, pay by card or phone, get your QR code instantly.</p></div>
+<div class="card"><span class="big">Clear</span><h3>What you see is what you pay</h3><p>Full fare shown upfront, including car, bike and luggage options.</p></div>
+<div class="card"><span class="big">Flexible</span><h3>Plans change? No problem</h3><p>Move to any sailing same day free, subject to space. <a href="#">Refund policy</a>.</p></div>
+</section>
+<footer>&copy; Ferryline 2026 &middot; Help: 0800 123 456 &middot; <a href="#">Timetable</a> &middot; <a href="#">Fares</a></footer>
+</body></html>

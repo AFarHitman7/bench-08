@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1280, height=720">
+<title>DRIFT — 8s Title Card</title>
+<style>*{margin:0;padding:0;box-sizing:border-box}html,body{width:1280px;height:720px;overflow:hidden;background:#05080d}body{font-family:Helvetica,Arial,sans-serif;color:#fff}#stage{position:relative;width:1280px;height:720px;overflow:hidden;background:radial-gradient(1100px 600px at 50% 115%,#1b3a55 0%,#0b1624 42%,#05080d 72%)}#center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}#word{display:flex;font-size:196px;font-weight:800;letter-spacing:.02em}#sub{margin-top:10px;font-size:15px;letter-spacing:.5em;color:#cbd5e1}#ruleWrap{margin-top:28px;width:420px;height:2px;background:rgba(148,163,184,.22)}#rule{width:100%;height:100%;background:linear-gradient(90deg,#38bdf8,#e879f9);transform-origin:left center}#tc{position:absolute;bottom:34px;left:64px;font-family:monospace;font-size:14px}</style>
+</head>
+<body>
+<div id="stage"><div id="center"><div id="word"></div><div id="sub">D R I F T — NEVER STILL</div><div id="ruleWrap"><div id="rule"></div></div></div><div id="tc">T+ 0.00 / 8.00</div></div>
+<script>
+(function(){var D=8;var wordEl=document.getElementById('word');var chars=['D','R','I','F','T'];var letters=[];for(var i=0;i<5;i++){var s=document.createElement('span');s.textContent=chars[i];wordEl.appendChild(s);letters.push(s)}var rule=document.getElementById('rule'),tc=document.getElementById('tc');
+function render(t){t=((t%D)+D)%D;var u=t/D;for(var i=0;i<5;i++){var x=Math.sin((u*Math.PI*2)+i*0.72)*20;var y=Math.cos((u*Math.PI*2)+i*1.13)*14;letters[i].style.transform='translate('+x.toFixed(1)+'px,'+y.toFixed(1)+'px)';letters[i].style.opacity=(0.3+0.7*Math.abs(Math.sin(u*Math.PI*2+i))).toFixed(2)}rule.style.transform='scaleX('+u.toFixed(4)+')';tc.textContent='T+ '+t.toFixed(2)+' / 8.00'}
+var cur=0,playing=true,last=null;function tick(now){if(!playing)return;if(last===null)last=now;var dt=(now-last)/1000;last=now;cur=(cur+dt)%D;render(cur);requestAnimationFrame(tick)}
+window.__anim={duration:D,seek:function(t){cur=((Number(t)%D)+D)%D;render(cur);return cur},play:function(){if(!playing){playing=true;last=null;requestAnimationFrame(tick)}return true},pause:function(){playing=false;return cur}};
+render(0);requestAnimationFrame(tick)})();
+</script>
+</body>
+</html>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1440, height=900">
+<title>Inkwell — Handwriting in. LaTeX out.</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{background:#E8E0D1}
+  body{width:1440px;height:900px;overflow:hidden;background:#F6F1E7;color:#1A1E1C;
+    font-family:"Helvetica Neue",Helvetica,Arial,-apple-system,"Inter",system-ui,sans-serif;
+    -webkit-font-smoothing:antialiased;display:flex;flex-direction:column}
+  .serif{font-family:Georgia,"Times New Roman",Times,serif}
+  header{height:72px;flex:0 0 72px;display:flex;align-items:center;justify-content:space-between;
+    padding:0 48px;border-bottom:1px solid #E0D6C2;background:#F6F1E7}
+  .brand{display:flex;align-items:center;gap:11px}
+  .mark{width:32px;height:32px;border-radius:9px;background:#1A1E1C;display:grid;place-items:center}
+  .brand b{font-size:19px;letter-spacing:-.02em}
+  .brand span{font-size:11px;color:#6B675F;border:1px solid #D9CDB4;border-radius:99px;padding:3px 8px;margin-left:2px}
+  nav{display:flex;gap:28px;font-size:14px;color:#4A463F}
+  nav a{text-decoration:none;color:inherit}
+  .hcta{display:flex;align-items:center;gap:16px;font-size:14px}
+  .hcta a{color:#1A1E1C;text-decoration:none}
+  .btn-dark{background:#1A1E1C;color:#F6F1E7;border:0;border-radius:8px;padding:11px 18px;font-size:14px;font-weight:600;cursor:pointer}
+  main{flex:1;display:grid;grid-template-columns:560px 1fr;gap:40px;padding:36px 48px 28px}
+  .eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:11.5px;letter-spacing:.12em;font-weight:700;color:#1E4D3B;
+    border:1px solid #C9BFA6;background:#EFE8D6;border-radius:99px;padding:7px 12px}
+  .dot{width:7px;height:7px;border-radius:50%;background:#1E4D3B}
+  h1{font-family:Georgia,"Times New Roman",serif;font-weight:400;font-size:66px;line-height:.98;letter-spacing:-.025em;margin:20px 0 16px}
+  h1 em{font-style:italic;font-weight:400}
+  .lede{font-size:17.5px;line-height:1.55;color:#4A463F;max-width:480px}
+  .ctarow{display:flex;align-items:center;gap:14px;margin:26px 0 14px}
+  .btn-primary{background:#1E4D3B;color:#fff;border:0;border-radius:9px;padding:15px 24px;font-size:15px;font-weight:700;cursor:pointer}
+  .btn-secondary{background:transparent;border:1px solid #1A1E1C;border-radius:9px;padding:14px 20px;font-size:15px;font-weight:600;color:#1A1E1C;cursor:pointer}
+  .micro{font-size:13px;color:#6B675F;display:flex;gap:18px;margin-top:4px}
+  .proofline{margin-top:22px;border:1px solid #D9CDB4;background:#EFE8D6;border-radius:10px;padding:12px 14px;display:flex;gap:12px;align-items:center;font-size:13.5px;color:#4A463F}
+  .demo{background:#fff;border:1px solid #D9CDB4;border-radius:16px;overflow:hidden;box-shadow:0 18px 50px rgba(26,30,28,.12);display:flex;flex-direction:column;height:552px}
+  .dtop{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid #E8DFCC;background:#FBF8F0}
+  .dsplit{display:grid;grid-template-columns:1fr 1fr;flex:1;min-height:0}
+  .leftpane{background:#FDFBF3;border-right:1px solid #E8DFCC;display:flex;flex-direction:column;padding:12px 16px}
+  .rightpane{background:#fff;display:flex;flex-direction:column;padding:12px 20px}
+  .hand{font-family:"Segoe Script","Bradley Hand",cursive;color:#2E3D5B;font-size:17px;line-height:28px}
+  .rendered{font-family:Georgia,serif;margin-top:8px}
+  table.tex{width:100%;border-collapse:collapse;font-family:Georgia,serif;font-size:12.5px;margin-top:4px}
+  table.tex th{font-family:Helvetica,Arial,sans-serif;font-size:10.5px;border-top:1.5px solid #1A1E1C;border-bottom:1px solid #1A1E1C;padding:6px 4px;text-align:left}
+  table.tex td{border-bottom:1px solid #E2DCCB;padding:6px 4px}
+  .dbottom{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-top:1px solid #E8DFCC;background:#FBF8F0}
+  footer{flex:0 0 208px;border-top:1px solid #D9CDB4;background:#EFE8D6;padding:22px 48px 0;display:grid;grid-template-columns:1fr 1fr 1fr}
+  .val{padding:0 32px 0 0;display:flex;gap:14px}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand"><div class="mark"></div><b>Inkwell</b><span>for LaTeX</span></div>
+  <nav><a href="#">How it works</a><a href="#">Accuracy</a><a href="#">Pricing</a><a href="#">Docs</a></nav>
+  <div class="hcta"><a href="#">Sign in</a><button class="btn-dark">Try a page free</button></div>
+</header>
+<main>
+  <div>
+    <div class="eyebrow"><span class="dot"></span>PHOTO → .TEX · BUILT FOR DAILY LATEX USE</div>
+    <h1>Handwriting in.<br><em>LaTeX out.</em></h1>
+    <p class="lede">Photograph a page of notes and Inkwell returns clean, compilable LaTeX — with the <b>original and the rendered output side by side</b> so you can verify every symbol.</p>
+    <div class="ctarow">
+      <button class="btn-primary">Try a page free</button>
+      <button class="btn-secondary">▶ See a real conversion</button>
+    </div>
+    <div class="micro"><span>✓ Compiles first time</span><span>✓ No account needed</span><span>✓ Your .sty respected</span></div>
+    <div class="proofline"><div><strong>Checked against 2,400 annotated pages.</strong> 98.2% symbol match on math, 99.1% cell match on tables.</div></div>
+  </div>
+  <div class="demo">
+    <div class="dtop"><div><small><b>page_042</b> — lecture notes</small></div><small>◉ original · ⬣ rendered · diff</small></div>
+    <div class="dsplit">
+      <div class="leftpane">
+        <div class="hand"><div>Theorem 3.2 (Gauss)</div><div>∮S F·dS = ∭V div F dV</div><div>x | f(x) | err — 0.1 | 0.995 | 0.002</div></div>
+      </div>
+      <div class="rightpane">
+        <div class="rendered"><h4>Theorem 3.2 (Gauss).</h4><p>Let F be C1 on V. Then ∮S F·dS = ∭V (∇·F) dV</p>
+          <table class="tex"><tr><th>x</th><th>f(x)</th><th>err</th></tr><tr><td>0.1</td><td>0.995</td><td>0.002</td></tr><tr><td>0.2</td><td>0.980</td><td>0.004</td></tr></table>
+        </div>
+      </div>
+    </div>
+    <div class="dbottom"><div>✓ 98.2% symbols matched · compiles with pdflatex</div><div>↓ .tex ↓ .pdf ⧉ Overleaf</div></div>
+  </div>
+</main>
+<footer>
+  <div class="val"><div><h3>Equations and tables handled</h3><p>Display math, aligned environments, matrices and booktabs tables.</p></div></div>
+  <div class="val"><div><h3>Revision history per page</h3><p>Every scan is versioned. Flip between v1 → v3, see what changed.</p></div></div>
+  <div class="val"><div><h3>Export to .tex or .pdf</h3><p>Copy the source, push to Overleaf, or download PDF.</p></div></div>
+</footer>
+</body>
+</html>

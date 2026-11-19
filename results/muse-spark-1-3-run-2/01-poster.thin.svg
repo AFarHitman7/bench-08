@@ -1,0 +1,184 @@
+<svg width="1080" height="1350" viewBox="0 0 1080 1350" xmlns="http://www.w3.org/2000/svg">
+<title>The Last Ferry, 11:40pm</title>
+<defs>
+<linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+<stop offset="0%" stop-color="#1b2c5a"/><stop offset="32%" stop-color="#121f42"/><stop offset="62%" stop-color="#0a1330"/><stop offset="100%" stop-color="#050a1e"/>
+</linearGradient>
+<linearGradient id="sea" x1="0" y1="0" x2="0" y2="1">
+<stop offset="0%" stop-color="#1b335f"/><stop offset="18%" stop-color="#111f40"/><stop offset="55%" stop-color="#080f26"/><stop offset="100%" stop-color="#02050f"/>
+</linearGradient>
+<radialGradient id="moonGlow" cx="50%" cy="50%" r="50%">
+<stop offset="0%" stop-color="#fff6d6" stop-opacity="0.95"/><stop offset="18%" stop-color="#fff0bb" stop-opacity="0.55"/><stop offset="45%" stop-color="#ffedb0" stop-opacity="0.18"/><stop offset="70%" stop-color="#ffedb0" stop-opacity="0"/>
+</radialGradient>
+<linearGradient id="beam" x1="0" y1="0" x2="1" y2="0">
+<stop offset="0%" stop-color="#fff3c0" stop-opacity="0.85"/><stop offset="100%" stop-color="#fff3c0" stop-opacity="0"/>
+</linearGradient>
+<linearGradient id="refl" x1="0" y1="0" x2="0" y2="1">
+<stop offset="0%" stop-color="#f7e8b8" stop-opacity="0.85"/><stop offset="100%" stop-color="#f7e8b8" stop-opacity="0"/>
+</linearGradient>
+<linearGradient id="fog" x1="0" y1="0" x2="0" y2="1">
+<stop offset="0%" stop-color="#a8bde0" stop-opacity="0"/><stop offset="50%" stop-color="#a8bde0" stop-opacity="0.28"/><stop offset="100%" stop-color="#a8bde0" stop-opacity="0"/>
+</linearGradient>
+<radialGradient id="vig" cx="50%" cy="46%" r="75%">
+<stop offset="55%" stop-color="#000" stop-opacity="0"/><stop offset="88%" stop-color="#000" stop-opacity="0.45"/><stop offset="100%" stop-color="#000" stop-opacity="0.75"/>
+</radialGradient>
+<filter id="soft" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="8"/></filter>
+<filter id="soft2" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="18"/></filter>
+</defs>
+<rect width="1080" height="1350" fill="#050a1e"/>
+<rect width="1080" height="880" fill="url(#sky)"/>
+<!-- stars -->
+<g fill="#fff">
+<circle cx="80" cy="120" r="2.2" opacity="0.9"/><circle cx="180" cy="220" r="1.3" opacity="0.7"/><circle cx="260" cy="90" r="1.6" opacity="0.8"/><circle cx="340" cy="180" r="1.1" opacity="0.6"/><circle cx="430" cy="110" r="1.8" opacity="0.9"/><circle cx="520" cy="200" r="1.2" opacity="0.6"/><circle cx="610" cy="90" r="1.5" opacity="0.8"/><circle cx="700" cy="150" r="1.2" opacity="0.6"/><circle cx="860" cy="110" r="1.9" opacity="0.9"/><circle cx="960" cy="200" r="1.4" opacity="0.7"/><circle cx="1010" cy="90" r="1.2" opacity="0.6"/>
+<circle cx="120" cy="320" r="1.4" opacity="0.7"/><circle cx="220" cy="380" r="1.1" opacity="0.55"/><circle cx="310" cy="300" r="1.7" opacity="0.8"/><circle cx="410" cy="360" r="1" opacity="0.5"/><circle cx="500" cy="290" r="1.6" opacity="0.75"/><circle cx="580" cy="380" r="1.1" opacity="0.55"/><circle cx="660" cy="320" r="1.3" opacity="0.6"/><circle cx="890" cy="340" r="1.5" opacity="0.75"/><circle cx="980" cy="410" r="1.2" opacity="0.6"/><circle cx="60" cy="500" r="1.3" opacity="0.6"/><circle cx="200" cy="540" r="1" opacity="0.5"/><circle cx="350" cy="500" r="1.2" opacity="0.6"/><circle cx="480" cy="560" r="1" opacity="0.45"/><circle cx="920" cy="520" r="1.3" opacity="0.65"/><circle cx="1020" cy="580" r="1.1" opacity="0.55"/>
+<circle cx="150" cy="160" r="0.8" opacity="0.5"/><circle cx="390" cy="140" r="0.9" opacity="0.55"/><circle cx="560" cy="150" r="0.8" opacity="0.5"/><circle cx="750" cy="80" r="0.9" opacity="0.6"/><circle cx="910" cy="250" r="0.9" opacity="0.6"/><circle cx="40" cy="250" r="0.9" opacity="0.55"/><circle cx="280" cy="450" r="0.9" opacity="0.5"/><circle cx="620" cy="450" r="0.9" opacity="0.5"/><circle cx="820" cy="460" r="1" opacity="0.6"/>
+<circle cx="125" cy="88" r="1" opacity="0.9"/><circle cx="635" cy="215" r="1" opacity="0.8"/><circle cx="955" cy="155" r="1" opacity="0.85"/>
+</g>
+<g opacity="0.9">
+<circle cx="125" cy="88" r="3" fill="#fff" opacity="0.25"/><circle cx="635" cy="215" r="3" fill="#fff" opacity="0.22"/><circle cx="955" cy="155" r="3" fill="#fff" opacity="0.22"/>
+<path d="M125 84v8M121 88h8" stroke="#fff" stroke-width="1" opacity="0.7"/>
+</g>
+<!-- moon -->
+<circle cx="770" cy="315" r="210" fill="url(#moonGlow)"/>
+<circle cx="770" cy="315" r="88" fill="#f5edd1"/>
+<circle cx="770" cy="315" r="88" fill="none" stroke="#fff8dc" stroke-width="1.5" opacity="0.6"/>
+<circle cx="742" cy="295" r="12" fill="#ddd0ac" opacity="0.9"/><circle cx="790" cy="335" r="9" fill="#ddd0ac" opacity="0.8"/><circle cx="778" cy="288" r="6" fill="#ddd0ac" opacity="0.7"/><circle cx="758" cy="340" r="5" fill="#ddd0ac" opacity="0.6"/>
+<ellipse cx="770" cy="315" rx="88" ry="88" fill="#0a1330" opacity="0.08"/>
+<!-- thin clouds -->
+<g fill="#0a1430" opacity="0.85">
+<ellipse cx="620" cy="280" rx="170" ry="16" opacity="0.7"/><ellipse cx="680" cy="302" rx="220" ry="12" opacity="0.6"/>
+<ellipse cx="880" cy="360" rx="180" ry="14" opacity="0.65"/><ellipse cx="200" cy="420" rx="160" ry="10" opacity="0.5"/>
+</g>
+<g fill="#c8d3f0" opacity="0.18">
+<ellipse cx="620" cy="276" rx="170" ry="4"/><ellipse cx="880" cy="356" rx="180" ry="4"/>
+</g>
+<!-- distant haze -->
+<rect x="0" y="720" width="1080" height="110" fill="url(#fog)"/>
+<!-- LEFT ISLAND with lighthouse -->
+<path d="M0 820 L0 700 L45 695 L70 640 L95 635 L130 680 L185 690 L240 720 L300 760 L330 820 Z" fill="#060c20"/>
+<path d="M70 640 L70 600 L86 600 L86 635 Z" fill="#060c20"/>
+<rect x="68" y="588" width="20" height="16" fill="#0c1530"/>
+<rect x="72" y="591" width="12" height="8" fill="#ffdf8a"/>
+<circle cx="78" cy="595" r="22" fill="#ffdf8a" opacity="0.25" filter="url(#soft2)"/>
+<!-- lighthouse beams -->
+<polygon points="84,594 320,560 320,630" fill="url(#beam)" opacity="0.45"/>
+<polygon points="72,594 -80,570 -80,620" fill="url(#beam)" opacity="0.18"/>
+<g fill="#060c20">
+<ellipse cx="160" cy="700" rx="18" ry="28"/><ellipse cx="185" cy="705" rx="14" ry="22"/><ellipse cx="45" cy="705" rx="14" ry="20"/>
+</g>
+<!-- RIGHT ISLAND -->
+<path d="M690 820 L720 770 L760 755 L800 720 L830 718 L860 750 L900 758 L950 740 L990 745 L1020 770 L1080 785 L1080 820 Z" fill="#060c20"/>
+<g>
+<rect x="822" y="732" width="36" height="22" fill="#0a142e" stroke="#1e2e55" stroke-width="1"/>
+<polygon points="822,732 840,720 858,732" fill="#060c20" stroke="#1e2e55" stroke-width="1"/>
+<rect x="830" y="740" width="8" height="8" fill="#ffbf62"/><rect x="842" y="740" width="6" height="8" fill="#ffbf62" opacity="0.9"/>
+<rect x="872" y="754" width="28" height="18" fill="#0a142e" stroke="#1e2e55" stroke-width="1"/>
+<rect x="878" y="760" width="6" height="6" fill="#ffbf62"/><rect x="887" y="760" width="6" height="6" fill="#ffbf62" opacity="0.7"/>
+<rect x="944" y="750" width="30" height="20" fill="#0a142e" stroke="#1e2e55" stroke-width="1"/>
+<rect x="950" y="756" width="7" height="7" fill="#ffbf62"/>
+<circle cx="800" cy="720" r="3" fill="#ff6b6b"><animate attributeName="opacity" values="1;0.2;1" dur="2.2s" repeatCount="indefinite"/></circle>
+</g>
+<g fill="#060c20">
+<ellipse cx="970" cy="758" rx="20" ry="26"/><ellipse cx="995" cy="765" rx="14" ry="18"/><ellipse cx="750" cy="772" rx="16" ry="20"/>
+</g>
+<!-- SEA -->
+<rect x="0" y="820" width="1080" height="530" fill="url(#sea)"/>
+<rect x="0" y="820" width="1080" height="2" fill="#8fb4e8" opacity="0.35"/>
+<!-- moon reflection -->
+<g opacity="0.9">
+<polygon points="735,830 805,830 840,1250 700,1250" fill="url(#refl)" opacity="0.22"/>
+<g fill="#f7e8b8">
+<rect x="748" y="845" width="44" height="6" rx="3" opacity="0.7"/><rect x="738" y="868" width="64" height="7" rx="3.5" opacity="0.65"/>
+<rect x="754" y="895" width="38" height="6" rx="3" opacity="0.7"/><rect x="730" y="920" width="80" height="8" rx="4" opacity="0.55"/>
+<rect x="744" y="950" width="52" height="7" rx="3.5" opacity="0.6"/><rect x="726" y="982" width="92" height="9" rx="4.5" opacity="0.5"/>
+<rect x="748" y="1015" width="54" height="8" rx="4" opacity="0.55"/><rect x="720" y="1050" width="104" height="10" rx="5" opacity="0.42"/>
+<rect x="738" y="1090" width="68" height="9" rx="4.5" opacity="0.45"/><rect x="712" y="1130" width="118" height="11" rx="5.5" opacity="0.35"/>
+<rect x="730" y="1175" width="84" height="10" rx="5" opacity="0.3"/>
+</g>
+</g>
+<!-- water sparkles -->
+<g fill="#9dc0f0" opacity="0.35">
+<rect x="120" y="860" width="62" height="3" rx="1.5"/><rect x="220" y="890" width="40" height="3" rx="1.5" opacity="0.7"/><rect x="90" y="920" width="88" height="3" rx="1.5"/><rect x="360" y="910" width="52" height="3" rx="1.5"/><rect x="180" y="960" width="70" height="3" rx="1.5"/><rect x="420" y="980" width="36" height="3" rx="1.5"/><rect x="880" y="880" width="64" height="3" rx="1.5"/><rect x="930" y="920" width="44" height="3" rx="1.5"/><rect x="860" y="970" width="78" height="3" rx="1.5"/><rect x="910" y="1020" width="50" height="3" rx="1.5"/>
+</g>
+<!-- FERRY -->
+<g transform="translate(500,905)">
+<!-- glow behind windows -->
+<ellipse cx="0" cy="-10" rx="145" ry="38" fill="#ffb84d" opacity="0.18" filter="url(#soft2)"/>
+<!-- smoke -->
+<g fill="#a8b5d6">
+<circle cx="58" cy="-110" r="10" opacity="0.35"/><circle cx="68" cy="-130" r="13" opacity="0.25"/><circle cx="82" cy="-155" r="17" opacity="0.15" filter="url(#soft)"/>
+</g>
+<!-- mast -->
+<line x1="-55" y1="-40" x2="-55" y2="-88" stroke="#0a132c" stroke-width="5"/>
+<circle cx="-55" cy="-92" r="5" fill="#fff" opacity="0.95"/>
+<circle cx="-55" cy="-92" r="11" fill="#fff" opacity="0.25" filter="url(#soft)"/>
+<line x1="-55" y1="-88" x2="-20" y2="-60" stroke="#0a132c" stroke-width="2.5"/>
+<!-- upper cabin -->
+<rect x="-78" y="-68" width="148" height="28" rx="3" fill="#0b142e" stroke="#2c3e67" stroke-width="1.5"/>
+<g fill="#ffd489">
+<rect x="-68" y="-61" width="16" height="12" rx="1"/><rect x="-48" y="-61" width="16" height="12" rx="1"/><rect x="-28" y="-61" width="16" height="12" rx="1"/><rect x="-8" y="-61" width="16" height="12" rx="1"/><rect x="12" y="-61" width="16" height="12" rx="1"/><rect x="32" y="-61" width="16" height="12" rx="1"/>
+</g>
+<!-- funnel -->
+<rect x="48" y="-108" width="22" height="44" fill="#0b142e" stroke="#2c3e67" stroke-width="1.5"/>
+<rect x="48" y="-108" width="22" height="10" fill="#a63a3a"/>
+<!-- main cabin -->
+<rect x="-125" y="-38" width="250" height="38" rx="4" fill="#0b142e" stroke="#2c3e67" stroke-width="1.5"/>
+<g fill="#ffc46a">
+<rect x="-113" y="-29" width="20" height="16" rx="2"/><rect x="-86" y="-29" width="20" height="16" rx="2"/><rect x="-59" y="-29" width="20" height="16" rx="2"/><rect x="-32" y="-29" width="20" height="16" rx="2"/><rect x="-5" y="-29" width="20" height="16" rx="2"/><rect x="22" y="-29" width="20" height="16" rx="2"/><rect x="49" y="-29" width="20" height="16" rx="2"/><rect x="76" y="-29" width="20" height="16" rx="2"/>
+</g>
+<g fill="#fff6d0" opacity="0.9">
+<circle cx="-103" cy="-21" r="1.5"/><circle cx="-49" cy="-21" r="1.5"/><circle cx="5" cy="-21" r="1.5"/><circle cx="59" cy="-21" r="1.5"/>
+</g>
+<!-- railing -->
+<g stroke="#2c3e67" stroke-width="1.2">
+<line x1="-125" y1="-48" x2="-125" y2="-38"/><line x1="-100" y1="-48" x2="-100" y2="-38"/><line x1="-75" y1="-48" x2="-75" y2="-38"/><line x1="-50" y1="-48" x2="-50" y2="-38"/><line x1="-25" y1="-48" x2="-25" y2="-38"/><line x1="0" y1="-48" x2="0" y2="-38"/><line x1="25" y1="-48" x2="25" y2="-38"/><line x1="50" y1="-48" x2="50" y2="-38"/><line x1="75" y1="-48" x2="75" y2="-38"/><line x1="100" y1="-48" x2="100" y2="-38"/><line x1="125" y1="-48" x2="125" y2="-38"/>
+<line x1="-125" y1="-48" x2="125" y2="-48"/>
+</g>
+<!-- hull -->
+<path d="M-145 0 L145 0 L122 42 L-118 42 Z" fill="#02050e" stroke="#2c3e67" stroke-width="1.5"/>
+<line x1="-139" y1="8" x2="139" y2="8" stroke="#7a2e2e" stroke-width="3" opacity="0.9"/>
+<circle cx="-138" cy="-2" r="4" fill="#ff5a5a"/><circle cx="138" cy="-2" r="4" fill="#3aff88"/>
+<circle cx="0" cy="-2" r="4" fill="#fff" opacity="0.9"/>
+<!-- wake -->
+<path d="M-118 42 L-190 58 M122 42 L194 58" stroke="#bcd3f5" stroke-width="2" opacity="0.5" stroke-linecap="round"/>
+<path d="M-110 44 L-160 56 L-110 58 L-60 56 L0 59 L60 56 L110 58 L160 56 L110 44 Z" fill="#bcd3f5" opacity="0.12"/>
+<!-- reflection -->
+<g opacity="0.65">
+<rect x="-90" y="52" width="24" height="6" rx="3" fill="#ffb84d"/><rect x="-58" y="52" width="24" height="6" rx="3" fill="#ffb84d" opacity="0.8"/><rect x="-26" y="52" width="24" height="6" rx="3" fill="#ffb84d"/><rect x="6" y="52" width="24" height="6" rx="3" fill="#ffb84d" opacity="0.8"/><rect x="38" y="52" width="24" height="6" rx="3" fill="#ffb84d"/>
+<rect x="-70" y="66" width="140" height="7" rx="3.5" fill="#ffb84d" opacity="0.35"/><rect x="-50" y="82" width="100" height="8" rx="4" fill="#ffb84d" opacity="0.22"/>
+</g>
+</g>
+<!-- foreground mist -->
+<rect x="0" y="790" width="1080" height="70" fill="url(#fog)" opacity="0.9"/>
+<rect x="0" width="1080" height="1350" fill="url(#vig)"/>
+<!-- inner border -->
+<rect x="36" y="36" width="1008" height="1278" fill="none" stroke="#f5efe0" stroke-width="1.5" opacity="0.35"/>
+<!-- TEXT TOP -->
+<g text-anchor="middle" font-family="Helvetica, Arial, sans-serif">
+<text x="540" y="118" fill="#c8cfe6" font-size="20" letter-spacing="6">NORTH HARBOUR &#183; SOUTH REACH</text>
+<line x1="340" y1="138" x2="740" y2="138" stroke="#c8cfe6" stroke-width="1" opacity="0.4"/>
+</g>
+<g text-anchor="middle">
+<text x="540" y="240" fill="#f5efe0" font-family="Georgia, 'Times New Roman', serif" font-style="italic" font-size="66">The Last</text>
+<text x="540" y="400" fill="#f5efe0" font-family="Georgia, 'Times New Roman', serif" font-size="188" letter-spacing="8">FERRY</text>
+</g>
+<g>
+<line x1="280" y1="450" x2="440" y2="450" stroke="#d9c48a" stroke-width="1.5" opacity="0.8"/>
+<line x1="640" y1="450" x2="800" y2="450" stroke="#d9c48a" stroke-width="1.5" opacity="0.8"/>
+<g text-anchor="middle" font-family="Helvetica, Arial, sans-serif">
+<text x="540" y="463" fill="#e9d49b" font-size="34" letter-spacing="10">11:40 PM</text>
+</g>
+</g>
+<!-- TEXT BOTTOM -->
+<g text-anchor="middle">
+<text x="540" y="1108" fill="#f5efe0" font-family="Georgia, 'Times New Roman', serif" font-style="italic" font-size="36">a late-night crossing between two islands</text>
+<text x="540" y="1165" fill="#a8b3d6" font-family="Helvetica, Arial, sans-serif" font-size="18" letter-spacing="4">ONE BOAT &#183; ONE LIGHT &#183; ONE QUIET HOUR</text>
+<g font-family="Helvetica, Arial, sans-serif" font-size="18" letter-spacing="3">
+<text x="340" y="1245" fill="#a8b3d6">DEPARTS NIGHTLY</text>
+<text x="540" y="1245" fill="#e9d49b">&#9670;</text>
+<text x="740" y="1245" fill="#a8b3d6">NO RETURN TILL DAWN</text>
+</g>
+<line x1="440" y1="1275" x2="640" y2="1275" stroke="#f5efe0" stroke-width="1" opacity="0.3"/>
+<text x="540" y="1295" fill="#6d78a0" font-family="Helvetica, Arial, sans-serif" font-size="14" letter-spacing="3">CROSSING TIME 40 MINUTES</text>
+</g>
+</svg>

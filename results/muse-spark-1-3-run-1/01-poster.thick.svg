@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1350" viewBox="0 0 1080 1350">
+<style>
+  .grotesk { font-family: 'Arial Narrow','Franklin Gothic Condensed','Helvetica Condensed',Impact,'Haettenschweiler',sans-serif; font-stretch: condensed; }
+  .mono { font-family: 'Courier New',Courier,ui-monospace,Menlo,Consolas,monospace; }
+</style>
+<rect x="0" y="0" width="1080" height="1350" fill="#EAE4CE"/>
+<!-- top rules -->
+<rect x="84" y="84" width="912" height="14" fill="#131736"/>
+<rect x="84" y="112" width="20" height="20" fill="#C73A1B"/>
+<text class="mono" x="116" y="129" font-size="26" font-weight="700" letter-spacing="1" fill="#131736">NIGHT CROSSING No1140 — DAILY</text>
+<text class="mono" x="996" y="129" font-size="26" font-weight="700" letter-spacing="1" fill="#131736" text-anchor="end">SAN REMO — VELL</text>
+<rect x="84" y="146" width="912" height="4" fill="#131736"/>
+<!-- display title -->
+<text class="grotesk" x="78" y="370" font-size="232" font-weight="900" letter-spacing="-4" fill="#131736">THE</text>
+<text class="grotesk" x="78" y="572" font-size="232" font-weight="900" letter-spacing="-4" fill="#131736">LAST</text>
+<text class="grotesk" x="78" y="774" font-size="232" font-weight="900" letter-spacing="-4" fill="#C73A1B">FERRY</text>
+<!-- side annotation -->
+<text class="mono" x="880" y="430" font-size="26" font-weight="700" fill="#131736">11:40PM</text>
+<text class="mono" x="880" y="460" font-size="26" font-weight="400" fill="#131736">SHARP</text>
+<rect x="880" y="480" width="116" height="10" fill="#C73A1B"/>
+<rect x="880" y="504" width="116" height="4" fill="#131736"/>
+<!-- timetable block -->
+<rect x="84" y="814" width="912" height="298" fill="#131736"/>
+<rect x="116" y="844" width="14" height="14" fill="#C73A1B"/>
+<text class="mono" x="142" y="858" font-size="25" font-weight="700" letter-spacing="2" fill="#EAE4CE">OUTBOUND / INBOUND — TONIGHT</text>
+<text class="grotesk" x="112" y="968" font-size="126" font-weight="900" letter-spacing="-2" fill="#EAE4CE">11:40<tspan font-size="44" baseline-shift="sub">PM</tspan></text>
+<text class="mono" x="512" y="930" font-size="30" font-weight="700" fill="#EAE4CE">SAN REMO &#8594; VELL</text>
+<text class="mono" x="512" y="966" font-size="28" font-weight="400" fill="#EAE4CE">DEP 23:40 — ARR 00:07</text>
+<rect x="116" y="986" width="848" height="2" fill="#EAE4CE" opacity="0.55"/>
+<text class="grotesk" x="112" y="1084" font-size="66" font-weight="900" letter-spacing="0" fill="#EAE4CE">12:20<tspan font-size="26" baseline-shift="sub">AM</tspan></text>
+<text class="mono" x="512" y="1046" font-size="30" font-weight="700" fill="#EAE4CE">VELL &#8594; SAN REMO</text>
+<text class="mono" x="512" y="1082" font-size="28" font-weight="400" fill="#EAE4CE">DEP 00:20 — ARR 00:47</text>
+<!-- copy line -->
+<rect x="84" y="1140" width="912" height="4" fill="#131736"/>
+<text class="grotesk" x="84" y="1192" font-size="36" font-weight="700" letter-spacing="-0.5" fill="#131736">For the ones clocking out when the city clocks off.</text>
+<!-- URL block -->
+<rect x="84" y="1214" width="912" height="4" fill="#C73A1B"/>
+<text class="grotesk" x="80" y="1290" font-size="84" font-weight="900" letter-spacing="-2" fill="#131736">ferry.vell/1140<tspan fill="#C73A1B">&#8599;</tspan></text>
+</svg>

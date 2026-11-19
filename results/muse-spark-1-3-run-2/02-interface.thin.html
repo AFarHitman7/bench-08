@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1440, height=900">
+<title>Inkwell — Handwritten Notes into LaTeX</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1440px;height:900px;overflow:hidden;background:#0E0D0B;color:#1A1815;font-family:Georgia,"Times New Roman",serif}
+body{display:flex;flex-direction:column;background:#F6F1E7}
+.topbar{height:72px;display:flex;align-items:center;justify-content:space-between;padding:0 56px;border-bottom:1px solid rgba(26,24,21,.12);background:#F6F1E7;flex-shrink:0}
+.brand{display:flex;align-items:center;gap:12px}
+.mark{width:36px;height:36px;border-radius:10px;background:#1A1815;color:#F6F1E7;display:flex;align-items:center;justify-content:center;font-size:22px;font-style:italic}
+.brand b{font-size:22px;letter-spacing:-.02em;font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Arial}
+.brand span{font-family:ui-sans-serif,system-ui,Arial;font-size:12px;letter-spacing:.14em;text-transform:uppercase;opacity:.55;margin-left:2px;margin-top:4px}
+.nav{display:flex;gap:32px;font-family:ui-sans-serif,system-ui,Arial;font-size:14.5px;color:#4A453D}
+.nav a{text-decoration:none;color:inherit}
+.cta-row{display:flex;gap:12px;align-items:center;font-family:ui-sans-serif,system-ui,Arial}
+.ghost{font-size:14px;text-decoration:none;color:#1A1815;font-weight:600}
+.btn{background:#1A1815;color:#FFFDF6;border:0;border-radius:999px;padding:12px 22px;font-size:14.5px;font-weight:700;cursor:pointer;font-family:ui-sans-serif,system-ui,Arial}
+.hero{flex:1;display:grid;grid-template-columns:600px 1fr;gap:40px;padding:44px 56px 28px;align-items:center}
+.eyebrow{display:inline-flex;align-items:center;gap:10px;font-family:ui-sans-serif,system-ui,Arial;font-size:12.5px;letter-spacing:.12em;text-transform:uppercase;background:#fff;border:1px solid rgba(0,0,0,.12);border-radius:999px;padding:8px 14px;color:#5B5547}
+.dot{width:8px;height:8px;border-radius:50%;background:#2E7D4F}
+h1{font-size:68px;line-height:.95;letter-spacing:-.04em;margin:20px 0 18px;font-weight:400}
+h1 i{font-style:italic;font-weight:400}
+.sub{font-family:ui-sans-serif,system-ui,Arial;font-size:18px;line-height:1.55;color:#5B5547;max-width:480px}
+.actions{display:flex;gap:14px;margin-top:26px;align-items:center;font-family:ui-sans-serif,system-ui,Arial}
+.btn-big{background:#1A1815;color:#FFFDF6;border-radius:14px;padding:16px 24px;font-size:16px;font-weight:700;border:0;display:flex;gap:10px;align-items:center}
+.btn-light{background:#fff;border:1px solid rgba(0,0,0,.14);border-radius:14px;padding:16px 22px;font-size:15px;font-weight:600}
+.meta{display:flex;gap:22px;margin-top:22px;font-family:ui-sans-serif,system-ui,Arial;font-size:13.5px;color:#6B6456}
+.meta strong{color:#1A1815;display:block;font-size:15px}
+.canvas{position:relative;height:560px;background:#FFFEFA;border:1px solid rgba(0,0,0,.12);border-radius:24px;box-shadow:0 30px 80px rgba(26,24,21,.16);overflow:hidden;display:grid;grid-template-columns:1fr 1fr}
+.paper{padding:28px;background:repeating-linear-gradient(180deg,transparent 0 31px,rgba(46,125,79,.14) 31px 32px),#FFFEFA}
+.paper h4,.out h4{font-family:ui-sans-serif,system-ui,Arial;font-size:11px;letter-spacing:.14em;text-transform:uppercase;opacity:.55;margin-bottom:14px}
+.hand{font-family:"Segoe Script","Bradley Hand",cursive;font-size:26px;line-height:1.35;color:#1E3A8A;transform:rotate(-1.5deg)}
+.hand small{display:block;font-size:18px;color:#6B7280}
+.formula-box{margin-top:16px;border:1.5px dashed #1E3A8A;border-radius:12px;padding:12px 14px;background:rgba(30,58,138,.05)}
+.out{padding:28px;background:#14120F;color:#F6F1E7}
+.out pre{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13.2px;line-height:1.6;background:#1F1C17;border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:16px;color:#E7D9B8;white-space:pre-wrap}
+.rendered{margin-top:14px;background:#FFFDF6;color:#1A1815;border-radius:12px;padding:16px 18px;font-size:22px;text-align:center}
+.badge{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);background:#1A1815;color:#fff;font-family:ui-sans-serif,system-ui,Arial;font-size:13px;font-weight:800;padding:10px 16px;border-radius:999px;border:4px solid #F6F1E7;box-shadow:0 10px 30px rgba(0,0,0,.3);display:flex;gap:8px;align-items:center;white-space:nowrap}
+.values{height:210px;margin:0 56px 28px;background:#1A1815;border-radius:20px;display:grid;grid-template-columns:1fr 1fr 1fr;color:#F6F1E7;overflow:hidden;flex-shrink:0}
+.v{padding:28px 32px;border-right:1px solid rgba(255,255,255,.12);display:flex;flex-direction:column;justify-content:center;gap:8px}
+.v:last-child{border:0}
+.v .n{font-family:ui-sans-serif,system-ui,Arial;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#C9BFA9}
+.v h3{font-size:24px;letter-spacing:-.02em;font-weight:400}
+.v p{font-family:ui-sans-serif,system-ui,Arial;font-size:14.5px;line-height:1.5;color:#B9B0A0}
+.v .icon{width:34px;height:34px;border-radius:10px;background:rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;font-size:18px;margin-bottom:4px}
+</style>
+</head>
+<body>
+<div class="topbar">
+<div class="brand"><div class="mark">✒</div><b>Inkwell</b><span>for research</span></div>
+<div class="nav"><a href="#">Product</a><a href="#">Accuracy</a><a href="#">Templates</a><a href="#">Pricing</a></div>
+<div class="cta-row"><a class="ghost" href="#">Sign in</a><button class="btn">Get Inkwell free →</button></div>
+</div>
+<div class="hero">
+<div>
+<div class="eyebrow"><span class="dot"></span> New — Mathpix-grade engine v3.2</div>
+<h1>Handwritten notes <i>into</i> LaTeX.</h1>
+<p class="sub">Snap a photo of lecture notes, marginalia, and derivations. Inkwell transcribes them into clean, compilable LaTeX in seconds — symbols, matrices, and all.</p>
+<div class="actions"><button class="btn-big">Convert my notes <span>→</span></button><button class="btn-light">▶ See 42s demo</button></div>
+<div class="meta"><div><strong>98.7% symbol accuracy</strong>on 2.1M pages tested</div><div><strong>Overleaf + Typst</strong>one-click export</div><div><strong>★★★★★ 4.9</strong>from 12k researchers</div></div>
+</div>
+<div class="canvas">
+<div class="paper"><h4>✎ notebook_04.jpg</h4><div class="hand">f(x) = ∫<small>Stokes' thm! ∮∂M ω = ∫M dω Σi=1n xi2 → ?</small></div><div class="formula-box"><div style="font-family:ui-sans-serif,system-ui,Arial;font-size:12px;color:#1E3A8A;font-weight:700">⧉ detected: 3 equations + 1 diagram</div><div style="font-family:cursive;font-size:20px;color:#1E3A8A;margin-top:6px">A⁻¹ = adj(A)/det(A)</div></div></div>
+<div class="out"><h4 style="color:#C9BFA9">⌁ output.tex — compilable</h4><pre>\oint_{\partial M} \omega = \int_M d\omega \\
+\sum_{i=1}^{n} x_i^2 \quad
+A^{-1} = \frac{\mathrm{adj}(A)}{\det(A)}</pre><div class="rendered">∮M ω = ∫M dω · A⁻¹ = adj(A)/det(A)</div><div style="font-family:ui-sans-serif,system-ui,Arial;font-size:12.5px;color:#8E8675;margin-top:10px">✓ Compiled with pdfLaTeX · 0 errors · 0.8s</div></div>
+<div class="badge">✦ Converting… 1.2s</div>
+</div>
+</div>
+<div class="values">
+<div class="v"><div class="icon">◈</div><div class="n">01 — Preserve meaning</div><h3><b>Math</b> stays math</h3><p>Fractions, matrices, commutative diagrams and chemical structures keep their semantics, not just pixels.</p></div>
+<div class="v"><div class="icon">⬣</div><div class="n">02 — Edit anywhere</div><h3>Clean diff-ready code</h3><p>Human-readable LaTeX with packages auto-included. Push straight to Overleaf, GitHub, or arXiv.</p></div>
+<div class="v"><div class="icon">◎</div><div class="n">03 — Your hand, learned</div><h3>Adapts to your script</h3><p>Inkwell learns your symbols in ~20 pages and gets 31% more accurate the longer you use it.</p></div>
+</div>
+</body>
+</html>

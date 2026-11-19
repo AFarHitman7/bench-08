@@ -1,0 +1,322 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bench 08 — Six models, eight runs, eight prompts</title>
+<meta name="description" content="A small creative benchmark across six model families and eight runs: poster, interface, critique, motion, explanation, fiction, parser and code review.">
+<script>
+  (function () {
+    var saved = null;
+    try { saved = localStorage.getItem('bench-theme'); } catch (e) {}
+    var params = new URLSearchParams(location.search);
+    var q = params.get('theme');
+    if (q === 'dark' || q === 'light') document.documentElement.dataset.theme = q;
+    else if (saved === 'dark' || saved === 'light') document.documentElement.dataset.theme = saved;
+    ['task', 'model', 'variant'].forEach(function (key) {
+      var value = params.get(key);
+      if (value) document.documentElement.setAttribute('data-filter-' + key, value);
+    });
+  })();
+</script>
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body data-page="index.html">
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="nav">
+  <div class="nav-inner">
+    <a class="brand" href="index.html" aria-label="Bench 08 home">
+      <span class="brand-mark">B08</span>
+      <span class="brand-name">Bench <em>08</em></span>
+    </a>
+    <nav class="nav-links" aria-label="Main">
+      <a href="index.html" class="active" aria-current="page">Overview</a><a href="results.html">Results</a><a href="compare.html">Compare</a><a href="method.html">Method</a>
+    </nav>
+    <button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch colour theme">
+      <span class="theme-glyph" aria-hidden="true"></span>
+      <span class="theme-word">Theme</span>
+    </button>
+  </div>
+</header>
+<main id="main">
+
+<section class="hero">
+  <div class="hero-grid">
+    <div class="hero-copy">
+      <p class="kicker">A creative benchmark in eight prompts</p>
+      <h1>Six models.<br><em>Eight</em> runs.<br>Eight prompts.</h1>
+      <p class="lede">A poster, an interface, a critique, a title sequence, an explainer, a story, a parser and a code review. Here is what came back.</p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="results.html">See the work</a>
+        <a class="btn btn-ghost" href="compare.html">Compare two runs</a>
+      </div>
+    </div>
+    <aside class="hero-sheet" aria-label="Benchmark at a glance">
+      <div class="sheet-row"><span class="sheet-num">06</span><span>models</span></div>
+      <div class="sheet-row"><span class="sheet-num">08</span><span>runs</span></div>
+      <div class="sheet-row"><span class="sheet-num">08</span><span>tasks</span></div>
+      <div class="sheet-row"><span class="sheet-num">16</span><span>prompts</span></div>
+      <div class="sheet-row"><span class="sheet-num">128</span><span>artifacts</span></div>
+      <p class="sheet-foot">Thin and thick variants for every task. Creative work is shown without a score.</p>
+    </aside>
+  </div>
+</section>
+
+<section class="section findings-section">
+  <div class="section-head">
+    <span class="section-num">01</span>
+    <div>
+      <h2>What the benchmark found</h2>
+      <p>Three things matter more than a ranking.</p>
+    </div>
+  </div>
+  <div class="findings">
+    <article class="finding-item">
+      <span class="finding-kicker">Technical</span>
+      <h3>Code review separated the field.</h3>
+      <p>Most runs found the two planted defects in the limiter. DeepSeek’s thick review missed the bigger one: <code>prune</code> compares an object to a number, so it never runs. It caught the <code>reset</code> bug, but not the type mismatch.</p>
+      <a class="text-link" href="compare.html?task=08&amp;variant=thick&amp;a=deepseek&amp;b=glm">See the two reviews <span aria-hidden="true">→</span></a>
+    </article>
+    <article class="finding-item">
+      <span class="finding-kicker">Fidelity</span>
+      <h3>Two runs are not directly comparable.</h3>
+      <p>Muse Spark’s saved files were rewritten, not copied: four artifacts in run 1 and seven in run 2. Treat those runs as process demos, not as the model’s one-shot output.</p>
+      <a class="text-link" href="compare.html?task=02&amp;variant=thin&amp;a=muse1&amp;b=hy4">See a trimmed artifact beside a clean one <span aria-hidden="true">→</span></a>
+    </article>
+    <article class="finding-item">
+      <span class="finding-kicker">Process</span>
+      <h3>The cleanest runs were the quietest.</h3>
+      <p>HY4 Flash and Claude Haiku 5.5 (run 2) used no subagent tools and saved every file exactly. DeepSeek’s subagents made 363 tool calls, browser screenshots included. GPT’s loaded 29 skills.</p>
+      <a class="text-link" href="results.html?model=hy4">Browse the clean run <span aria-hidden="true">→</span></a>
+    </article>
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-head">
+    <span class="section-num">02</span>
+    <div>
+      <h2>The runs</h2>
+      <p>Eight runs across six model families. The small line under each name is the run caveat.</p>
+    </div>
+  </div>
+  <div class="model-grid">
+    <article class="model-card" data-health="caveat">
+  <div class="model-top">
+    <span class="run-tag">Run 1</span>
+    <span class="health caveat"><span class="dot"></span>Tool-assisted</span>
+  </div>
+  <h3 class="model-name">DeepSeek 4.1 Flash</h3>
+  <p class="model-caveat">Subagents used a browser to refine their work.</p>
+  <div class="model-stats">
+    <span><b>363</b> subagent tool calls</span>
+    <span><b>16/16 saved</b></span>
+  </div>
+  <a class="text-link" href="results.html?model=deepseek">View results <span aria-hidden="true">→</span></a>
+</article><article class="model-card" data-health="caveat">
+  <div class="model-top">
+    <span class="run-tag">Run 1</span>
+    <span class="health caveat"><span class="dot"></span>One repair</span>
+  </div>
+  <h3 class="model-name">GLM 5.3</h3>
+  <p class="model-caveat">One malformed CSS line was repaired after saving.</p>
+  <div class="model-stats">
+    <span><b>3</b> subagent tool calls</span>
+    <span><b>16/16</b></span>
+  </div>
+  <a class="text-link" href="results.html?model=glm">View results <span aria-hidden="true">→</span></a>
+</article><article class="model-card" data-health="caveat">
+  <div class="model-top">
+    <span class="run-tag">Run 1</span>
+    <span class="health caveat"><span class="dot"></span>Skill-assisted</span>
+  </div>
+  <h3 class="model-name">GPT 6 Luna</h3>
+  <p class="model-caveat">Subagents loaded skills; two files were edited after saving.</p>
+  <div class="model-stats">
+    <span><b>30</b> subagent tool calls</span>
+    <span><b>14/16 exact</b></span>
+  </div>
+  <a class="text-link" href="results.html?model=gpt">View results <span aria-hidden="true">→</span></a>
+</article><article class="model-card" data-health="caveat">
+  <div class="model-top">
+    <span class="run-tag">Run 1</span>
+    <span class="health caveat"><span class="dot"></span>One unfenced reply</span>
+  </div>
+  <h3 class="model-name">Claude Haiku 5.5</h3>
+  <p class="model-caveat">One review arrived without a fenced block.</p>
+  <div class="model-stats">
+    <span><b>0</b> subagent tool calls</span>
+    <span><b>16/16</b></span>
+  </div>
+  <a class="text-link" href="results.html?model=haiku1">View results <span aria-hidden="true">→</span></a>
+</article><article class="model-card" data-health="clean">
+  <div class="model-top">
+    <span class="run-tag">Run 2</span>
+    <span class="health clean"><span class="dot"></span>Clean run</span>
+  </div>
+  <h3 class="model-name">Claude Haiku 5.5</h3>
+  <p class="model-caveat">No subagent tools; one identical retry.</p>
+  <div class="model-stats">
+    <span><b>0</b> subagent tool calls</span>
+    <span><b>16/16 exact</b></span>
+  </div>
+  <a class="text-link" href="results.html?model=haiku2">View results <span aria-hidden="true">→</span></a>
+</article><article class="model-card" data-health="clean">
+  <div class="model-top">
+    <span class="run-tag">Run 1</span>
+    <span class="health clean"><span class="dot"></span>Clean run</span>
+  </div>
+  <h3 class="model-name">HY4 Flash</h3>
+  <p class="model-caveat">No subagent tools; all 16 files byte-exact.</p>
+  <div class="model-stats">
+    <span><b>0</b> subagent tool calls</span>
+    <span><b>16/16 exact</b></span>
+  </div>
+  <a class="text-link" href="results.html?model=hy4">View results <span aria-hidden="true">→</span></a>
+</article><article class="model-card" data-health="broken">
+  <div class="model-top">
+    <span class="run-tag">Run 1</span>
+    <span class="health broken"><span class="dot"></span>Not comparable</span>
+  </div>
+  <h3 class="model-name">Muse Spark 1.3</h3>
+  <p class="model-caveat">Four visual files were saved trimmed.</p>
+  <div class="model-stats">
+    <span><b>5</b> subagent tool calls</span>
+    <span><b>12/16 exact</b></span>
+  </div>
+  <a class="text-link" href="results.html?model=muse1">View results <span aria-hidden="true">→</span></a>
+</article><article class="model-card" data-health="broken">
+  <div class="model-top">
+    <span class="run-tag">Run 2</span>
+    <span class="health broken"><span class="dot"></span>Not comparable</span>
+  </div>
+  <h3 class="model-name">Muse Spark 1.3</h3>
+  <p class="model-caveat">Seven files saved trimmed; three prompts re-run after wording errors.</p>
+  <div class="model-stats">
+    <span><b>1</b> subagent tool calls</span>
+    <span><b>9/16 near-exact</b></span>
+  </div>
+  <a class="text-link" href="results.html?model=muse2">View results <span aria-hidden="true">→</span></a>
+</article>
+  </div>
+</section>
+
+<section class="section featured-section">
+  <div class="section-head">
+    <span class="section-num">03</span>
+    <div>
+      <h2>A first look</h2>
+      <p>Three clean artifacts, chosen because they show the range of the prompts.</p>
+    </div>
+  </div>
+  <div class="feature-layout">
+    <article class="feature-card">
+  <div class="feature-media"><div class="poster-frame live"><img src="artifacts/hy4-flash-run-1/01-poster.thick.svg" alt="Poster by HY4 Flash" loading="eager"></div></div>
+  <div class="feature-cap">
+    <div><span class="cap-num">01</span> <b>Poster</b></div>
+    <div class="cap-model">HY4 Flash <span>Run 1</span></div>
+  </div>
+  <p class="feature-note">A poster with two inks and a hard timetable geometry.</p>
+</article>
+    <div class="feature-stack">
+      <article class="feature-card">
+  <div class="feature-media"><div class="stage live" data-w="1440" data-h="900"><iframe src="artifacts/haiku-5-5-run-2/02-interface.thick.html" title="Claude Haiku 5.5 — Interface (thick)" loading="lazy" sandbox="allow-scripts" scrolling="no"></iframe></div></div>
+  <div class="feature-cap">
+    <div><span class="cap-num">02</span> <b>Interface</b></div>
+    <div class="cap-model">Claude Haiku 5.5 <span>Run 2</span></div>
+  </div>
+  <p class="feature-note">A handwriting-to-LaTeX hero that shows the product instead of describing it.</p>
+</article>
+      <article class="feature-card">
+  <div class="feature-media"><div class="stage live" data-w="1280" data-h="720"><iframe src="artifacts/hy4-flash-run-1/04-motion.thick.html" title="HY4 Flash — Motion (thick)" loading="lazy" sandbox="allow-scripts" scrolling="no"></iframe></div></div>
+  <div class="feature-cap">
+    <div><span class="cap-num">04</span> <b>Motion</b></div>
+    <div class="cap-model">HY4 Flash <span>Run 1</span></div>
+  </div>
+  <p class="feature-note">An eight-second loop with a restrained title treatment.</p>
+</article>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-head">
+    <span class="section-num">04</span>
+    <div>
+      <h2>The eight tasks</h2>
+      <p>Every task has a thin brief and a thick brief. Open a task to see all sixteen results.</p>
+    </div>
+  </div>
+  <div class="task-list">
+    <a class="task-row" href="results.html?task=01">
+  <span class="task-num">01</span>
+  <span class="task-main"><b>Poster</b><span>A late-night ferry crossing, built from type and hard geometry.</span></span>
+  <span class="task-format">SVG · 1080 × 1350</span>
+  <span class="task-arrow" aria-hidden="true">→</span>
+</a><a class="task-row" href="results.html?task=02">
+  <span class="task-num">02</span>
+  <span class="task-main"><b>Interface</b><span>A hero and value section for a handwriting-to-LaTeX tool.</span></span>
+  <span class="task-format">HTML · 1440 × 900</span>
+  <span class="task-arrow" aria-hidden="true">→</span>
+</a><a class="task-row" href="results.html?task=03">
+  <span class="task-num">03</span>
+  <span class="task-main"><b>Critique</b><span>Diagnose and repair a generic ferry landing page.</span></span>
+  <span class="task-format">HTML · 1440 × 900</span>
+  <span class="task-arrow" aria-hidden="true">→</span>
+</a><a class="task-row" href="results.html?task=04">
+  <span class="task-num">04</span>
+  <span class="task-main"><b>Motion</b><span>An eight-second looping title card for the word DRIFT.</span></span>
+  <span class="task-format">HTML · 1280 × 720</span>
+  <span class="task-arrow" aria-hidden="true">→</span>
+</a><a class="task-row" href="results.html?task=05">
+  <span class="task-num">05</span>
+  <span class="task-main"><b>Explanation</b><span>Explain DNS to someone who has never thought about it.</span></span>
+  <span class="task-format">Markdown · ≤ 150 words</span>
+  <span class="task-arrow" aria-hidden="true">→</span>
+</a><a class="task-row" href="results.html?task=06">
+  <span class="task-num">06</span>
+  <span class="task-main"><b>Fiction</b><span>A 100-word story containing a clock that is wrong.</span></span>
+  <span class="task-format">Markdown · 100 words</span>
+  <span class="task-arrow" aria-hidden="true">→</span>
+</a><a class="task-row" href="results.html?task=07">
+  <span class="task-num">07</span>
+  <span class="task-main"><b>Build</b><span>Write a duration parser, with tests, in one file.</span></span>
+  <span class="task-format">MJS · one file</span>
+  <span class="task-arrow" aria-hidden="true">→</span>
+</a><a class="task-row" href="results.html?task=08">
+  <span class="task-num">08</span>
+  <span class="task-main"><b>Code review</b><span>Review a rate limiter. Comments only; do not rewrite it.</span></span>
+  <span class="task-format">Markdown · comments only</span>
+  <span class="task-arrow" aria-hidden="true">→</span>
+</a>
+  </div>
+</section>
+
+<section class="closing">
+  <div>
+    <p class="kicker">How to read this</p>
+    <h2>Creative work is presented. Technical work gets a note.</h2>
+    <p>There is no invented score for a poster, an interface or a story. The parser and code-review tasks carry a short editorial note about what worked, what broke, or what missed the brief.</p>
+    <a class="btn btn-primary" href="method.html">Read the method and caveats</a>
+  </div>
+</section>
+
+</main>
+<footer class="footer">
+  <div class="footer-inner">
+    <div>
+      <p class="footer-mark">Bench <em>08</em></p>
+      <p class="footer-note">A small, open-ended benchmark. Creative work is presented, not scored. Technical work gets a note.</p>
+    </div>
+    <div class="footer-links">
+      <a href="results.html">Results</a>
+      <a href="compare.html">Compare</a>
+      <a href="method.html">Method &amp; caveats</a>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/app.js"></script>
+</body>
+</html>

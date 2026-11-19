@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1280, height=720">
+<title>DRIFT — Title Card</title>
+<style>
+  :root{
+    --ink:#0B131A;
+    --fog:#E8E6DC;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{width:1280px;height:720px;background:var(--ink);overflow:hidden}
+  body{
+    font-family:Georgia,'Times New Roman',serif;
+    color:var(--fog);
+    -webkit-font-smoothing:antialiased;
+  }
+  .stage{
+    width:1280px;height:720px;position:relative;overflow:hidden;
+    display:flex;align-items:center;justify-content:center;
+    background:var(--ink);
+  }
+  .frame{
+    position:absolute;inset:44px;
+    border:1px solid var(--fog);
+    opacity:.14;
+  }
+  .center{
+    text-align:center;
+    will-change:transform,opacity;
+  }
+  .kicker{
+    font-size:20px;letter-spacing:.52em;text-indent:.52em;
+    font-weight:400;opacity:.82;
+  }
+  .title{
+    font-size:168px;line-height:1;
+    letter-spacing:.16em;text-indent:.16em;
+    font-weight:400;
+    margin:18px 0 8px 0;
+  }
+  .horizon{
+    width:560px;height:1px;background:var(--fog);
+    margin:26px auto 22px auto;
+    transform-origin:left center;
+    will-change:transform,opacity;
+  }
+  .sub{
+    font-size:19px;letter-spacing:.34em;text-indent:.34em;font-style:italic;
+  }
+  .rule-top,.rule-bot{position:absolute;left:50%;width:1px;height:26px;background:var(--fog);}
+  .rule-top{top:44px;transform:translateX(-50%);}
+  .rule-bot{bottom:44px;transform:translateX(-50%);}
+</style>
+</head>
+<body>
+<div class="stage" id="stage">
+  <div class="frame" id="frame"></div>
+  <div class="rule-top" id="rt"></div>
+  <div class="rule-bot" id="rb"></div>
+  <div class="center" id="word">
+    <div class="kicker">A FERRY CROSSING AT NIGHT</div>
+    <div class="title">DRIFT</div>
+    <div class="horizon" id="wake"></div>
+    <div class="sub">a short film</div>
+  </div>
+</div>
+<script>
+(function(){
+  var DUR = 8;
+  var word = document.getElementById('word');
+  var wake = document.getElementById('wake');
+  var frame = document.getElementById('frame');
+  var rt = document.getElementById('rt');
+  var rb = document.getElementById('rb');
+
+  function clamp01(x){ return x<0?0:x>1?1:x; }
+  function easeInOut(p){ p=clamp01(p); return 0.5-0.5*Math.cos(Math.PI*p); }
+  function easeOut(p){ p=clamp01(p); return 1-Math.pow(1-p,3); }
+
+  function opacityAt(t){
+    if(t<0) t=0; if(t>=DUR) t=0;
+    if(t<1.2) return easeOut(t/1.2);
+    if(t<6.2) return 1;
+    if(t<7.8) return 1-easeInOut((t-6.2)/1.6);
+    return 0;
+  }
+  function driftAt(t){
+    if(t<3.5) return 0;
+    if(t<6.0) return easeInOut((t-3.5)/2.5);
+    if(t<DUR) return 1-easeInOut((t-6.0)/2.0);
+    return 0;
+  }
+
+  function render(t){
+    t = ((t % DUR) + DUR) % DUR;
+    // snap exact seam
+    if(t > 7.999) t = 0;
+    var o = opacityAt(t);
+    var d = driftAt(t);
+    var x = d * 56;
+    var y = d * 10;
+    word.style.opacity = o.toFixed(4);
+    word.style.transform = 'translate('+x.toFixed(3)+'px,'+y.toFixed(3)+'px)';
+    // wake: grows behind the drift (to the left), then retracts
+    // at rest (d=0) it is a short centred horizon mark; while drifting it stretches left
+    var wScale = 0.22 + 0.78*d;
+    var wOp = o * (0.55 + 0.25*d);
+    wake.style.transform = 'scaleX('+wScale.toFixed(4)+') translateX('+(-90*d).toFixed(2)+'px)';
+    wake.style.opacity = wOp.toFixed(4);
+    frame.style.opacity = (o*0.14+0.02).toFixed(4);
+    rt.style.opacity = rb.style.opacity = o.toFixed(4);
+    current = t;
+  }
+
+  var current = 0;
+  var playing = false;
+  var raf = 0;
+  var last = 0;
+
+  function loop(ts){
+    if(!playing) return;
+    if(!last) last = ts;
+    var dt = (ts-last)/1000;
+    last = ts;
+    current = (current + dt) % DUR;
+    render(current);
+    raf = requestAnimationFrame(loop);
+  }
+
+  window.__anim = {
+    duration: DUR,
+    seek: function(t){ cancelAnimationFrame(raf); last=0; if(playing){playing=false;} render(Number(t)); },
+    play: function(){
+      if(playing) return;
+      playing = true; last = 0;
+      raf = requestAnimationFrame(loop);
+    },
+    pause: function(){ playing = false; cancelAnimationFrame(raf); last = 0; }
+  };
+
+  render(0);
+  window.__anim.play();
+})();
+</script>
+</body>
+</html>

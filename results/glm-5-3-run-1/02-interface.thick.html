@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Inkwell — photograph a page, get the LaTeX</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{height:100%;overflow:hidden}
+  body{background:#ECE5D6;font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;color:#28231A;-webkit-font-smoothing:antialiased}
+  .page{width:1440px;height:900px;margin:0 auto;background:#ECE5D6;display:flex;flex-direction:column}
+
+  /* ---------- header ---------- */
+  header.top{height:56px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 64px;border-bottom:1px solid #D8CDB4}
+  .brand{display:flex;align-items:center;gap:10px}
+  .brand svg{display:block}
+  .brand .wm{font-family:Georgia,serif;font-size:20px;letter-spacing:.02em}
+  nav.topnav{display:flex;align-items:center;gap:16px;font-size:13px;color:#5F5748}
+  nav.topnav .dot{color:#B4A88C}
+  nav.topnav .ver{font-size:12px;color:#95876C}
+
+  /* ---------- hero ---------- */
+  section.hero{height:563px;flex:none;display:grid;grid-template-columns:470px 1fr;gap:44px;padding:0 64px;align-items:center}
+  .kicker{font-size:11.5px;font-weight:600;letter-spacing:.17em;color:#8F7F60}
+  h1{font-family:Georgia,serif;font-size:51px;line-height:1.13;font-weight:400;margin-top:14px;color:#28231A}
+  h1 em{font-style:italic}
+  .lede{margin-top:18px;font-size:16px;line-height:1.55;color:#5F5748;max-width:432px}
+  .ctas{margin-top:26px;display:flex;align-items:center;gap:14px}
+  .btn{font-family:inherit;font-size:15px;border:none;cursor:pointer;border-radius:2px;padding:13px 22px;display:inline-flex;align-items:center;gap:10px}
+  .btn-pri{background:#28231A;color:#F2EBD9}
+  .btn-pri:hover{background:#3A3427}
+  .btn-sec{background:transparent;color:#28231A;border:1px solid rgba(40,35,26,.45);padding:12px 21px}
+  .btn-sec:hover{background:#E2DAC5}
+  .point{margin-top:20px;display:flex;align-items:center;gap:9px;font-size:12.5px;font-style:italic;color:#95876C}
+
+  /* ---------- specimen ---------- */
+  .spec{position:relative;display:grid;grid-template-columns:350px 434px;column-gap:14px;width:798px}
+  .photo-wrap{position:relative;width:350px;height:400px}
+  .mark{position:absolute;width:18px;height:18px;border:0 solid #28231A}
+  .mark.tl{top:-7px;left:-7px;border-top-width:2px;border-left-width:2px}
+  .mark.tr{top:-7px;right:-7px;border-top-width:2px;border-right-width:2px}
+  .mark.bl{bottom:-7px;left:-7px;border-bottom-width:2px;border-left-width:2px}
+  .mark.br{bottom:-7px;right:-7px;border-bottom-width:2px;border-right-width:2px}
+  .photo-pane{width:350px;height:400px;transform:rotate(-1.1deg);background:#FBF7EC;border:1px solid #E4DBC6;box-shadow:0 16px 30px rgba(40,35,26,.17),0 3px 9px rgba(40,35,26,.11)}
+  .photo-pane svg{display:block}
+  .pen{fill:none;stroke:#343941;stroke-width:2.1;stroke-linecap:round;stroke-linejoin:round}
+  .redpen{fill:none;stroke:#B0452E;stroke-width:2.1;stroke-linecap:round;stroke-linejoin:round}
+  .pane.out{height:400px;display:flex;flex-direction:column;background:#FDFBF4;border:1px solid #E4DBC6;box-shadow:0 14px 26px rgba(40,35,26,.13),0 3px 8px rgba(40,35,26,.09);padding:20px 26px 22px}
+  .out-util{display:flex;justify-content:space-between;align-items:center;padding-bottom:10px;border-bottom:1px solid #EAE2CC}
+  .ov-label{font-size:11.5px;letter-spacing:.04em;color:#95876C}
+  .ov-icons{display:flex;gap:11px}
+  .thm{margin-top:13px;font-family:"Times New Roman",Times,serif;font-size:13.5px;color:#28231A}
+  .thm b{font-weight:700}
+  .eqn{margin-top:9px;text-align:center;font-family:"Times New Roman",Times,serif;font-size:23px;color:#28231A}
+  .eqn i{font-style:italic}
+  .eqn sub{font-size:12px}
+  table.bt{margin-top:15px;width:100%;border-collapse:collapse;font-family:"Times New Roman",Times,serif;font-size:14px;color:#28231A}
+  .bt th{font-weight:400;text-align:center;padding:7px 4px;border-top:2px solid #28231A;border-bottom:1px solid #28231A}
+  .bt td{text-align:center;padding:7px 4px}
+  .bt tr:last-child td{border-bottom:2px solid #28231A}
+  .bt sub{font-size:9.5px}
+  .bt sup{font-size:9.5px}
+  .grow{flex:1}
+  .src{background:#262019;border-radius:3px;padding:10px 13px 11px;font-family:Consolas,Menlo,"Liberation Mono",monospace}
+  .src-h{display:flex;justify-content:space-between;font-size:10px;letter-spacing:.05em;color:#8A8170;margin-bottom:7px}
+  .ln{font-size:10.5px;line-height:1.5;color:#CDC4AE;white-space:nowrap}
+  .cm{color:#C98F5C}
+  .dm{color:#7A7160}
+  .badge{position:absolute;left:331px;top:174px;width:52px;height:52px;border-radius:50%;background:#FDFBF4;border:1.5px solid #28231A;display:flex;align-items:center;justify-content:center;box-shadow:0 5px 12px rgba(40,35,26,.2);z-index:3}
+  .badge svg{animation:nudge 2.6s ease-in-out infinite}
+  @keyframes nudge{0%,100%{transform:translateX(-1.5px)}50%{transform:translateX(2.5px)}}
+  @media (prefers-reduced-motion:reduce){.badge svg{animation:none}}
+  .cap{margin-top:12px;font-size:12px;color:#95876C}
+
+  /* ---------- value ledger ---------- */
+  section.value{flex:1;border-top:1px solid #D8CDB4;padding:0 64px}
+  .v-head{display:flex;justify-content:space-between;align-items:baseline;padding:16px 0 13px}
+  .v-head .t{font-size:12px;font-weight:600;letter-spacing:.16em;color:#8F7F60}
+  .v-head .n{font-size:12px;color:#A99C80}
+  .v-row{display:grid;grid-template-columns:320px 1fr 190px;align-items:center;height:63px}
+  .v-row + .v-row{border-top:1px solid #D8CDB4}
+  .v-ix{font-size:10.5px;letter-spacing:.14em;color:#A99C80}
+  .v-nm{font-size:16px;font-weight:600;margin-top:3px}
+  .v-ds{font-size:14.5px;line-height:1.5;color:#5F5748;max-width:640px}
+  .v-vi{justify-self:end}
+  .chip{display:inline-block;font-family:Consolas,Menlo,"Liberation Mono",monospace;font-size:11px;color:#28231A;background:#F6F0E1;border:1px solid #C9BEA2;border-radius:2px;padding:5px 10px}
+  .chip + .chip{margin-left:8px}
+
+  /* ---------- footer ---------- */
+  footer{height:44px;flex:none;border-top:1px solid #D8CDB4;display:flex;align-items:center;justify-content:space-between;padding:0 64px;font-size:12px;color:#95876C}
+</style>
+</head>
+<body>
+
+<!-- glyph library for the hand-drawn strokes -->
+<svg style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true">
+<defs>
+<g id="g-int"><path d="M7.5 -13.4C3.4 -13.1 1.8 -10.5 3.6 -6.8C5.8 -2.4 6 5 3.8 10.6C2.6 13.8 3.4 16.4 6.2 16.9"/></g>
+<g id="g-om"><path d="M2 -4C1.4 -9.4 4.6 -12.4 7 -12.4C9.4 -12.4 12.6 -9.4 12 -4C11.6 -1.6 9.6 0 7 0C4.4 0 2.4 -1.6 2 -4M2.4 -3.6L0.2 0.2M11.6 -3.6L13.8 0.2"/></g>
+<g id="g-nab"><path d="M2 -10.4C3.6 -6 5.6 -1.6 7 2.2C8.4 -1.6 10.4 -6 12 -10.4"/></g>
+<g id="g-u"><path d="M2 -8.4C1.6 -4.4 2.2 0 5.4 0C7.8 0 8.7 -2.8 9.2 -6.6"/></g>
+<g id="g-dot"><path d="M5 -4.5L5.1 -4.5"/></g>
+<g id="g-v"><path d="M2.4 -9C3 -5.6 4.6 -2.4 6.2 0.6C7.8 -2.6 9.2 -6 10 -9.6"/></g>
+<g id="g-d"><path d="M8.7 -11.8C8.2 -8.4 8 -5 8.1 -0.2M8.4 -0.8C6.2 0.8 3.4 -0.2 3.2 -3.2C3 -6 4.8 -8.2 7.3 -8C8.1 -7.9 8.6 -7.5 8.9 -6.8"/></g>
+<g id="g-x"><path d="M2.6 -9.4C4.8 -6.4 6.7 -3.2 8.6 1.4M9.6 -9.4C7.2 -5.8 4.6 -2.2 2.2 1.8"/></g>
+<g id="g-eq"><path d="M2.4 -6.4C4.4 -6.8 7 -6 10.4 -6.5M2.4 -2.4C4.4 -2.8 7 -2 10.4 -2.5"/></g>
+<g id="g-f"><path d="M9.2 -12C6.4 -11.8 5.4 -9.2 5.5 -5.8L4.9 0.6C4.7 2.8 3 3 2.4 1.6M3.4 -7.8C4.8 -8.6 6.8 -8.6 8.4 -7.8"/></g>
+<g id="g-h"><path d="M3 -11.8C3.2 -8.4 3.1 -4 2.9 0M3.1 -5.4C4 -8.2 6.8 -9.1 8.4 -7.4C9.9 -5.8 9.6 -2.4 8 -1C6.7 0 5 0 4.2 -0.8"/></g>
+<g id="g-bar"><path d="M4.4 -10.8L4.4 1M8 -10.8L8 1"/></g>
+<g id="g-minus"><path d="M2.4 -4.4C4.4 -4.7 7 -4.1 10.2 -4.5"/></g>
+<g id="g-one"><path d="M3.8 -10.8C4.6 -12 5.6 -12.4 6.8 -12.2C6.4 -8 6.2 -3.6 6.4 0.6"/></g>
+<g id="g-two"><path d="M2.6 -8.8C2.2 -11.2 5.2 -12.8 7.6 -11.8C9.8 -10.8 9.6 -8 7 -5.4C5.4 -3.6 4 -1.8 3.4 0.6L10.4 0.4"/></g>
+<g id="g-three"><path d="M2.6 -10.4C4.6 -12.4 8.6 -12.2 9.2 -9.8C9.6 -7.6 7 -6.2 5.6 -6.2C7.6 -6.2 10.4 -5 9.8 -2.2C9.2 0.6 5 1.8 2.4 -0.2"/></g>
+<g id="g-four"><path d="M8.8 -12C7.4 -8.4 5.2 -5.2 2.6 -2.8L11.2 -3M8.6 -11.8L8.2 0.6"/></g>
+<g id="g-five"><path d="M8.6 -12L3.6 -11.8L3.2 -6.6C5.8 -8 9.4 -7 9.6 -3.8C9.8 -0.4 6 1.4 3.2 -0.4"/></g>
+<g id="g-six"><path d="M7.8 -12.2C4.8 -8.6 2.6 -5.2 2.6 -2.8C2.6 0.2 5.4 1.6 7.4 0.4C9.4 -0.8 9.4 -4 7.4 -5C5.6 -5.9 3.8 -4.4 3.6 -2.4"/></g>
+<g id="g-seven"><path d="M2.6 -11.4L10.8 -11.6C8.4 -7.2 6.4 -3 5.8 1"/></g>
+<g id="g-eight"><path d="M6.1 -9.2C3.6 -9.2 3.4 -12.6 6 -12.6C8.6 -12.6 8.4 -9.2 6.1 -9.2C3.2 -8.8 2.9 0.8 6.1 0.8C9.3 0.8 9 -8.8 6.1 -9.2"/></g>
+<g id="g-nine"><path d="M3.4 -9C3.2 -11.6 6 -12.8 8 -11.6C9.8 -10.4 9.4 -7.6 7.4 -6.4C5.4 -5.2 3.6 -6.6 3.4 -9M8.2 -11.6C8.5 -7.2 8 -3 6.8 1.2"/></g>
+<g id="g-zero"><path d="M6.2 -11.6C2.8 -11.6 2.8 0 6.2 0C9.6 0 9.6 -11.6 6.2 -11.6"/></g>
+<g id="g-e"><path d="M9.7 -5.2L3 -5.4M9.8 -4.6C8.7 -8 4.4 -8.4 3.1 -5.7C1.9 -3.2 3.5 0.2 6.6 0.1C8.6 0 9.7 -1.6 9.9 -3"/></g>
+<g id="g-r"><path d="M2.6 0C2.5 -3.2 2.6 -6.6 2.8 -9.4M2.9 -6.6C4.4 -8.4 6.8 -8.4 8.4 -7.2"/></g>
+<g id="g-o"><path d="M6.2 -8.4C3.2 -8.4 3.2 0 6.2 0C9.2 0 9.2 -8.4 6.2 -8.4"/></g>
+<g id="g-s"><path d="M9.8 -7.6C8 -9.6 3.4 -9 3.3 -6C3.2 -3.4 9.9 -3.2 9.8 -0.8C9.7 1.6 4.6 1.9 2.6 -0.6"/></g>
+<g id="g-t"><path d="M4.6 -11.4C4.4 -8 4.6 -4 4.4 -0.2M1.8 -8.4C3.6 -9 5.8 -8.9 7.8 -8.1"/></g>
+<g id="g-a"><path d="M3.2 -4C2.9 -7.2 5.4 -8.8 7.6 -8.2C9.6 -7.6 10.2 -4.6 9.4 -2.4C8.6 -0.6 6.2 0.2 4.6 -0.8C3.6 -1.4 3.2 -2.6 3.2 -4M9.5 -9.6L9.6 -0.4"/></g>
+<g id="g-c"><path d="M10 -1.6C8.2 -3.6 4.2 -3.8 3 -6.4C1.9 -8.8 3.4 -12.2 6.6 -12.5C8.4 -12.7 9.6 -11.8 10.4 -10.6"/></g>
+<g id="g-k"><path d="M3.6 -12C3.4 -7.6 3.6 -3.4 3.4 1M9.8 -10.2C7.8 -7.6 5.6 -5.4 3.9 -4.2M5.2 -5C6.6 -3.8 8.2 -1.8 9.6 0.8"/></g>
+<g id="g-slash"><path d="M2.4 1.4L9.8 -12.4"/></g>
+<g id="g-qm"><path d="M3.2 -8.6C3.6 -11.6 8.2 -12.2 9.2 -9.6C10 -7.4 7.4 -6 6.6 -4.4L6.5 -2M6.5 1L6.6 1"/></g>
+<g id="g-per"><path d="M4.6 0.2L4.7 0.2"/></g>
+<g id="g-N"><path d="M3 0.6L3.2 -11.4L9.6 0.6L9.8 -11.6"/></g>
+</defs>
+</svg>
+
+<div class="page">
+
+  <header class="top">
+    <div class="brand">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#28231A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M10 2.2C13.4 6.2 14 11 10 16.6C6 11 6.6 6.2 10 2.2Z"/>
+        <path d="M10 7.4V12.2"/>
+        <circle cx="10" cy="12.2" r="0.9" fill="#28231A" stroke="none"/>
+        <path d="M6.6 17H13.4"/>
+      </svg>
+      <span class="wm">Inkwell</span>
+    </div>
+    <nav class="topnav">
+      <span>How it works</span><span class="dot">·</span><span>Pricing</span><span class="dot">·</span><span class="ver">0.9.2</span>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <div class="copy">
+      <div class="kicker">FOR PEOPLE WHO WRITE LATEX EVERY DAY</div>
+      <h1>Photograph a page.<br>Get the <em>LaTeX</em>.</h1>
+      <p class="lede">Point your camera at a handwritten page and Inkwell returns compilable LaTeX, rendered beside the original so you can check every symbol before it reaches your paper.</p>
+      <div class="ctas">
+        <button class="btn btn-pri" type="button">
+          <svg width="16" height="14" viewBox="0 0 16 14" fill="none" stroke="#F2EBD9" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="1.2" y="3.6" width="13.6" height="9.2" rx="2"/>
+            <path d="M5.2 3.6L6.6 1.6H9.4L10.8 3.6"/>
+            <circle cx="8" cy="8" r="2.6"/>
+          </svg>
+          Try a page free
+        </button>
+        <button class="btn btn-sec" type="button">See a real conversion
+          <svg width="18" height="10" viewBox="0 0 18 10" fill="none" stroke="#28231A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 5H15M10.5 1.5L15 5L10.5 8.5"/></svg>
+        </button>
+      </div>
+      <div class="point">
+        <svg width="18" height="10" viewBox="0 0 18 10" fill="none" stroke="#95876C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 5H15M10.5 1.5L15 5L10.5 8.5"/></svg>
+        A real page from a thesis chapter — converted as-is.
+      </div>
+    </div>
+
+    <div class="spec">
+      <div class="photo-wrap">
+        <span class="mark tl"></span><span class="mark tr"></span><span class="mark bl"></span><span class="mark br"></span>
+        <div class="photo-pane">
+          <svg width="350" height="400" viewBox="0 0 350 400" role="img" aria-label="Photograph of a handwritten page of mathematics">
+            <rect width="350" height="400" fill="#FBF7EC"/>
+            <!-- ruled paper -->
+            <path d="M22 76H328M22 114H328M22 152H328M22 190H328M22 228H328M22 266H328M22 304H328M22 342H328M22 380H328" fill="none" stroke="#D6D9C3" stroke-width="1"/>
+            <path d="M40 26V388" fill="none" stroke="#DDA98E" stroke-width="1.2"/>
+
+            <!-- corner note: date -->
+            <g class="pen" opacity="0.7">
+              <use href="#g-N" transform="translate(250,54) scale(0.9)"/>
+              <use href="#g-o" transform="translate(262,54) scale(0.9)"/>
+              <use href="#g-v" transform="translate(271,54) scale(0.9)"/>
+              <use href="#g-one" transform="translate(283,54) scale(0.9)"/>
+              <use href="#g-nine" transform="translate(291,54) scale(0.9)"/>
+            </g>
+
+            <!-- heading: 3.2 error est. -->
+            <g class="pen">
+              <use href="#g-three" transform="translate(62,54) scale(0.9)"/>
+              <use href="#g-per" transform="translate(72,54) scale(0.9)"/>
+              <use href="#g-two" transform="translate(75,54) scale(0.9)"/>
+              <use href="#g-e" transform="translate(86,54) scale(0.9)"/>
+              <use href="#g-r" transform="translate(97,54) scale(0.9)"/>
+              <use href="#g-r" transform="translate(105,54) scale(0.9)"/>
+              <use href="#g-o" transform="translate(113,54) scale(0.9)"/>
+              <use href="#g-r" transform="translate(123,54) scale(0.9)"/>
+              <use href="#g-e" transform="translate(134,54) scale(0.9)"/>
+              <use href="#g-s" transform="translate(146,54) scale(0.9)"/>
+              <use href="#g-t" transform="translate(156,54) scale(0.9)"/>
+              <use href="#g-per" transform="translate(164,54) scale(0.9)"/>
+            </g>
+
+            <!-- the equation: integral over Omega of grad u dot grad v dx = integral over Omega of f v dx -->
+            <g class="pen">
+              <use href="#g-int" transform="translate(62,128) scale(1.18)"/>
+              <use href="#g-om" transform="translate(75,132) scale(0.62)"/>
+              <use href="#g-nab" transform="translate(87,128) scale(1.18)"/>
+              <use href="#g-u" transform="translate(104,128) scale(1.18)"/>
+              <use href="#g-dot" transform="translate(120,128) scale(1.18)"/>
+              <use href="#g-nab" transform="translate(126,128) scale(1.18)"/>
+              <use href="#g-v" transform="translate(143,128) scale(1.18)"/>
+              <use href="#g-d" transform="translate(158,128) scale(1.18)"/>
+              <use href="#g-x" transform="translate(171,128) scale(1.18)"/>
+              <use href="#g-eq" transform="translate(190,128) scale(1.18)"/>
+              <use href="#g-int" transform="translate(210,128) scale(1.18)"/>
+              <use href="#g-om" transform="translate(223,132) scale(0.62)"/>
+              <use href="#g-f" transform="translate(235,128) scale(1.18)"/>
+              <use href="#g-v" transform="translate(250,128) scale(1.18)"/>
+              <use href="#g-d" transform="translate(265,128) scale(1.18)"/>
+              <use href="#g-x" transform="translate(278,128) scale(1.18)"/>
+            </g>
+
+            <!-- hand-drawn table -->
+            <g fill="none" stroke="#343941" stroke-linecap="round">
+              <path d="M62 184C140 182 250 186 326 184" stroke-width="1.6"/>
+              <path d="M62 218C150 220 240 216 326 218" stroke-width="1.6"/>
+              <path d="M62 247C150 245 250 249 326 247" stroke-width="1" opacity="0.5"/>
+              <path d="M62 273C150 275 250 271 326 273" stroke-width="1" opacity="0.5"/>
+              <path d="M62 300C140 298 250 302 326 300" stroke-width="1.6"/>
+              <path d="M170 184C168 220 172 260 170 300" stroke-width="1" opacity="0.7"/>
+              <path d="M262 184C260 220 264 260 262 300" stroke-width="1" opacity="0.7"/>
+            </g>
+            <g class="pen">
+              <!-- header row: h | ||u - u_h|| | rate -->
+              <use href="#g-h" transform="translate(108,202) scale(0.95)"/>
+              <use href="#g-bar" transform="translate(184,202) scale(0.95)"/>
+              <use href="#g-u" transform="translate(195,202) scale(0.95)"/>
+              <use href="#g-minus" transform="translate(208,202) scale(0.95)"/>
+              <use href="#g-u" transform="translate(219,202) scale(0.95)"/>
+              <use href="#g-h" transform="translate(232,206) scale(0.6)"/>
+              <use href="#g-bar" transform="translate(240,202) scale(0.95)"/>
+              <use href="#g-r" transform="translate(278,202) scale(0.95)"/>
+              <use href="#g-a" transform="translate(287,202) scale(0.95)"/>
+              <use href="#g-t" transform="translate(296,202) scale(0.95)"/>
+              <use href="#g-e" transform="translate(304,202) scale(0.95)"/>
+              <!-- row 1 -->
+              <use href="#g-one" transform="translate(96,240) scale(0.95)"/>
+              <use href="#g-slash" transform="translate(104,240) scale(0.95)"/>
+              <use href="#g-four" transform="translate(113,240) scale(0.95)"/>
+              <use href="#g-two" transform="translate(184,240) scale(0.95)"/>
+              <use href="#g-per" transform="translate(194,240) scale(0.95)"/>
+              <use href="#g-three" transform="translate(197,240) scale(0.95)"/>
+              <use href="#g-one" transform="translate(206,240) scale(0.95)"/>
+              <use href="#g-e" transform="translate(215,240) scale(0.95)"/>
+              <use href="#g-minus" transform="translate(226,240) scale(0.95)"/>
+              <use href="#g-two" transform="translate(236,240) scale(0.95)"/>
+              <use href="#g-two" transform="translate(282,240) scale(0.95)"/>
+              <use href="#g-per" transform="translate(292,240) scale(0.95)"/>
+              <use href="#g-zero" transform="translate(295,240) scale(0.95)"/>
+              <!-- row 2 -->
+              <use href="#g-one" transform="translate(96,266) scale(0.95)"/>
+              <use href="#g-slash" transform="translate(104,266) scale(0.95)"/>
+              <use href="#g-eight" transform="translate(113,266) scale(0.95)"/>
+              <use href="#g-five" transform="translate(184,266) scale(0.95)"/>
+              <use href="#g-per" transform="translate(194,266) scale(0.95)"/>
+              <use href="#g-seven" transform="translate(197,266) scale(0.95)"/>
+              <use href="#g-seven" transform="translate(206,266) scale(0.95)"/>
+              <use href="#g-e" transform="translate(216,266) scale(0.95)"/>
+              <use href="#g-minus" transform="translate(227,266) scale(0.95)"/>
+              <use href="#g-three" transform="translate(237,266) scale(0.95)"/>
+              <use href="#g-two" transform="translate(282,266) scale(0.95)"/>
+              <use href="#g-per" transform="translate(292,266) scale(0.95)"/>
+              <use href="#g-zero" transform="translate(295,266) scale(0.95)"/>
+              <!-- row 3 -->
+              <use href="#g-one" transform="translate(96,292) scale(0.95)"/>
+              <use href="#g-slash" transform="translate(104,292) scale(0.95)"/>
+              <use href="#g-one" transform="translate(113,292) scale(0.95)"/>
+              <use href="#g-six" transform="translate(121,292) scale(0.95)"/>
+              <use href="#g-one" transform="translate(184,292) scale(0.95)"/>
+              <use href="#g-per" transform="translate(194,292) scale(0.95)"/>
+              <use href="#g-four" transform="translate(197,292) scale(0.95)"/>
+              <use href="#g-four" transform="translate(207,292) scale(0.95)"/>
+              <use href="#g-e" transform="translate(217,292) scale(0.95)"/>
+              <use href="#g-minus" transform="translate(228,292) scale(0.95)"/>
+              <use href="#g-three" transform="translate(238,292) scale(0.95)"/>
+              <use href="#g-two" transform="translate(282,292) scale(0.95)"/>
+              <use href="#g-per" transform="translate(292,292) scale(0.95)"/>
+              <use href="#g-zero" transform="translate(295,292) scale(0.95)"/>
+            </g>
+
+            <!-- red-pen annotations -->
+            <g class="redpen">
+              <path d="M62 150C120 147 190 152 240 149C268 147 284 150 296 149" fill="none" stroke-width="2"/>
+              <use href="#g-c" transform="translate(62,344) scale(0.95)"/>
+              <use href="#g-h" transform="translate(73,344) scale(0.95)"/>
+              <use href="#g-e" transform="translate(84,344) scale(0.95)"/>
+              <use href="#g-k" transform="translate(95,344) scale(0.95)"/>
+              <use href="#g-h" transform="translate(110,344) scale(0.95)"/>
+              <use href="#g-eq" transform="translate(121,344) scale(0.95)"/>
+              <use href="#g-one" transform="translate(133,344) scale(0.95)"/>
+              <use href="#g-slash" transform="translate(141,344) scale(0.95)"/>
+              <use href="#g-three" transform="translate(149,344) scale(0.95)"/>
+              <use href="#g-two" transform="translate(158,344) scale(0.95)"/>
+              <use href="#g-qm" transform="translate(167,344) scale(0.95)"/>
+            </g>
+
+            <circle cx="308" cy="358" r="1.1" fill="#343941" opacity="0.25"/>
+          </svg>
+        </div>
+      </div>
+
+      <div class="pane out">
+        <div class="out-util">
+          <span class="ov-label">page-47 · preview</span>
+          <span class="ov-icons">
+            <svg width="13" height="13" viewBox="0 0 13 13"><circle cx="5.2" cy="5.2" r="3.7" fill="none" stroke="#8F836B" stroke-width="1.4"/><path d="M8 8L11.6 11.6" fill="none" stroke="#8F836B" stroke-width="1.4" stroke-linecap="round"/></svg>
+            <svg width="13" height="13" viewBox="0 0 13 13"><path d="M6.5 2V8.2M3.8 5.8L6.5 8.6L9.2 5.8M2.4 11.2H10.6" fill="none" stroke="#8F836B" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+        </div>
+        <div class="thm"><b>Theorem 3.2</b> <i>(Error estimate).</i></div>
+        <div class="eqn">∫<sub>Ω</sub>&thinsp;∇<i>u</i>&thinsp;·&thinsp;∇<i>v</i>&thinsp;<i>dx</i>&nbsp;=&nbsp;∫<sub>Ω</sub>&thinsp;<i>fv&thinsp;dx</i></div>
+        <table class="bt">
+          <tr><th><i>h</i></th><th><i>‖u − u<sub>h</sub>‖</i></th><th>rate</th></tr>
+          <tr><td>1/4</td><td>2.31 × 10<sup>−2</sup></td><td>2.0</td></tr>
+          <tr><td>1/8</td><td>5.77 × 10<sup>−3</sup></td><td>2.0</td></tr>
+          <tr><td>1/16</td><td>1.44 × 10<sup>−3</sup></td><td>2.0</td></tr>
+        </table>
+        <div class="grow"></div>
+        <div class="src">
+          <div class="src-h"><span>page-47.tex — excerpt</span><span>pdflatex · 0 errors</span></div>
+          <div class="ln"><span class="cm">\int</span><span class="dm">_{\Omega}</span><span class="cm">\nabla</span> u<span class="cm">\cdot</span><span class="cm">\nabla</span> v<span class="cm">\,</span>dx = <span class="cm">\int</span><span class="dm">_{\Omega}</span>fv<span class="cm">\,</span>dx</div>
+          <div class="ln"><span class="cm">\toprule</span> h &amp; <span class="cm">\lVert</span> u-u_h<span class="cm">\rVert</span> &amp; <span class="cm">\mathrm</span><span class="dm">{rate}</span><span class="cm">\\</span></div>
+          <div class="ln">1/8 &amp; 5.77<span class="dm">{</span><span class="cm">\times</span><span class="dm">}</span>10<span class="dm">^{-3}</span> &amp; 2.0<span class="cm">\\</span></div>
+          <div class="ln">1/16 &amp; 1.44<span class="dm">{</span><span class="cm">\times</span><span class="dm">}</span>10<span class="dm">^{-3}</span> &amp; 2.0<span class="cm">\\</span><span class="cm">\bottomrule</span></div>
+        </div>
+      </div>
+
+      <div class="badge" aria-label="converted">
+        <svg width="24" height="14" viewBox="0 0 24 14" fill="none" stroke="#28231A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 7H20M14.5 2.5L20 7L14.5 11.5"/></svg>
+      </div>
+
+      <div class="cap">handwritten — page 47 · photographed 14:32</div>
+      <div class="cap">typeset — 2 equations · 1 table · compiled in 0.9 s</div>
+    </div>
+  </section>
+
+  <section class="value">
+    <div class="v-head">
+      <span class="t">WHAT COMES BACK</span>
+      <span class="n">01 – 03</span>
+    </div>
+
+    <div class="v-row">
+      <div>
+        <div class="v-ix">01</div>
+        <div class="v-nm">Equations and tables</div>
+      </div>
+      <p class="v-ds">Display math, aligned environments and booktabs tables all come back as editable source — never a flattened picture.</p>
+      <div class="v-vi">
+        <svg width="176" height="32" viewBox="0 0 176 32">
+          <rect x="0.5" y="1" width="46" height="30" rx="2" fill="#F6F0E1" stroke="#CFC4A8"/>
+          <g fill="none" stroke="#4A443A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><use href="#g-int" transform="translate(19.5,21.5) scale(0.5)"/></g>
+          <path d="M56 16H68M63.5 11.5L68.5 16L63.5 20.5" fill="none" stroke="#95876C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <rect x="80" y="1" width="95" height="30" rx="2" fill="#FDFBF4" stroke="#CFC4A8"/>
+          <text x="90" y="24" font-family="Georgia,serif" font-style="italic" font-size="20" fill="#28231A">∫</text>
+          <path d="M114 9H168" stroke="#28231A" stroke-width="1.8"/>
+          <path d="M114 13.5H162" stroke="#28231A" stroke-width="0.9"/>
+          <path d="M114 18.5H168" stroke="#28231A" stroke-width="1.8"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="v-row">
+      <div>
+        <div class="v-ix">02</div>
+        <div class="v-nm">Revision history, per page</div>
+      </div>
+      <p class="v-ds">Each page keeps every conversion ever made of it. Open an earlier version, or diff two of them side by side.</p>
+      <div class="v-vi">
+        <svg width="176" height="32" viewBox="0 0 176 32">
+          <path d="M10 13H166" stroke="#CFC4A8" stroke-width="1.5"/>
+          <circle cx="24" cy="13" r="4" fill="#CFC4A8"/>
+          <circle cx="84" cy="13" r="4" fill="#CFC4A8"/>
+          <circle cx="144" cy="13" r="4.6" fill="#28231A"/>
+          <circle cx="144" cy="13" r="8.5" fill="none" stroke="#28231A" stroke-width="1.2"/>
+          <text x="24" y="29" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="9" fill="#95876C">v1</text>
+          <text x="84" y="29" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="9" fill="#95876C">v2</text>
+          <text x="144" y="29" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="9" fill="#28231A">current</text>
+        </svg>
+      </div>
+    </div>
+
+    <div class="v-row">
+      <div>
+        <div class="v-ix">03</div>
+        <div class="v-nm">Export to .tex or .pdf</div>
+      </div>
+      <p class="v-ds">The source drops straight into the paper you’re already writing; the .pdf goes to your advisor.</p>
+      <div class="v-vi">
+        <span class="chip">page-47.tex</span><span class="chip">page-47.pdf</span>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <span>photograph → compile → commit</span>
+    <span>Inkwell 0.9.2 — first page free</span>
+  </footer>
+
+</div>
+</body>
+</html>

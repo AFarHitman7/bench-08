@@ -1,0 +1,415 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Ferryline — Crossings to the Isles of Scilly</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<!--
+Critique: the page sold adjectives, not crossings. A purple-to-pink gradient behind a centred 56px headline, then three interchangeable "Fast / Simple / Reliable" cards — it could be any startup, and "Get started" pointed at "#". No navigation, no route, no fare, no timetable, no proof, and nothing anyone could actually book.
+
+Rebuilt around the product. Ink navy, warm paper and burnt orange replace the gradient; a Palatino display face replaces the default sans. The hero's right side is a real booking panel — a drawn route map, from/to, date, passengers, seats left, live fare — so the CTA does something. The filler cards became a routes strip with durations, next departures and prices. Proof (4.8 rating, no booking fee, free changes) sits under the lede, and the header finally carries navigation, a phone number and booking management.
+-->
+<style>
+  :root{
+    --ink:#0d1f2d;
+    --ink-2:#41545f;
+    --muted:#6f818a;
+    --paper:#faf7f1;
+    --sand:#f1e9dc;
+    --line:rgba(13,31,45,.11);
+    --line-2:rgba(13,31,45,.17);
+    --accent:#b64a22;
+    --accent-d:#983a18;
+    --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,serif;
+    --sans:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0;overflow:hidden;display:flex;flex-direction:column;
+    background:var(--paper);color:var(--ink);
+    font-family:var(--sans);font-size:16px;-webkit-font-smoothing:antialiased;
+  }
+  :focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:5px}
+  a{color:inherit}
+
+  /* ---------- header ---------- */
+  header{
+    flex:0 0 72px;height:72px;display:flex;align-items:center;gap:44px;
+    padding:0 72px;border-bottom:1px solid var(--line);position:relative;z-index:3;
+  }
+  .brand{display:flex;align-items:center;gap:11px;text-decoration:none}
+  .brand span{font-family:var(--serif);font-size:22px;letter-spacing:-.01em}
+  .nav{display:flex;gap:28px}
+  .nav a{
+    font-size:14px;color:var(--ink-2);text-decoration:none;
+    padding:5px 0;border-bottom:1.5px solid transparent;transition:.15s;
+  }
+  .nav a:hover{color:var(--ink);border-color:var(--accent)}
+  .hright{margin-left:auto;display:flex;align-items:center;gap:24px}
+  .tel{font-size:13.5px;color:var(--muted);text-decoration:none;font-variant-numeric:tabular-nums}
+  .tel:hover{color:var(--ink)}
+  .ghost{
+    font-size:13.5px;font-weight:600;text-decoration:none;color:var(--ink);
+    padding:9px 17px;border:1px solid var(--line-2);border-radius:999px;transition:.15s;
+  }
+  .ghost:hover{background:#fff;border-color:rgba(13,31,45,.3)}
+
+  /* ---------- hero ---------- */
+  main{flex:1 1 auto;min-height:0;display:flex;flex-direction:column}
+  .hero{
+    flex:1 1 auto;min-height:0;position:relative;
+    display:grid;grid-template-columns:minmax(0,1fr) 420px;gap:76px;
+    align-items:center;padding:0 72px;
+  }
+  .hero::before{
+    content:"";position:absolute;right:-140px;top:-180px;width:760px;height:760px;
+    border-radius:50%;pointer-events:none;
+    background:radial-gradient(circle,rgba(182,74,34,.075),rgba(182,74,34,0) 66%);
+  }
+  .hero > *{position:relative;z-index:1}
+
+  .eyebrow{
+    display:inline-flex;align-items:center;gap:9px;
+    font-size:11.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-2);
+    background:#fff;border:1px solid var(--line);border-radius:999px;padding:7px 14px 7px 11px;
+  }
+  .dot{width:6px;height:6px;border-radius:50%;background:#2f8f6b;box-shadow:0 0 0 3px rgba(47,143,107,.15)}
+
+  h1{
+    font-family:var(--serif);font-weight:500;font-size:76px;line-height:1.03;
+    letter-spacing:-.024em;margin:24px 0 0;max-width:12ch;
+  }
+  h1 em{font-style:italic;color:var(--accent)}
+  .lede{
+    font-size:17.5px;line-height:1.62;color:var(--ink-2);
+    max-width:54ch;margin:24px 0 0;
+  }
+  .proof{display:flex;align-items:center;flex-wrap:wrap;margin-top:32px}
+  .proof div{
+    display:flex;align-items:center;gap:8px;font-size:13px;color:var(--ink-2);
+    padding:0 20px;border-left:1px solid var(--line-2);
+  }
+  .proof div:first-child{padding-left:0;border-left:0}
+  .stars{color:var(--accent);letter-spacing:1.5px;font-size:12px}
+  .textlink{
+    display:inline-flex;align-items:center;gap:9px;margin-top:28px;
+    font-size:14px;font-weight:650;text-decoration:none;color:var(--ink);
+    padding-bottom:3px;border-bottom:1.5px solid var(--accent);width:max-content;
+  }
+  .textlink svg{transition:transform .18s}
+  .textlink:hover svg{transform:translateX(3px)}
+
+  /* ---------- booking card ---------- */
+  .card{
+    position:relative;background:#fff;border:1px solid rgba(13,31,45,.09);
+    border-radius:20px;overflow:hidden;
+    box-shadow:0 30px 64px -30px rgba(13,31,45,.5),0 4px 14px rgba(13,31,45,.06);
+  }
+  .map{position:relative;height:140px;border-bottom:1px solid rgba(13,31,45,.08);background:#dcecec}
+  .map svg{display:block;width:100%;height:100%}
+  .map text{
+    font-family:var(--sans);font-size:8.5px;font-weight:700;
+    letter-spacing:1.5px;text-transform:uppercase;fill:#0d1f2d;opacity:.5;
+  }
+  .map .dur{
+    font-size:9px;letter-spacing:.04em;text-transform:none;opacity:.85;
+    fill:#0d1f2d;font-weight:600;font-variant-numeric:tabular-nums;
+  }
+  .seats{
+    position:absolute;top:12px;right:12px;display:flex;align-items:center;gap:6px;
+    background:rgba(255,255,255,.94);border-radius:999px;padding:6px 11px;
+    font-size:11.5px;font-weight:650;color:var(--ink);
+    box-shadow:0 2px 10px rgba(13,31,45,.14);
+  }
+  .cbody{padding:18px 20px 18px}
+  .tabs{display:grid;grid-template-columns:1fr 1fr;gap:4px;background:var(--sand);padding:4px;border-radius:10px}
+  .tabs button{
+    border:0;background:transparent;font-family:inherit;font-size:13px;font-weight:600;
+    color:var(--ink-2);padding:7px 6px;border-radius:7px;cursor:pointer;transition:.15s;
+  }
+  .tabs button[aria-selected="true"]{background:#fff;color:var(--ink);box-shadow:0 1px 3px rgba(13,31,45,.16)}
+
+  .trip{
+    position:relative;margin-top:12px;background:#fff;
+    border:1px solid var(--line-2);border-radius:12px;
+  }
+  .field{padding:9px 14px 10px}
+  .field + .field{border-top:1px solid var(--line)}
+  .lbl{
+    display:block;font-size:10px;font-weight:700;letter-spacing:.13em;
+    text-transform:uppercase;color:#728690;margin-bottom:2px;
+  }
+  .sel{
+    appearance:none;-webkit-appearance:none;display:block;width:100%;
+    border:0;background:transparent;margin:0;padding:0 20px 0 0;
+    font-family:inherit;font-size:15px;font-weight:600;line-height:21px;color:var(--ink);
+    cursor:pointer;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='9' height='6'%3E%3Cpath d='M1 1l3.5 3.5L8 1' fill='none' stroke='%236f818a' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat:no-repeat;background-position:right 2px center;
+  }
+  .trip .sel{padding-right:44px;background-image:none}
+  .swap{
+    position:absolute;right:11px;top:50%;transform:translateY(-50%);
+    width:31px;height:31px;border-radius:50%;border:1px solid var(--line-2);
+    background:#fff;display:grid;place-items:center;cursor:pointer;transition:.15s;
+  }
+  .swap:hover{background:var(--paper);border-color:rgba(13,31,45,.3)}
+  .duo{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+  .duo .cell{border:1px solid var(--line-2);border-radius:12px;background:#fff}
+
+  .go{
+    margin-top:12px;width:100%;height:46px;border:0;border-radius:12px;cursor:pointer;
+    background:var(--accent);color:#fff;font-family:inherit;font-size:14.5px;font-weight:650;
+    display:flex;align-items:center;justify-content:center;gap:11px;
+    box-shadow:0 10px 20px -12px rgba(182,74,34,.95);
+    transition:background .16s,transform .16s;
+  }
+  .go:hover{background:var(--accent-d)}
+  .go:active{transform:translateY(1px)}
+  .go .price{
+    font-size:12.5px;font-weight:500;opacity:.85;padding-left:11px;
+    border-left:1px solid rgba(255,255,255,.35);
+  }
+  .fine{margin:10px 0 0;text-align:center;font-size:11.5px;line-height:1.4;color:var(--muted)}
+
+  /* ---------- routes ---------- */
+  .routes{flex:0 0 auto;background:var(--sand);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+  .routes-in{display:grid;grid-template-columns:repeat(3,1fr);padding:0 72px}
+  .route{
+    display:block;text-decoration:none;padding:24px 32px;
+    border-left:1px solid rgba(13,31,45,.1);transition:background .15s;
+  }
+  .route:first-child{border-left:0;padding-left:0}
+  .route:hover{background:rgba(255,255,255,.55)}
+  .rhead{display:flex;align-items:baseline;justify-content:space-between;gap:14px}
+  .rname{font-family:var(--serif);font-size:21px;letter-spacing:-.01em}
+  .rname i{color:var(--muted);font-style:normal;font-size:17px;padding:0 2px}
+  .rprice{font-size:12px;color:var(--muted);white-space:nowrap}
+  .rprice b{font-family:var(--sans);font-size:16px;font-weight:650;color:var(--ink);letter-spacing:-.01em}
+  .rmeta{
+    margin-top:7px;display:flex;align-items:center;gap:9px;
+    font-size:12.5px;color:var(--ink-2);
+  }
+  .rmeta .sep{width:3px;height:3px;border-radius:50%;background:rgba(13,31,45,.28)}
+  .rmeta .live{display:inline-flex;align-items:center;gap:6px;font-variant-numeric:tabular-nums}
+
+  /* ---------- footer ---------- */
+  footer{
+    flex:0 0 56px;height:56px;display:flex;align-items:center;justify-content:space-between;
+    padding:0 72px;font-size:12.5px;color:var(--muted);background:var(--paper);
+  }
+  .flinks{display:flex;gap:22px}
+  .flinks a{text-decoration:none;color:var(--muted)}
+  .flinks a:hover{color:var(--ink)}
+
+  @keyframes pulse{0%,100%{box-shadow:0 0 0 3px rgba(47,143,107,.15)}50%{box-shadow:0 0 0 5px rgba(47,143,107,.08)}}
+  .dot{animation:pulse 2.8s ease-in-out infinite}
+  @media (prefers-reduced-motion:reduce){
+    .dot{animation:none}
+    *{transition:none!important}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <a class="brand" href="#" aria-label="Ferryline home">
+    <svg width="27" height="27" viewBox="0 0 27 27" aria-hidden="true">
+      <rect width="27" height="27" rx="7.5" fill="#0d1f2d"/>
+      <path d="M5.6 16.2c2.2-2.5 4.4-2.5 6.6 0s4.4 2.5 6.6 0 3.3-1.6 4.1-.6" fill="none" stroke="#faf7f1" stroke-width="1.8" stroke-linecap="round"/>
+      <path d="M5.6 10.6c2.2-2.5 4.4-2.5 6.6 0s4.4 2.5 6.6 0" fill="none" stroke="#b64a22" stroke-width="1.8" stroke-linecap="round"/>
+    </svg>
+    <span>Ferryline</span>
+  </a>
+
+  <nav class="nav" aria-label="Main">
+    <a href="#">Routes</a>
+    <a href="#">Timetables</a>
+    <a href="#">On board</a>
+    <a href="#">Help</a>
+  </nav>
+
+  <div class="hright">
+    <a class="tel" href="tel:+441736334220">01736 334 220</a>
+    <a class="ghost" href="#">Manage booking</a>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <div>
+      <p class="eyebrow"><span class="dot"></span>Spring timetable live · 6 routes</p>
+
+      <h1>A quieter way<br>to the <em>islands</em>.</h1>
+
+      <p class="lede">Foot-passenger and car crossings from Cornwall to the Isles of Scilly,
+      the Channel Islands and Brittany. Live availability, honest fares, and a fare held
+      for twenty minutes while you decide.</p>
+
+      <div class="proof">
+        <div><span class="stars">★★★★★</span> 4.8 · 6,300 crossings</div>
+        <div>No booking fee</div>
+        <div>Free changes up to 24h</div>
+      </div>
+
+      <a class="textlink" href="#">See this week's timetable
+        <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true">
+          <path d="M1.5 6.5h9M7.5 3.5l3 3-3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+    </div>
+
+    <form class="card" aria-label="Search crossings">
+      <div class="map">
+        <svg viewBox="0 0 420 140" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+          <defs>
+            <linearGradient id="sea" x1="0" y1="0" x2=".35" y2="1">
+              <stop offset="0" stop-color="#eaf4f3"/>
+              <stop offset="1" stop-color="#c6e0e1"/>
+            </linearGradient>
+          </defs>
+          <rect width="420" height="140" fill="url(#sea)"/>
+
+          <g fill="none" stroke="#a2cbcd" stroke-width="1" opacity=".5">
+            <path d="M150 122c26-9 58-11 100-6"/>
+            <path d="M128 134c34-11 76-13 128-7"/>
+            <path d="M176 20c22-6 48-6 72 1"/>
+          </g>
+
+          <path d="M0 0h78c-4 19 7 30 5 46-3 24 14 40 8 60-2 8-4 21-2 34H0Z" fill="#2a6663"/>
+          <path d="M0 0h78c-4 19 7 30 5 46-3 24 14 40 8 60-2 8-4 21-2 34H0Z" fill="none" stroke="#7fb3ae" stroke-width="1.4" opacity=".75"/>
+
+          <path d="M366 27c23-2 43 10 47 26 4 15-6 27-22 32-17 5-36 2-47-8-11-10-12-25-4-36 6-8 15-13 26-14Z" fill="#2a6663"/>
+          <path d="M366 27c23-2 43 10 47 26 4 15-6 27-22 32-17 5-36 2-47-8-11-10-12-25-4-36 6-8 15-13 26-14Z" fill="none" stroke="#7fb3ae" stroke-width="1.4" opacity=".75"/>
+
+          <path d="M84 72C150 34 268 30 336 58" fill="none" stroke="#0d1f2d" stroke-opacity=".38"
+                stroke-width="1.6" stroke-dasharray="2 6" stroke-linecap="round"/>
+
+          <rect x="181" y="57" width="56" height="17" rx="8.5" fill="#ffffff" opacity=".9"/>
+          <text class="dur" x="209" y="68.5" text-anchor="middle">2h 45m</text>
+
+          <g transform="translate(209 40)">
+            <circle r="11" fill="#ffffff" opacity=".96"/>
+            <circle r="11" fill="none" stroke="#2a6663" stroke-opacity=".18"/>
+            <path d="M-5.5 1.2h11l-2.6 4.2h-5.8z" fill="#0d1f2d"/>
+            <path d="M0 .6v-8l5.2 6.2z" fill="#b64a22"/>
+          </g>
+
+          <text x="74" y="112">Penzance</text>
+          <text x="366" y="112" text-anchor="middle">St Mary's</text>
+        </svg>
+        <div class="seats"><span class="dot"></span>42 seats left</div>
+      </div>
+
+      <div class="cbody">
+        <div class="tabs" role="tablist" aria-label="Travelling with">
+          <button type="button" role="tab" aria-selected="true">Foot passenger</button>
+          <button type="button" role="tab" aria-selected="false">Car + driver</button>
+        </div>
+
+        <div class="trip">
+          <div class="field">
+            <label class="lbl" for="from">From</label>
+            <select class="sel" id="from">
+              <option>Penzance, Cornwall</option>
+              <option>Poole, Dorset</option>
+              <option>Plymouth, Devon</option>
+            </select>
+          </div>
+          <div class="field">
+            <label class="lbl" for="to">To</label>
+            <select class="sel" id="to">
+              <option>St Mary's, Isles of Scilly</option>
+              <option>St Helier, Jersey</option>
+              <option>Roscoff, Brittany</option>
+            </select>
+          </div>
+          <button class="swap" type="button" aria-label="Swap departure and destination">
+            <svg width="15" height="15" viewBox="0 0 15 15" fill="none" aria-hidden="true">
+              <path d="M5 12.5V2.5M5 2.5 2.5 5M5 2.5 7.5 5" stroke="#0d1f2d" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M10 2.5v10M10 12.5 7.5 10M10 12.5l2.5-2.5" stroke="#0d1f2d" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </div>
+
+        <div class="duo">
+          <div class="cell">
+            <div class="field">
+              <label class="lbl" for="date">Outbound</label>
+              <select class="sel" id="date">
+                <option>Fri 21 Nov</option>
+                <option>Sat 22 Nov</option>
+                <option>Sun 23 Nov</option>
+              </select>
+            </div>
+          </div>
+          <div class="cell">
+            <div class="field">
+              <label class="lbl" for="pax">Passengers</label>
+              <select class="sel" id="pax">
+                <option>2 adults</option>
+                <option>1 adult</option>
+                <option>2 adults, 1 child</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <button class="go" type="button">Search crossings <span class="price">from £22</span></button>
+        <p class="fine">Fare held 20 minutes · free changes up to 24h before sailing</p>
+      </div>
+    </form>
+  </section>
+
+  <section class="routes" aria-label="Today's crossings">
+    <div class="routes-in">
+      <a class="route" href="#">
+        <div class="rhead">
+          <span class="rname">Penzance <i>→</i> St Mary's</span>
+          <span class="rprice">from <b>£22</b></span>
+        </div>
+        <div class="rmeta">
+          <span>2h 45m</span><span class="sep"></span>
+          <span>6 sailings today</span><span class="sep"></span>
+          <span class="live"><span class="dot"></span>next 09:15</span>
+        </div>
+      </a>
+      <a class="route" href="#">
+        <div class="rhead">
+          <span class="rname">Poole <i>→</i> St Helier</span>
+          <span class="rprice">from <b>£39</b></span>
+        </div>
+        <div class="rmeta">
+          <span>4h 20m</span><span class="sep"></span>
+          <span>2 sailings today</span><span class="sep"></span>
+          <span class="live"><span class="dot"></span>next 11:40</span>
+        </div>
+      </a>
+      <a class="route" href="#">
+        <div class="rhead">
+          <span class="rname">Plymouth <i>→</i> Roscoff</span>
+          <span class="rprice">from <b>£46</b></span>
+        </div>
+        <div class="rmeta">
+          <span>5h 50m</span><span class="sep"></span>
+          <span>1 sailing today</span><span class="sep"></span>
+          <span class="live"><span class="dot"></span>next 16:05</span>
+        </div>
+      </a>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <span>© 2026 Ferryline Ltd · Penzance, Cornwall</span>
+  <nav class="flinks" aria-label="Legal">
+    <a href="#">Terms</a>
+    <a href="#">Privacy</a>
+    <a href="#">Accessibility</a>
+    <a href="#">Contact</a>
+  </nav>
+</footer>
+
+</body>
+</html>

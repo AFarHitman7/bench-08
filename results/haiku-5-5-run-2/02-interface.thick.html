@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1440">
+<title>Inkwell: handwritten pages to LaTeX</title>
+<style>
+  :root {
+    --paper: #f4f0e6;
+    --paper-2: #ebe5d5;
+    --card: #faf8f2;
+    --ink: #22201c;
+    --ink-soft: #5d5a52;
+    --rule: #d6cfbd;
+    --pencil: #2c3b5e;
+    --accent: #7a4a2b;
+    --serif: Georgia, "Iowan Old Style", "Palatino Linotype", Palatino, serif;
+    --sans: "Helvetica Neue", Helvetica, Arial, "Segoe UI", sans-serif;
+    --mono: Consolas, "Courier New", monospace;
+    --hand: "Segoe Print", "Bradley Hand", "Comic Sans MS", cursive;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1440px; height: 900px; overflow: hidden; }
+  body { background: var(--paper); color: var(--ink); font-family: var(--sans); font-size: 15px; }
+
+  .page { height: 900px; display: grid; grid-template-rows: 64px 1fr 156px; }
+
+  nav { display: flex; align-items: center; justify-content: space-between; padding: 0 64px; border-bottom: 1px solid var(--rule); }
+  .wordmark { font-family: var(--serif); font-size: 22px; letter-spacing: -0.2px; }
+  .wordmark i { color: var(--accent); font-style: italic; }
+  nav ul { display: flex; gap: 32px; list-style: none; font-size: 14px; color: var(--ink-soft); }
+  nav .signin { font-size: 14px; color: var(--ink); text-decoration: none; border-bottom: 1px solid var(--ink); padding-bottom: 2px; }
+
+  .hero { padding: 34px 64px 30px; display: grid; grid-template-rows: auto 1fr; gap: 28px; min-height: 0; }
+  .hero-top { display: grid; grid-template-columns: 1fr 380px; gap: 56px; align-items: end; }
+  .kicker { font-size: 12px; text-transform: uppercase; letter-spacing: 1.6px; color: var(--accent); margin-bottom: 14px; }
+  h1 { font-family: var(--serif); font-weight: 400; font-size: 52px; line-height: 1.07; letter-spacing: -0.8px; max-width: 720px; }
+  h1 em { font-style: italic; }
+  .lede { margin-top: 16px; font-size: 17px; line-height: 1.5; color: var(--ink-soft); max-width: 640px; }
+
+  .actions { display: flex; flex-direction: column; gap: 12px; align-items: flex-start; }
+  .btn { display: inline-block; font-family: var(--sans); font-size: 15px; padding: 14px 24px; text-decoration: none; border-radius: 2px; }
+  .btn-primary { background: var(--ink); color: var(--card); width: 260px; text-align: center; }
+  .btn-secondary { color: var(--ink); border: 1px solid var(--ink); width: 260px; text-align: center; }
+  .actions small { font-size: 12px; color: var(--ink-soft); }
+
+  .specimen { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; min-height: 0; }
+  .panel { display: grid; grid-template-rows: auto 1fr; gap: 10px; min-height: 0; }
+  .label { display: flex; justify-content: space-between; font-size: 12px; color: var(--ink-soft); text-transform: uppercase; letter-spacing: 1.2px; }
+
+  .photo-wrap { position: relative; min-height: 0; display: flex; align-items: center; justify-content: center; }
+  .photo {
+    width: 100%; height: 100%; position: relative; overflow: hidden;
+    background-color: #e8e1cc;
+    background-image:
+      repeating-linear-gradient(to bottom, transparent 0 39px, rgba(90,120,160,0.22) 39px 40px),
+      radial-gradient(ellipse at 30% 20%, rgba(255,255,255,0.45), transparent 60%),
+      radial-gradient(ellipse at 90% 100%, rgba(80,60,30,0.22), transparent 55%);
+    transform: rotate(-1.1deg);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.12), 0 12px 28px rgba(60,45,20,0.18);
+    border-radius: 2px;
+    padding: 46px 52px 0 58px;
+    color: var(--pencil);
+    font-family: var(--hand);
+    font-size: 25px;
+    line-height: 40px;
+  }
+  .photo::before {
+    content: ""; position: absolute; inset: 0; pointer-events: none;
+    background: linear-gradient(90deg, rgba(120,90,40,0.18), transparent 6%, transparent 94%, rgba(120,90,40,0.12));
+  }
+  .photo .margin { position: absolute; left: 40px; top: 0; bottom: 0; width: 1px; background: rgba(200,80,80,0.35); }
+  .photo .l { white-space: nowrap; }
+  .photo .cross { text-decoration: line-through; text-decoration-color: rgba(44,59,94,0.6); opacity: 0.8; }
+  .photo .small { font-size: 20px; }
+  .photo .box { display: inline-block; border: 2px solid var(--pencil); border-radius: 6px; padding: 0 8px; transform: rotate(-2deg); }
+  .photo .frac { display: inline-flex; flex-direction: column; align-items: center; vertical-align: middle; line-height: 1; }
+  .photo .frac span:first-child { border-bottom: 2px solid var(--pencil); padding: 0 4px 2px; }
+  .photo .frac span:last-child { padding: 2px 4px 0; }
+  .photo .scrawl { position: absolute; right: 36px; top: 258px; font-size: 19px; color: rgba(160,50,40,0.85); transform: rotate(-6deg); }
+
+  .output { background: var(--card); border: 1px solid var(--rule); display: grid; grid-template-rows: auto 1fr; min-height: 0; }
+  .output-bar { display: flex; justify-content: space-between; align-items: center; padding: 10px 18px; border-bottom: 1px solid var(--rule); font-family: var(--mono); font-size: 12px; color: var(--ink-soft); }
+  .status { font-family: var(--sans); font-size: 12px; color: #3f6b4a; }
+  .output-body { padding: 26px 34px; font-family: var(--serif); font-size: 19px; line-height: 1.5; overflow: hidden; }
+  .output-body p { margin-bottom: 14px; }
+  .eq { display: block; text-align: center; margin: 12px 0 18px; font-size: 20px; }
+  .eq .n { float: right; font-size: 15px; color: var(--ink-soft); }
+  .sym { font-style: italic; }
+  .sub { font-size: 0.7em; vertical-align: -0.35em; }
+  .sup { font-size: 0.7em; vertical-align: 0.5em; }
+  .frac2 { display: inline-flex; flex-direction: column; align-items: center; vertical-align: middle; line-height: 1.05; }
+  .frac2 span:first-child { border-bottom: 1px solid var(--ink); padding: 0 4px; }
+  .frac2 span:last-child { padding: 0 4px; }
+  .out-table { width: 100%; border-collapse: collapse; font-size: 16px; margin-top: 4px; }
+  .out-table th, .out-table td { padding: 5px 10px; text-align: center; border-top: 1px solid var(--ink); }
+  .out-table th { font-weight: normal; font-style: italic; border-bottom: 1px solid var(--ink); }
+  .out-table tr:last-child td { border-bottom: 1px solid var(--ink); }
+  .out-note { font-family: var(--sans); font-size: 12px; color: var(--ink-soft); margin-top: 10px; }
+
+  .value { border-top: 1px solid var(--ink); padding: 22px 64px 0; display: grid; grid-template-columns: 230px 1fr 1fr 1fr; gap: 36px; min-height: 0; }
+  .value h2 { font-family: var(--sans); font-size: 12px; text-transform: uppercase; letter-spacing: 1.6px; font-weight: 700; color: var(--ink-soft); line-height: 1.5; }
+  .cap .num { font-family: var(--serif); font-size: 15px; color: var(--accent); }
+  .cap h3 { font-family: var(--sans); font-size: 17px; font-weight: 700; margin: 4px 0 6px; letter-spacing: -0.1px; }
+  .cap p { font-size: 14px; line-height: 1.5; color: var(--ink-soft); }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <nav>
+    <div class="wordmark">Ink<i>well</i></div>
+    <ul>
+      <li>How a page converts</li>
+      <li>Export</li>
+      <li>Revision history</li>
+    </ul>
+    <a class="signin" href="#">Sign in</a>
+  </nav>
+
+  <section class="hero">
+    <div class="hero-top">
+      <div>
+        <div class="kicker">Inkwell · handwriting to LaTeX</div>
+        <h1>Photograph a page of handwriting. <em>Get back LaTeX you can compile.</em></h1>
+        <p class="lede">Inkwell reads a photo of your notes, derivations or tables and returns clean source, with the original and the rendered output side by side so you can check every symbol before it reaches your manuscript.</p>
+      </div>
+      <div class="actions">
+        <a class="btn btn-primary" href="#">Try a page free</a>
+        <a class="btn btn-secondary" href="#">See a real conversion</a>
+        <small>No account needed for the first page.</small>
+      </div>
+    </div>
+
+    <div class="specimen">
+      <div class="panel">
+        <div class="label"><span>Input · photo of notebook page</span><span>IMG_2214.jpg</span></div>
+        <div class="photo-wrap">
+          <div class="photo">
+            <div class="margin"></div>
+            <div class="l">Lemma 2. Let X ~ N(0, σ²).</div>
+            <div class="l">Then the normaliser is</div>
+            <div class="l small">&nbsp;&nbsp;&nbsp;Z = ∫ e<sup>−x²/2σ²</sup> dx</div>
+            <div class="l">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= σ√(2π)</div>
+            <div class="l">so E[X] = <span class="frac"><span>1</span><span>n</span></span> Σ x<sub>i</sub></div>
+            <div class="l cross">E[X] = 0 by symmetry?</div>
+            <div class="l">Check: <span class="box">n = 40</span> rows, 3 cols</div>
+            <div class="scrawl">ok, keep</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="label"><span>Output · rendered from main.tex</span><span>revision 4 of 4</span></div>
+        <div class="output">
+          <div class="output-bar">
+            <span>lemma2.tex</span>
+            <span class="status">compiled · 0 warnings</span>
+          </div>
+          <div class="output-body">
+            <p>Lemma 2. Let <span class="sym">X</span> ∼ 𝒩(0, <span class="sym">σ</span><span class="sup">2</span>). Then the normaliser is</p>
+            <span class="eq">
+              <span class="sym">Z</span> = ∫<span class="sub">−∞</span><span class="sup">∞</span> e<span class="sup">−<span class="frac2"><span><span class="sym">x</span><span class="sup">2</span></span><span>2<span class="sym">σ</span><span class="sup">2</span></span></span></span></span> d<span class="sym">x</span>
+              = <span class="sym">σ</span>√(2π)
+            </span>
+            <p>so</p>
+            <span class="eq">
+              𝔼[<span class="sym">X</span>] = <span class="frac2"><span>1</span><span><span class="sym">n</span></span></span> ∑<span class="sub"><span class="sym">i</span>=1</span><span class="sup"><span class="sym">n</span></span> <span class="sym">x</span><span class="sub"><span class="sym">i</span></span>
+            </span>
+            <table class="out-table">
+              <tr><th>rows</th><th>cols</th><th>status</th></tr>
+              <tr><td>40</td><td>3</td><td>aligned</td></tr>
+            </table>
+            <div class="out-note">Table detected from ruled lines. Symbols checked against the page; 1 ambiguity flagged at σ.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="value">
+    <h2>What it does<br>on the page</h2>
+    <div class="cap">
+      <div class="num">01</div>
+      <h3>Equations and tables</h3>
+      <p>Multi-line derivations, aligned environments, matrices and ruled tables come out with their structure kept, not flattened to text.</p>
+    </div>
+    <div class="cap">
+      <div class="num">02</div>
+      <h3>Revision history per page</h3>
+      <p>Each conversion is stored against its photo. Compare any two revisions line by line when you change a symbol or a bracket.</p>
+    </div>
+    <div class="cap">
+      <div class="num">03</div>
+      <h3>Export to .tex or .pdf</h3>
+      <p>Download the source to drop into your own preamble, or a compiled PDF of the page to send to a co-author.</p>
+    </div>
+  </section>
+
+</div>
+</body>
+</html>

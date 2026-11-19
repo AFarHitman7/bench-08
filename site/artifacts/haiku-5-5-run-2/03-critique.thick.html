@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!--
+Diagnosis, by impact:
+1. No viewport meta and desktop-only sizing: the 56px heading, three columns and 120px padding break on phones.
+2. The primary action is weak: "Get started" is generic and small, with no clear booking step.
+3. Low contrast: white text at 90% opacity on a light pink-violet gradient.
+4. Vague hero copy ("seamless, modern booking experience that puts you first") tells a passenger nothing useful.
+5. Excess padding (120px hero, 80px cards) pushes the action below the fold.
+
+Changed: added the viewport meta; responsive type, padding and single-column cards under 720px; solid deep-teal hero with full-opacity text; CTA now reads "Book a crossing" with a 52px+ tap target; hero paragraph rewritten to state the steps; "Reliable" card line made plainer.
+
+Left alone: the headline, the Fast and Simple cards, the three-card structure, the footer, and the CTA href.
+-->
+<title>Ferryline — Book your crossing</title>
+<style>
+ *{box-sizing:border-box}
+ body{margin:0;font-family:Inter,system-ui,sans-serif;color:#111;background:#fff}
+ .hero{padding:72px 24px;text-align:center;background:#0b4f6c;color:#fff}
+ h1{font-size:48px;line-height:1.1;margin:0 0 16px}
+ .hero p{font-size:20px;line-height:1.5;color:#fff;max-width:640px;margin:0 auto 32px}
+ .cta{display:inline-flex;align-items:center;justify-content:center;min-height:52px;padding:14px 32px;border-radius:999px;background:#fff;color:#0b4f6c;font-size:18px;font-weight:600;text-decoration:none}
+ .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;padding:48px 24px}
+ .card{border:1px solid #e5e5e5;border-radius:16px;padding:28px;background:#fafafa}
+ .card h3{margin:0 0 12px;font-size:22px}
+ .card p{margin:0;font-size:17px;line-height:1.5;color:#222}
+ footer{padding:24px;text-align:center;color:#555;font-size:14px}
+ @media (max-width:720px){
+  .hero{padding:48px 20px}
+  h1{font-size:34px}
+  .hero p{font-size:18px}
+  .cta{display:flex;width:100%}
+  .cards{grid-template-columns:1fr;padding:32px 20px}
+ }
+</style></head>
+<body>
+<section class="hero">
+  <h1>Book your crossing in seconds</h1>
+  <p>Pick your route and sailing time, then confirm your booking online.</p>
+  <a class="cta" href="#">Book a crossing</a>
+</section>
+<section class="cards">
+  <div class="card"><h3>Fast</h3><p>Book in under a minute with our streamlined flow.</p></div>
+  <div class="card"><h3>Simple</h3><p>No hidden fees, no surprises, just clear pricing.</p></div>
+  <div class="card"><h3>Reliable</h3><p>Thousands of travellers book with us every day.</p></div>
+</section>
+<footer>© Ferryline 2026 — All rights reserved</footer>
+</body></html>

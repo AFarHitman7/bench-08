@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>DRIFT</title>
+<style>
+  html, body { height: 100%; }
+  body {
+    margin: 0;
+    background: #0a0f16;            /* colour 1: night water */
+    overflow: hidden;
+    display: grid;
+    place-items: center;
+  }
+  .stage {
+    position: relative;
+    width: 1280px;
+    height: 720px;
+    overflow: hidden;
+    background: #0a0f16;
+    font-family: Georgia, "Times New Roman", serif;  /* one typeface */
+    -webkit-user-select: none;
+    user-select: none;
+    cursor: default;
+  }
+  /* the one permanent element: the horizon. It never moves,
+     so the whole loop reads as a single unbroken shot. */
+  #horizon {
+    position: absolute;
+    left: 0;
+    top: 460px;
+    width: 1280px;
+    height: 1px;
+    background: rgba(233, 228, 212, 0.3);   /* colour 2, as a hairline */
+  }
+  #word, #refl {
+    position: absolute;
+    left: 50%;
+    height: 150px;
+    white-space: nowrap;
+    font-size: 150px;
+    line-height: 150px;
+    color: #e9e4d4;                 /* colour 2: cabin-lamp bone white */
+    letter-spacing: 0;
+    will-change: transform, opacity, filter;
+  }
+  #word { top: 264px; }
+  /* reflection: same type, flipped and stretched down from the horizon */
+  #refl {
+    top: 310px;
+    transform-origin: 50% 100%;
+  }
+  #word span, #refl span { display: inline-block; }
+  /* tracking driven by one shared value: the word moves as a single unit */
+  #word span + span, #refl span + span { margin-left: var(--gap, 20px); }
+</style>
+</head>
+<body>
+  <div class="stage" id="stage">
+    <div id="horizon"></div>
+    <div id="word" style="opacity:0;transform:translateX(-50%)"><span>D</span><span>R</span><span>I</span><span>F</span><span>T</span></div>
+    <div id="refl" style="opacity:0;transform:translateX(-50%) scaleY(-1.22)"><span>D</span><span>R</span><span>I</span><span>F</span><span>T</span></div>
+  </div>
+  <script>
+    (function () {
+      'use strict';
+
+      var DUR = 8;
+      var stage = document.getElementById('stage');
+      var word  = document.getElementById('word');
+      var refl  = document.getElementById('refl');
+
+      /* ---- the sequence, as pure functions of t (seconds, period 8) ----
+         0.20 - 2.20  BEGINNING: the title condenses out of night fog —
+                      dim, soft, wide-tracked, gliding in from the left
+                      (the ferry's heading), letters gathering as it sharpens.
+         2.20 - 5.60 MIDDLE: dead still, sharp, fully legible over the
+                      horizon, its mirror resting on the water.
+         5.60 - 7.50 END: it drifts off — letters loosen apart, the whole
+                      word slides on toward the far bank while fog
+                      softens and swallows it; the mirror follows.
+         7.50 - 0.20 the open channel in the dark: only the horizon remains.
+                      Frames here are identical on both sides of the seam. */
+
+      var W_IN0 = 0.2, W_IN1 = 2.2, W_OUT0 = 5.6, W_OUT1 = 7.5;
+      var X0 = -64, X1 = 56;          /* lateral crossing, left to right */
+      var LS0 = 40, LS1 = 20, LS2 = 48;  /* tracking: dispersed -> set -> adrift */
+      var B0 = 16, B1 = 18;           /* fog blur at the ends */
+      var REF_OP = 0.17, REF_BLUR = 2;
+
+      function cubicOut(u) { return 1 - (1 - u) * (1 - u) * (1 - u); }
+      function cubicIn(u)  { return u * u * u; }
+      function lerp(a, b, p) { return a + (b - a) * p; }
+
+      function wordAt(t) {
+        if (t < W_IN0) return { op: 0, x: X0, ls: LS0, blur: B0 };
+        if (t < W_IN1) {
+          var p = cubicOut((t - W_IN0) / (W_IN1 - W_IN0));
+          return { op: p, x: lerp(X0, 0, p), ls: lerp(LS0, LS1, p), blur: lerp(B0, 0, p) };
+        }
+        if (t < W_OUT0) return { op: 1, x: 0, ls: LS1, blur: 0 };
+        if (t < W_OUT1) {
+          var q = cubicIn((t - W_OUT0) / (W_OUT1 - W_OUT0));
+          return { op: 1 - q, x: lerp(0, X1, q), ls: lerp(LS1, LS2, q), blur: lerp(0, B1, q) };
+        }
+        return { op: 0, x: X1, ls: LS2, blur: B1 };  /* held invisible into the seam */
+      }
+
+      /* every frame is computed from t alone: seek() is exact anywhere */
+      var tNow = 0, anchor = 0, raf = 0, playing = false;
+
+      function render(t) {
+        tNow = t;
+        var w = wordAt(t);
+        stage.style.setProperty('--gap', w.ls.toFixed(2) + 'px');
+        word.style.opacity = w.op.toFixed(4);
+        word.style.transform = 'translateX(-50%) translateX(' + w.x.toFixed(2) + 'px)';
+        word.style.filter = w.blur > 0.05 ? 'blur(' + w.blur.toFixed(2) + 'px)' : 'none';
+        refl.style.opacity = (REF_OP * w.op).toFixed(4);
+        refl.style.transform = 'translateX(-50%) translateX(' + w.x.toFixed(2) + 'px) scaleY(-1.22)';
+        refl.style.filter = 'blur(' + (REF_BLUR + 0.55 * w.blur).toFixed(2) + 'px)';
+      }
+
+      function wrap(t) {
+        var x = Number(t);
+        if (!isFinite(x)) x = 0;
+        x = x % DUR;
+        if (x < 0) x += DUR;
+        return x;
+      }
+
+      function tick(now) {
+        if (!playing) return;
+        var t = ((now - anchor) / 1000) % DUR;
+        if (t < 0) t += DUR;
+        render(t);
+        raf = requestAnimationFrame(tick);
+      }
+
+      window.__anim = {
+        duration: DUR,
+        seek: function (t) {
+          var tt = wrap(t);
+          if (playing) anchor = performance.now() - tt * 1000;
+          render(tt);
+        },
+        play: function () {
+          if (playing) return;
+          playing = true;
+          anchor = performance.now() - tNow * 1000;
+          raf = requestAnimationFrame(tick);
+        },
+        pause: function () {
+          if (!playing) return;
+          playing = false;
+          cancelAnimationFrame(raf);
+        }
+      };
+
+      render(0);
+      window.__anim.play();
+    })();
+  </script>
+</body>
+</html>

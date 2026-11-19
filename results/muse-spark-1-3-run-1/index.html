@@ -1,0 +1,635 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Bench · muse spark 1.3 - run 1</title>
+<style>
+:root{--ink:#111;--muted:#666;--line:#e3e3e3;--bg:#fff;--panel:#fafafa}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
+.bar{position:sticky;top:0;z-index:9;display:flex;gap:20px;align-items:baseline;padding:12px 28px;background:rgba(255,255,255,.94);border-bottom:1px solid var(--line)}
+.bar h1{margin:0;font-size:14px;font-weight:600}
+.bar nav{display:flex;gap:12px;flex-wrap:wrap;font-size:12px}
+.bar a{color:var(--muted);text-decoration:none}
+.bar a:hover{color:var(--ink)}
+main{max-width:1560px;margin:0 auto;padding:24px 28px 80px}
+.task{border-top:1px solid var(--line);padding:26px 0}
+.task h2{margin:0 0 2px;font-size:14px;font-weight:600}
+.task .meta{margin:0 0 12px;font-size:12px;color:var(--muted)}
+details{margin:0 0 14px}
+summary{font-size:12px;color:var(--muted);cursor:pointer}
+details pre{white-space:pre-wrap;margin:8px 0 0;padding:12px;border:1px solid var(--line);border-radius:8px;background:var(--panel);font:12px/1.6 ui-monospace,SFMono-Regular,Menlo,monospace}
+.pair{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.pair.stacked{grid-template-columns:1fr}
+.frame{border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--panel)}
+.cap{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:7px 11px;font-size:12px;color:var(--muted);border-bottom:1px solid var(--line)}
+.cap b{color:var(--ink);font-weight:600}
+.cap button{font:inherit;color:var(--muted);background:none;border:0;cursor:pointer;padding:2px 4px}
+.cap button:hover{color:var(--ink)}
+.stage{position:relative;width:100%;overflow:hidden;background:#fff}
+.stage iframe{position:absolute;top:0;left:0;border:0;transform-origin:top left;background:#fff}
+.stage img{display:block;width:100%;height:auto;background:#fff}
+.prose{padding:20px;background:#fff;white-space:pre-wrap;font:15px/1.65 ui-serif,Georgia,serif}
+.prose p{margin:0 0 .8em}
+pre.code{margin:0;padding:14px;max-height:520px;overflow:auto;background:#0f1115;color:#e8e8e8;font:12.5px/1.6 ui-monospace,Menlo,monospace}
+.scores{display:flex;flex-wrap:wrap;gap:14px;padding:9px 11px;border-top:1px solid var(--line);font-size:12px;color:var(--muted)}
+.scores label{display:flex;align-items:center;gap:5px}
+.scores input{width:42px;padding:2px 4px;border:1px solid var(--line);border-radius:6px;font:inherit;text-align:center}
+.missing{padding:36px;text-align:center;background:#fff;color:#b91c1c;font-size:13px}
+table.sum{border-collapse:collapse;width:100%;margin-top:12px;font-size:13px}
+table.sum th,table.sum td{border-bottom:1px solid var(--line);padding:6px 8px;text-align:right}
+table.sum th:first-child,table.sum td:first-child{text-align:left;color:var(--ink)}
+table.sum th{font-weight:600;color:var(--muted);font-size:12px}
+@media(max-width:1000px){.pair{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header class="bar"><h1>Bench · muse spark 1.3 - run 1</h1><nav><a href="#t01">01 Poster</a><a href="#t02">02 Interface</a><a href="#t03">03 Critique</a><a href="#t04">04 Motion</a><a href="#t05">05 Explanation</a><a href="#t06">06 Fiction</a><a href="#t07">07 Build</a><a href="#t08">08 Review</a></nav></header>
+<main>
+<section class="task" data-task="01" id="t01">
+<h2>01 · Poster</h2>
+<p class="meta">svg · 1080 × 1350</p>
+<details><summary>prompt (thin)</summary><pre>Design a poster for "The Last Ferry, 11:40pm" — a late-night ferry crossing
+between two islands. Output: one SVG file, 1080 × 1350.</pre></details>
+<details><summary>prompt (thick)</summary><pre>A poster for "The Last Ferry", the 11:40pm crossing between San Remo and the
+island of Vell. Output: one SVG file, 1080 × 1350.
+
+Must contain: the title, the time, both directions, one line of copy, and the
+URL `ferry.vell/1140`.
+Audience: night-shift workers, 24–40, urban and tired. It is seen on a phone at
+11pm but printed at A2.
+Direction: two inks plus one paper tone. A condensed grotesque for the display,
+a monospace for the timetable block. Margins no tighter than 7% of the shorter
+edge. No imagery other than type and hard geometry.
+Avoid: gradients, drop shadows, faux paper texture, badges or stickers, stock
+photography, everything centred.
+Success: legible at phone size, unmistakably a schedule, and something a person
+would tear off a wall.</pre></details>
+<div class="pair">
+<div class="frame"><div class="cap"><b>Thin</b><span>svg</span><button data-replay>replay</button></div><div class="stage"><img src="01-poster.thin.svg" alt=""></div><div class="scores"><label>fulfils <input type="number" min="0" max="5" data-score="01.thin.fulfils"></label><label>craft <input type="number" min="0" max="5" data-score="01.thin.craft"></label><label>original <input type="number" min="0" max="5" data-score="01.thin.original"></label><label>restraint <input type="number" min="0" max="5" data-score="01.thin.restraint"></label></div></div>
+<div class="frame"><div class="cap"><b>Thick</b><span>svg</span><button data-replay>replay</button></div><div class="stage"><img src="01-poster.thick.svg" alt=""></div><div class="scores"><label>fulfils <input type="number" min="0" max="5" data-score="01.thick.fulfils"></label><label>craft <input type="number" min="0" max="5" data-score="01.thick.craft"></label><label>original <input type="number" min="0" max="5" data-score="01.thick.original"></label><label>restraint <input type="number" min="0" max="5" data-score="01.thick.restraint"></label></div></div>
+</div>
+</section>
+<section class="task" data-task="02" id="t02">
+<h2>02 · Interface</h2>
+<p class="meta">html · 1440 × 900</p>
+<details><summary>prompt (thin)</summary><pre>Build the hero and one value section for Inkwell, a tool that turns handwritten
+notes into LaTeX. Output: one HTML file, 1440 × 900, no page scrolling.</pre></details>
+<details><summary>prompt (thick)</summary><pre>Build the hero and one value section for Inkwell. Output: one HTML file,
+1440 × 900, no page scrolling.
+
+What it is: you photograph a page of handwriting and get clean LaTeX back, with
+the original and the rendered output side by side.
+Must contain: the product name; a headline; one sentence explaining the
+conversion; three concrete capabilities — equations and tables handled,
+revision history per page, export to `.tex` or `.pdf`; a primary action
+"Try a page free"; a secondary action "See a real conversion".
+Audience: PhD students and researchers who already write LaTeX daily and
+distrust marketing pages.
+Direction: show the product rather than describe it — the hero must display a
+photograph of handwriting beside its rendered output, drawn with CSS or inline
+SVG. Use one serif for the headline and one grotesque for interface text. A
+muted, paper-like palette.
+Avoid: gradient hero, purple, centred hero with a blurred blob, three identical
+feature cards, emoji as icons, the words seamless / elevate / unlock, a fake
+"trusted by" logo strip.
+Success: at 1440 × 900 a researcher knows what it does within three seconds and
+has seen evidence it works.</pre></details>
+<div class="pair">
+<div class="frame"><div class="cap"><b>Thin</b><span>html</span><button data-replay>replay</button></div><div class="stage" data-w="1440" data-h="900"><iframe src="02-interface.thin.html" sandbox="allow-scripts" scrolling="no"></iframe></div><div class="scores"><label>fulfils <input type="number" min="0" max="5" data-score="02.thin.fulfils"></label><label>craft <input type="number" min="0" max="5" data-score="02.thin.craft"></label><label>original <input type="number" min="0" max="5" data-score="02.thin.original"></label><label>restraint <input type="number" min="0" max="5" data-score="02.thin.restraint"></label></div></div>
+<div class="frame"><div class="cap"><b>Thick</b><span>html</span><button data-replay>replay</button></div><div class="stage" data-w="1440" data-h="900"><iframe src="02-interface.thick.html" sandbox="allow-scripts" scrolling="no"></iframe></div><div class="scores"><label>fulfils <input type="number" min="0" max="5" data-score="02.thick.fulfils"></label><label>craft <input type="number" min="0" max="5" data-score="02.thick.craft"></label><label>original <input type="number" min="0" max="5" data-score="02.thick.original"></label><label>restraint <input type="number" min="0" max="5" data-score="02.thick.restraint"></label></div></div>
+</div>
+</section>
+<section class="task" data-task="03" id="t03">
+<h2>03 · Critique</h2>
+<p class="meta">html · 1440 × 900</p>
+<details><summary>prompt (thin)</summary><pre>Here is a landing page I shipped. Critique it, then fix it. Output: one HTML
+file at 1440 × 900, containing the improved page, with a note of at most 150
+words in an HTML comment at the top explaining what you changed.
+
+```html
+&lt;!doctype html&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta charset="utf-8"&gt;&lt;title&gt;Ferryline — Book your crossing&lt;/title&gt;
+&lt;style&gt;
+ body{margin:0;font-family:Inter,system-ui,sans-serif;color:#111;background:#fff}
+ .hero{padding:120px 40px;text-align:center;background:linear-gradient(135deg,#7c3aed,#ec4899);color:#fff}
+ h1{font-size:56px;margin:0 0 16px}
+ p{font-size:20px;opacity:.9;max-width:640px;margin:0 auto 32px}
+ .cta{display:inline-block;padding:16px 32px;border-radius:999px;background:#fff;color:#7c3aed;font-weight:600;text-decoration:none}
+ .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;padding:80px 40px}
+ .card{border:1px solid #eee;border-radius:16px;padding:32px;background:#fafafa}
+ .card h3{margin:0 0 12px}
+ footer{padding:40px;text-align:center;color:#666;font-size:14px}
+&lt;/style&gt;&lt;/head&gt;
+&lt;body&gt;
+&lt;section class="hero"&gt;
+  &lt;h1&gt;Book your crossing in seconds&lt;/h1&gt;
+  &lt;p&gt;Ferryline connects you to the islands you love with a seamless, modern
+  booking experience that puts you first.&lt;/p&gt;
+  &lt;a class="cta" href="#"&gt;Get started&lt;/a&gt;
+&lt;/section&gt;
+&lt;section class="cards"&gt;
+  &lt;div class="card"&gt;&lt;h3&gt;Fast&lt;/h3&gt;&lt;p&gt;Book in under a minute with our streamlined flow.&lt;/p&gt;&lt;/div&gt;
+  &lt;div class="card"&gt;&lt;h3&gt;Simple&lt;/h3&gt;&lt;p&gt;No hidden fees, no surprises, just clear pricing.&lt;/p&gt;&lt;/div&gt;
+  &lt;div class="card"&gt;&lt;h3&gt;Reliable&lt;/h3&gt;&lt;p&gt;Thousands of travellers trust us every day.&lt;/p&gt;&lt;/div&gt;
+&lt;/section&gt;
+&lt;footer&gt;© Ferryline 2026 — All rights reserved&lt;/footer&gt;
+&lt;/body&gt;&lt;/html&gt;
+```</pre></details>
+<details><summary>prompt (thick)</summary><pre>Here is a landing page I shipped. Output: one HTML file at 1440 × 900,
+containing the improved page, with a note of at most 150 words in an HTML
+comment at the top.
+
+Do three things, in this order:
+1. Diagnose — the five most damaging problems, ordered by impact.
+2. Fix — repair them in the page. Do not rebuild it from scratch; keep the
+   product, the structure and any copy that is defensible.
+3. Record — in the note, list what you changed and what you deliberately left
+   alone.
+Audience: ferry passengers booking on a phone, who do not care about the
+brand.
+You may rewrite copy only where it is vague or inflated. You may not add
+sections the product does not have.
+Avoid: replacing the page with a different generic landing page; removing
+content to make the layout easier; fixing everything instead of the five that
+matter.
+Success: the same page, visibly better, and the priorities in your note match
+the fixes actually made.
+
+```html
+&lt;!doctype html&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta charset="utf-8"&gt;&lt;title&gt;Ferryline — Book your crossing&lt;/title&gt;
+&lt;style&gt;
+ body{margin:0;font-family:Inter,system-ui,sans-serif;color:#111;background:#fff}
+ .hero{padding:120px 40px;text-align:center;background:linear-gradient(135deg,#7c3aed,#ec4899);color:#fff}
+ h1{font-size:56px;margin:0 0 16px}
+ p{font-size:20px;opacity:.9;max-width:640px;margin:0 auto 32px}
+ .cta{display:inline-block;padding:16px 32px;border-radius:999px;background:#fff;color:#7c3aed;font-weight:600;text-decoration:none}
+ .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;padding:80px 40px}
+ .card{border:1px solid #eee;border-radius:16px;padding:32px;background:#fafafa}
+ .card h3{margin:0 0 12px}
+ footer{padding:40px;text-align:center;color:#666;font-size:14px}
+&lt;/style&gt;&lt;/head&gt;
+&lt;body&gt;
+&lt;section class="hero"&gt;
+  &lt;h1&gt;Book your crossing in seconds&lt;/h1&gt;
+  &lt;p&gt;Ferryline connects you to the islands you love with a seamless, modern
+  booking experience that puts you first.&lt;/p&gt;
+  &lt;a class="cta" href="#"&gt;Get started&lt;/a&gt;
+&lt;/section&gt;
+&lt;section class="cards"&gt;
+  &lt;div class="card"&gt;&lt;h3&gt;Fast&lt;/h3&gt;&lt;p&gt;Book in under a minute with our streamlined flow.&lt;/p&gt;&lt;/div&gt;
+  &lt;div class="card"&gt;&lt;h3&gt;Simple&lt;/h3&gt;&lt;p&gt;No hidden fees, no surprises, just clear pricing.&lt;/p&gt;&lt;/div&gt;
+  &lt;div class="card"&gt;&lt;h3&gt;Reliable&lt;/h3&gt;&lt;p&gt;Thousands of travellers trust us every day.&lt;/p&gt;&lt;/div&gt;
+&lt;/section&gt;
+&lt;footer&gt;© Ferryline 2026 — All rights reserved&lt;/footer&gt;
+&lt;/body&gt;&lt;/html&gt;
+```</pre></details>
+<div class="pair">
+<div class="frame"><div class="cap"><b>Thin</b><span>html</span><button data-replay>replay</button></div><div class="stage" data-w="1440" data-h="900"><iframe src="03-critique.thin.html" sandbox="allow-scripts" scrolling="no"></iframe></div><div class="scores"><label>fulfils <input type="number" min="0" max="5" data-score="03.thin.fulfils"></label><label>craft <input type="number" min="0" max="5" data-score="03.thin.craft"></label><label>original <input type="number" min="0" max="5" data-score="03.thin.original"></label><label>restraint <input type="number" min="0" max="5" data-score="03.thin.restraint"></label></div></div>
+<div class="frame"><div class="cap"><b>Thick</b><span>html</span><button data-replay>replay</button></div><div class="stage" data-w="1440" data-h="900"><iframe src="03-critique.thick.html" sandbox="allow-scripts" scrolling="no"></iframe></div><div class="scores"><label>fulfils <input type="number" min="0" max="5" data-score="03.thick.fulfils"></label><label>craft <input type="number" min="0" max="5" data-score="03.thick.craft"></label><label>original <input type="number" min="0" max="5" data-score="03.thick.original"></label><label>restraint <input type="number" min="0" max="5" data-score="03.thick.restraint"></label></div></div>
+</div>
+</section>
+<section class="task" data-task="04" id="t04">
+<h2>04 · Motion</h2>
+<p class="meta">html · 1280 × 720</p>
+<details><summary>prompt (thin)</summary><pre>Animate the word DRIFT as an 8-second looping title card. Output: one HTML
+file, 1280 × 720. Expose `window.__anim = { duration: 8, seek(t), play(), pause() }`
+where `seek` is deterministic.</pre></details>
+<details><summary>prompt (thick)</summary><pre>Animate the word DRIFT as an 8-second looping title card. Output: one HTML
+file, 1280 × 720. Expose `window.__anim = { duration: 8, seek(t), play(), pause() }`
+where `seek(t)` renders the exact state at time t and is safe to call at any
+point.
+
+It is the title card for a short film about a ferry crossing at night.
+Direction: the word must be legible at rest for at least two seconds of the
+eight. Movement must be motivated — nothing moves without a reason in the
+sequence. Use one typeface. Two colours maximum. Keep the loop’s seam
+invisible: the final frame must flow into the first.
+Avoid: elastic or bounce eases, letter-by-letter fade-up, drop shadows, glow,
+glitch or particle effects, white flash frames, motion that never settles.
+Success: a viewer can describe the sequence as having a beginning, a middle and
+an end, and cannot see where it loops.</pre></details>
+<div class="pair">
+<div class="frame"><div class="cap"><b>Thin</b><span>html</span><button data-replay>replay</button></div><div class="stage" data-w="1280" data-h="720"><iframe src="04-motion.thin.html" sandbox="allow-scripts" scrolling="no"></iframe></div><div class="scores"><label>fulfils <input type="number" min="0" max="5" data-score="04.thin.fulfils"></label><label>craft <input type="number" min="0" max="5" data-score="04.thin.craft"></label><label>original <input type="number" min="0" max="5" data-score="04.thin.original"></label><label>restraint <input type="number" min="0" max="5" data-score="04.thin.restraint"></label></div></div>
+<div class="frame"><div class="cap"><b>Thick</b><span>html</span><button data-replay>replay</button></div><div class="stage" data-w="1280" data-h="720"><iframe src="04-motion.thick.html" sandbox="allow-scripts" scrolling="no"></iframe></div><div class="scores"><label>fulfils <input type="number" min="0" max="5" data-score="04.thick.fulfils"></label><label>craft <input type="number" min="0" max="5" data-score="04.thick.craft"></label><label>original <input type="number" min="0" max="5" data-score="04.thick.original"></label><label>restraint <input type="number" min="0" max="5" data-score="04.thick.restraint"></label></div></div>
+</div>
+</section>
+<section class="task" data-task="05" id="t05">
+<h2>05 · Explanation</h2>
+<p class="meta">md · ≤ 150 words</p>
+<details><summary>prompt (thin)</summary><pre>Explain how DNS works to someone who has never thought about it. 150 words
+maximum. Output: markdown.</pre></details>
+<details><summary>prompt (thick)</summary><pre>Explain how DNS works to someone who has never thought about it. 150 words
+maximum, counting the title if you write one. Output: markdown.
+
+Audience: a smart adult, not technical, who has only ever seen DNS in an error
+message.
+Must cover: the problem it solves, what happens between typing an address and
+the page appearing, why answers are remembered, and what usually goes wrong.
+Every technical term must be glossed in plain words at its first use.
+You may use one analogy, once. A second analogy costs you the piece.
+Avoid: the phone book, the postal service, "imagine a", "in today’s digital
+world", three-item lists used as padding, and em-dash chains.
+Success: a reader could retell it to a colleague in one sentence without
+getting it wrong.</pre></details>
+<div class="pair stacked">
+<div class="frame"><div class="cap"><b>Thin</b><span>md</span><button data-replay>replay</button></div><div class="prose"><p># DNS: The Internet's Address Book</p><p>Every website lives at a number called an IP address, like `142.250.72.14`. Nobody wants to memorize those, so we use names like `google.com`.</p><p>DNS translates names into numbers.</p><p>1. You type `google.com`.
+2. Your computer asks a DNS resolver: "What's the address?"
+3. If it doesn't know, it asks down a chain: root servers, then `.com` servers, then Google's own servers.
+4. It gets back the correct IP address and saves it for next time.
+5. Your browser connects to that number and loads the site.</p><p>It all happens in milliseconds — you just see the website appear.</p></div><div class="scores"><label>fulfils <input type="number" min="0" max="5" data-score="05.thin.fulfils"></label><label>craft <input type="number" min="0" max="5" data-score="05.thin.craft"></label><label>original <input type="number" min="0" max="5" data-score="05.thin.original"></label><label>restraint <input type="number" min="0" max="5" data-score="05.thin.restraint"></label></div></div>
+<div class="frame"><div class="cap"><b>Thick</b><span>md</span><button data-replay>replay</button></div><div class="prose"><p>Why Typing a Name Finds a Website</p><p>Computers find each other by numbers, but people remember by names. DNS (the system that matches names to those numbers) bridges that gap.</p><p>When you type an address (the name you see, such as example.com) your browser (the program showing web pages) asks a chain of servers (other computers that answer questions). One points to the next until one returns the matching number, called an IP address (the computer's actual location). Your browser then visits that location to get the page.</p><p>Answers are remembered for a short time, called caching (reusing a recent answer instead of asking again), because asking every time would be slow.</p><p>Most failures are typing mistakes or a server that is off or cannot be reached.</p></div><div class="scores"><label>fulfils <input type="number" min="0" max="5" data-score="05.thick.fulfils"></label><label>craft <input type="number" min="0" max="5" data-score="05.thick.craft"></label><label>original <input type="number" min="0" max="5" data-score="05.thick.original"></label><label>restraint <input type="number" min="0" max="5" data-score="05.thick.restraint"></label></div></div>
+</div>
+</section>
+<section class="task" data-task="06" id="t06">
+<h2>06 · Fiction</h2>
+<p class="meta">md · exactly 100 words</p>
+<details><summary>prompt (thin)</summary><pre>Write a 100-word story containing a broken clock. No dialogue. Output:
+markdown.</pre></details>
+<details><summary>prompt (thick)</summary><pre>Write a 100-word story, exactly 100 words, containing a clock that is wrong.
+No dialogue, no quoted speech. Output: markdown.
+
+Setting: a workplace after hours. Third person, limited to one character, who
+is not the narrator.
+The clock must earn its place — something in the story depends on it.
+Avoid: weather standing in for emotion, "a chill ran down", stacked similes,
+a twist in the last sentence, and any word you would only use in a story.
+Success: something has changed between the first sentence and the last, and the
+reader can say what.</pre></details>
+<div class="pair stacked">
+<div class="frame"><div class="cap"><b>Thin</b><span>md</span><button data-replay>replay</button></div><div class="prose"><p>Mara inherited the house on Linden Street with its leaning porch and dusty attic full of forgotten winters. She kept everything except time itself, which pooled in corners like water. The broken clock above the fireplace had stopped at 3:17 decades ago, its hands rusted together in stubborn agreement. Each morning she wound other clocks, polished their glass, listened to their ticking fill empty rooms. Yet evenings drew her back to the silent one. It asked nothing, promised nothing, remembered her father napping beneath it. Some things, she understood, are truer stopped than moving endlessly forward without rest or mercy.</p></div><div class="scores"><label>fulfils <input type="number" min="0" max="5" data-score="06.thin.fulfils"></label><label>craft <input type="number" min="0" max="5" data-score="06.thin.craft"></label><label>original <input type="number" min="0" max="5" data-score="06.thin.original"></label><label>restraint <input type="number" min="0" max="5" data-score="06.thin.restraint"></label></div></div>
+<div class="frame"><div class="cap"><b>Thick</b><span>md</span><button data-replay>replay</button></div><div class="prose"><p>Mara stayed late in the accounting office to finish payroll before the audit.
+She kept glancing at the wall clock above the door, which showed half past seven.
+She matched each total against paper receipts, initialed each page, and stacked them for scanning.
+At what she took for eight, she sent the files and shut down her computer.
+Tired, she reached for her phone and saw the screen read nearly ten.
+The wall clock had stopped during the afternoon without her noticing.
+She gathered her bag, turned off the lights, and left the office determined to check the time twice.</p></div><div class="scores"><label>fulfils <input type="number" min="0" max="5" data-score="06.thick.fulfils"></label><label>craft <input type="number" min="0" max="5" data-score="06.thick.craft"></label><label>original <input type="number" min="0" max="5" data-score="06.thick.original"></label><label>restraint <input type="number" min="0" max="5" data-score="06.thick.restraint"></label></div></div>
+</div>
+</section>
+<section class="task" data-task="07" id="t07">
+<h2>07 · Build</h2>
+<p class="meta">mjs · node:test</p>
+<details><summary>prompt (thin)</summary><pre>Write `parseDuration(‘1h30m’)` returning seconds, with tests. Output: one
+`.mjs` file that runs its own tests with `node:test` when executed.</pre></details>
+<details><summary>prompt (thick)</summary><pre>Write `parseDuration` and its tests. Output: one `.mjs` file that runs its own
+tests with `node:test` when executed.
+
+Signature: `parseDuration(input)` → number, in seconds.
+Accepts: one or more `number + unit` segments concatenated, units `h`, `m`, `s`,
+case-insensitive, e.g. `"1h30m"`, `"90s"`, `"2h"`, `"1H2M3S"`. Segments may
+appear in any order. Each unit at most once. Integers only, no spaces.
+Rejects, by throwing `TypeError` with a useful message: empty string, unknown
+unit, repeated unit, bare number with no unit, negative numbers, non-string
+input.
+`"0s"` returns `0`. `"1h"` returns `3600`.
+No dependencies. No classes. No options object. At most 60 lines including
+tests.
+Tests must cover the happy paths, each rejection case, and one composite.
+Avoid: silently coercing invalid input, regex you cannot explain on a second
+read, an abstraction layer for three units.
+Success: a reviewer understands it in one pass, and the tests fail if the
+parser regresses.</pre></details>
+<div class="pair stacked">
+<div class="frame"><div class="cap"><b>Thin</b><span>mjs</span><button data-replay>replay</button></div><pre class="code">export function parseDuration(input) {
+  if (typeof input !== "string") {
+    throw new TypeError("parseDuration expects a string");
+  }
+  const s = input.trim();
+  if (s === "") {
+    throw new Error("parseDuration: empty string");
+  }
+
+  const UNITS = {
+    ms: 0.001,
+    millisecond: 0.001,
+    milliseconds: 0.001,
+    s: 1,
+    sec: 1,
+    secs: 1,
+    second: 1,
+    seconds: 1,
+    m: 60,
+    min: 60,
+    mins: 60,
+    minute: 60,
+    minutes: 60,
+    h: 3600,
+    hr: 3600,
+    hrs: 3600,
+    hour: 3600,
+    hours: 3600,
+    d: 86400,
+    day: 86400,
+    days: 86400,
+    w: 604800,
+    week: 604800,
+    weeks: 604800,
+  };
+
+  // Bare number means seconds, e.g. "45" -&gt; 45, "1.5" -&gt; 1.5
+  if (/^[+-]?\d+(?:\.\d+)?$/.test(s)) {
+    return Number(s);
+  }
+
+  const re = /([+-]?\d+(?:\.\d+)?)\s*([a-zA-Z]+)/g;
+  let total = 0;
+  let matched = "";
+  let count = 0;
+  let m;
+  while ((m = re.exec(s)) !== null) {
+    const value = Number(m[1]);
+    const unit = m[2].toLowerCase();
+    if (!Number.isFinite(value)) {
+      throw new Error(`parseDuration: invalid number in ${JSON.stringify(input)}`);
+    }
+    if (!(unit in UNITS)) {
+      throw new Error(`parseDuration: unknown unit ${JSON.stringify(m[2])} in ${JSON.stringify(input)}`);
+    }
+    total += value * UNITS[unit];
+    matched += m[0];
+    count += 1;
+  }
+
+  if (count === 0) {
+    throw new Error(`parseDuration: invalid duration ${JSON.stringify(input)}`);
+  }
+
+  // Ensure the whole string was consumed (allowing whitespace between parts)
+  const stripped = s.replace(/\s+/g, "");
+  const consumed = matched.replace(/\s+/g, "");
+  if (stripped !== consumed) {
+    throw new Error(`parseDuration: invalid duration ${JSON.stringify(input)}`);
+  }
+
+  return total;
+}
+
+import test, { describe, it } from "node:test";
+import assert from "node:assert/strict";
+
+describe("parseDuration", () =&gt; {
+  it("parses '1h30m' to 5400 seconds", () =&gt; {
+    assert.equal(parseDuration("1h30m"), 5400);
+  });
+
+  it("parses single units", () =&gt; {
+    assert.equal(parseDuration("90s"), 90);
+    assert.equal(parseDuration("30m"), 1800);
+    assert.equal(parseDuration("1h"), 3600);
+    assert.equal(parseDuration("1d"), 86400);
+    assert.equal(parseDuration("1w"), 604800);
+  });
+
+  it("parses multi-part durations", () =&gt; {
+    assert.equal(parseDuration("1m30s"), 90);
+    assert.equal(parseDuration("2h45m10s"), 2 * 3600 + 45 * 60 + 10);
+    assert.equal(parseDuration("1w2d3h4m5s"), 604800 + 2 * 86400 + 3 * 3600 + 4 * 60 + 5);
+  });
+
+  it("parses decimals", () =&gt; {
+    assert.equal(parseDuration("1.5h"), 5400);
+    assert.equal(parseDuration("0.5m"), 30);
+    assert.equal(parseDuration("1.5m30s"), 120);
+  });
+
+  it("parses milliseconds to fractional seconds", () =&gt; {
+    assert.equal(parseDuration("1500ms"), 1.5);
+    assert.equal(parseDuration("1s500ms"), 1.5);
+  });
+
+  it("ignores whitespace and case", () =&gt; {
+    assert.equal(parseDuration("1h 30m"), 5400);
+    assert.equal(parseDuration("  1H30M  "), 5400);
+    assert.equal(parseDuration("1h30m"), parseDuration("1H 30M"));
+  });
+
+  it("supports long unit names", () =&gt; {
+    assert.equal(parseDuration("1 hour 30 minutes"), 5400);
+    assert.equal(parseDuration("2 days"), 172800);
+    assert.equal(parseDuration("45 seconds"), 45);
+  });
+
+  it("treats a bare number as seconds", () =&gt; {
+    assert.equal(parseDuration("45"), 45);
+    assert.equal(parseDuration("1.5"), 1.5);
+  });
+
+  it("parses zero", () =&gt; {
+    assert.equal(parseDuration("0s"), 0);
+    assert.equal(parseDuration("0h0m0s"), 0);
+  });
+
+  it("throws on invalid input", () =&gt; {
+    assert.throws(() =&gt; parseDuration(""), /empty/);
+    assert.throws(() =&gt; parseDuration("abc"));
+    assert.throws(() =&gt; parseDuration("10x"));
+    assert.throws(() =&gt; parseDuration("1h30"), /invalid/);
+    assert.throws(() =&gt; parseDuration("--5s"));
+  });
+
+  it("throws TypeError on non-string", () =&gt; {
+    assert.throws(() =&gt; parseDuration(90), TypeError);
+    assert.throws(() =&gt; parseDuration(null), TypeError);
+    assert.throws(() =&gt; parseDuration(undefined), TypeError);
+  });
+});
+</pre><div class="scores"><label>fulfils <input type="number" min="0" max="5" data-score="07.thin.fulfils"></label><label>craft <input type="number" min="0" max="5" data-score="07.thin.craft"></label><label>original <input type="number" min="0" max="5" data-score="07.thin.original"></label><label>restraint <input type="number" min="0" max="5" data-score="07.thin.restraint"></label></div></div>
+<div class="frame"><div class="cap"><b>Thick</b><span>mjs</span><button data-replay>replay</button></div><pre class="code">import { test } from 'node:test';
+import assert from 'node:assert/strict';
+export function parseDuration(input) {
+  if (typeof input !== 'string') throw new TypeError('parseDuration: input must be a string');
+  if (input === '') throw new TypeError('parseDuration: empty string');
+  const secs = { h: 3600, m: 60, s: 1 };
+  const seen = new Set();
+  let total = 0;
+  let digits = '';
+  for (const ch of input) {
+    if (ch &gt;= '0' &amp;&amp; ch &lt;= '9') { digits += ch; continue; }
+    if (ch === '-') throw new TypeError('parseDuration: negative numbers not allowed');
+    const u = ch.toLowerCase();
+    if (!(u in secs)) throw new TypeError(`parseDuration: unknown unit '${ch}'`);
+    if (digits === '') throw new TypeError(`parseDuration: missing number before '${ch}'`);
+    if (seen.has(u)) throw new TypeError(`parseDuration: repeated unit '${u}'`);
+    seen.add(u);
+    total += Number(digits) * secs[u];
+    digits = '';
+  }
+  if (digits !== '') throw new TypeError('parseDuration: bare number with no unit');
+  if (seen.size === 0) throw new TypeError('parseDuration: no segments found');
+  return total;
+}
+test('happy paths', () =&gt; {
+  assert.equal(parseDuration('0s'), 0);
+  assert.equal(parseDuration('1h'), 3600);
+  assert.equal(parseDuration('90s'), 90);
+  assert.equal(parseDuration('2h'), 7200);
+  assert.equal(parseDuration('1H2M3S'), 3723);
+});
+test('composite out of order', () =&gt; {
+  assert.equal(parseDuration('30s1h10m'), 4230);
+});
+test('rejects empty', () =&gt; { assert.throws(() =&gt; parseDuration(''), TypeError); });
+test('rejects unknown unit', () =&gt; { assert.throws(() =&gt; parseDuration('5x'), TypeError); });
+test('rejects repeated unit', () =&gt; { assert.throws(() =&gt; parseDuration('1h2H'), TypeError); });
+test('rejects bare number', () =&gt; { assert.throws(() =&gt; parseDuration('123'), TypeError); });
+test('rejects negative', () =&gt; { assert.throws(() =&gt; parseDuration('-5s'), TypeError); });
+test('rejects non-string', () =&gt; { assert.throws(() =&gt; parseDuration(90), TypeError); });
+test('rejects spaces', () =&gt; { assert.throws(() =&gt; parseDuration('1h 30m'), TypeError); });
+</pre><div class="scores"><label>fulfils <input type="number" min="0" max="5" data-score="07.thick.fulfils"></label><label>craft <input type="number" min="0" max="5" data-score="07.thick.craft"></label><label>original <input type="number" min="0" max="5" data-score="07.thick.original"></label><label>restraint <input type="number" min="0" max="5" data-score="07.thick.restraint"></label></div></div>
+</div>
+</section>
+<section class="task" data-task="08" id="t08">
+<h2>08 · Review</h2>
+<p class="meta">md · code review</p>
+<details><summary>prompt (thin)</summary><pre>Review this code. Comments only — do not rewrite it. Output: markdown.
+
+```js
+export function createLimiter({ limit = 10, windowMs = 1000, now = () =&gt; Date.now() } = {}) {
+  const hits = [];
+  function prune(t) {
+    while (hits.length &amp;&amp; hits[0] &lt; t - windowMs) hits.shift();
+  }
+  return {
+    allow(key) {
+      const t = now();
+      prune(t);
+      const n = hits.filter(h =&gt; h.key === key).length;
+      if (n &gt;= limit) return false;
+      hits.push({ key, time: t });
+      return true;
+    },
+    reset(key) {
+      for (let i = 0; i &lt; hits.length; i++) {
+        if (hits[i].key === key) hits.splice(i, 1);
+      }
+    }
+  };
+}
+```</pre></details>
+<details><summary>prompt (thick)</summary><pre>Review this code. Comments only — do not rewrite it. Output: markdown.
+
+Format each finding on one line:
+`[severity] location — problem — why it matters — suggested direction`
+Severity is one of `blocker`, `major`, `minor`, `nit`. Order by severity.
+Cover correctness first, then performance, then API design, then tests.
+Do not summarise what the code does. Do not praise. Do not suggest a rewrite.
+Maximum eight findings — if you find more, keep the eight that matter.
+Success: a maintainer could fix every blocker using only your comments.
+
+```js
+export function createLimiter({ limit = 10, windowMs = 1000, now = () =&gt; Date.now() } = {}) {
+  const hits = [];
+  function prune(t) {
+    while (hits.length &amp;&amp; hits[0] &lt; t - windowMs) hits.shift();
+  }
+  return {
+    allow(key) {
+      const t = now();
+      prune(t);
+      const n = hits.filter(h =&gt; h.key === key).length;
+      if (n &gt;= limit) return false;
+      hits.push({ key, time: t });
+      return true;
+    },
+    reset(key) {
+      for (let i = 0; i &lt; hits.length; i++) {
+        if (hits[i].key === key) hits.splice(i, 1);
+      }
+    }
+  };
+}
+```</pre></details>
+<div class="pair stacked">
+<div class="frame"><div class="cap"><b>Thin</b><span>md</span><button data-replay>replay</button></div><div class="prose"><p># Code Review: `createLimiter`</p><p>## Summary</p><p>Intent is a per-key fixed/sliding window rate limiter with injectable clock. The implementation is small and readable, but it has at least two correctness bugs that break core behavior, plus validation, performance, and API-clarity gaps.</p><p>## Critical Defects — Must Fix</p><p>### 1. Sliding-window expiry never fires — `prune()` compares the wrong type</p><p>- `hits` stores objects shaped `{ key, time }`.
+- `prune(t)` tests `hits[0] &lt; t - windowMs`.
+- An object compared to a number does not yield its `time` field, so the `while` condition is never true in the intended way.
+- Effect: old entries are never evicted. The window grows without bound, `allow()` eventually denies everything once a key reaches `limit` total hits, and memory leaks.
+- Comment only: the comparison needs to inspect the stored timestamp property, and the inclusive vs. exclusive boundary at exactly `t - windowMs` should be decided and documented.</p><p>### 2. `reset(key)` skips entries — mutating while iterating forward</p><p>- The loop is `for (let i = 0; i &lt; hits.length; i++)` with `hits.splice(i, 1)` on match and no index adjustment.
+- After a removal, all later elements shift left by one, then `i++` advances past the element that just moved into position `i`.
+- Effect: with two or more consecutive entries for the same `key`, every other one survives. `reset()` therefore does not reliably reset.
+- Comment only: this needs a backwards iteration, an index correction after splice, or a non-mutating rebuild. Also confirm whether `reset()` should prune expired entries first.</p><p>## Correctness / Edge Cases</p><p>### 3. Time ordering assumption is undocumented and fragile</p><p>- `prune()` assumes `hits` is chronologically ordered because it only inspects `hits[0]`.
+- The injected `now()` can move backwards in tests or with clock skew, and nothing enforces monotonic time.
+- Comment: document whether non-monotonic clocks are supported, and what happens on backwards jumps.</p><p>### 4. Window boundary semantics are implicit</p><p>- With `&lt;` versus `&lt;=`, an entry timestamped exactly at `t - windowMs` is either kept or dropped.
+- Comment: choose and document inclusive/exclusive behavior, especially since tests with a fake `now()` will hit the exact boundary.</p><p>### 5. No input validation</p><p>- No checks on `limit`, `windowMs`, or `key`.
+- Consider: `limit = 0`, negative or fractional `limit`, `windowMs &lt;= 0`, `NaN`, missing `key`, or non-string keys.
+- Currently `allow(undefined)` would record a bucket under `undefined`, which is almost certainly not intended but is silently accepted.
+- Comment: validate constructor options and decide whether invalid input throws, clamps, or is ignored.</p><p>### 6. `reset()` contract for missing / absent key is unclear</p><p>- `reset(key)` with no argument, with `undefined`, or with a never-seen key silently does nothing (apart from the bug above).
+- Comment: document whether `reset()` with no key should clear all buckets, and whether resetting an unknown key is a no-op.</p><p>## Performance / Scalability</p><p>### 7. `allow()` is O(n) per call</p><p>- Every call runs `hits.filter(h =&gt; h.key === key).length`, scanning all keys' histories.
+- Comment: this is fine for tiny use but degrades with many keys or high throughput. A per-key queue / `Map&lt;key, timestamps[]&gt;` would isolate buckets.</p><p>### 8. `shift()` in a loop is O(n) per eviction</p><p>- Repeated `shift()` reindexes the array.
+- Comment: for a high-volume limiter, prefer a start-index pointer with periodic compaction or per-key queues.</p><p>### 9. Unbounded cardinality</p><p>- Expired entries are meant to be pruned globally, which helps, but live state still grows with distinct-key count within the window.
+- Comment: document expected key cardinality and whether eviction of idle keys is needed.</p><p>## API / Observability</p><p>### 10. Minimal return value limits usability</p><p>- `allow()` returns only boolean. Callers building `429` responses typically need remaining quota, limit, reset time, or retry delay.
+- Comment: consider whether the API should expose that metadata or keep the minimal contract and document the limitation.</p><p>### 11. No introspection for tests or monitoring</p><p>- No way to read current count, bucket size, or total stored entries.
+- Combined with the injectable `now()`, which is good for testability, the lack of introspection makes the expiry bug harder to catch.
+- Comment: document how callers should test expiry and reset.</p><p>## Style / Maintainability</p><p>### 12. Missing contract documentation</p><p>- No JSDoc for parameters, return shape, window semantics, per-key isolation, or thread/reentrancy expectations.
+- Comment: a short contract would prevent divergent assumptions about `reset()`, boundary handling, and `now()` monotonicity.</p><p>### 13. Test suggestions (no code changes proposed here)</p><p>- Expiry: fill to limit, advance clock past `windowMs`, expect allowance again.
+- Boundary: hit exactly at `t - windowMs`.
+- Reset with interleaved keys: `a, b, a, a`, reset `a`, verify `b` untouched and `a` fully cleared.
+- Reset with consecutive same-key entries specifically, to catch the splice-skip.
+- Storage growth: many expired entries followed by time advance, verify internal size does not grow without bound.
+- Invalid options and missing keys.
+- Backwards clock movement, if supported.</p></div><div class="scores"><label>fulfils <input type="number" min="0" max="5" data-score="08.thin.fulfils"></label><label>craft <input type="number" min="0" max="5" data-score="08.thin.craft"></label><label>original <input type="number" min="0" max="5" data-score="08.thin.original"></label><label>restraint <input type="number" min="0" max="5" data-score="08.thin.restraint"></label></div></div>
+<div class="frame"><div class="cap"><b>Thick</b><span>md</span><button data-replay>replay</button></div><div class="prose"><p>[blocker] prune() — `hits[0] &lt; t - windowMs` compares an entry object to a number so it is always false and nothing is ever evicted — limiter never slides and permanently denies after `limit` hits — compare `hits[0].time` against the cutoff.
+[blocker] reset(key) — forward loop with `hits.splice(i, 1)` advances past the shifted element so consecutive entries for the key are skipped — reset leaves stale hits and the key stays blocked — iterate backwards or decrement `i` after splicing.
+[major] allow()/prune() — `hits.filter()` scans all keys per call and `shift()` in a loop makes eviction quadratic — throughput collapses and memory grows with total traffic — store per-key timestamp queues in a `Map` with a head index.
+[major] createLimiter({limit, windowMs}) — no validation of zero/negative/NaN/Infinity values — invalid config silently yields always-deny or never-expire behavior — throw `RangeError` for `limit &lt; 1` non-integer and `windowMs &lt;= 0` non-finite.
+[major] allow(key)/reset(key) — any `key` type is accepted with no normalization — `undefined`/object keys collide or never match so quota isolation breaks silently — validate key type or use `Map` key semantics and document them.
+[minor] prune() cutoff uses `&lt;` with no specified boundary — entry exactly `windowMs` old is retained, making the window inclusive and edge counts ambiguous — pin behavior with a test using exact-boundary timestamps and choose `&lt;` vs `&lt;=` explicitly.
+[minor] `now()` is assumed monotonic — clock skew or a mock moving backwards inserts out-of-order `time` values that head-only global `prune` cannot evict — stale entries linger or fresh entries expire early — clamp `t` to last-seen time or document a monotonic-clock requirement.
+[minor] tests — no coverage for window slide, per-key isolation, consecutive-entry reset, or invalid options — both loop bugs pass a single happy-path check — add cases for expiry boundary, multi-key counts, back-to-back reset, and rejected config.</p></div><div class="scores"><label>fulfils <input type="number" min="0" max="5" data-score="08.thick.fulfils"></label><label>craft <input type="number" min="0" max="5" data-score="08.thick.craft"></label><label>original <input type="number" min="0" max="5" data-score="08.thick.original"></label><label>restraint <input type="number" min="0" max="5" data-score="08.thick.restraint"></label></div></div>
+</div>
+</section>
+<section class="task"><h2>Summary</h2>
+<p class="meta">0–20 per column: fulfils + craft + original + restraint, four axes at 0–5.</p>
+<table class="sum" id="sum"></table>
+</section>
+</main>
+<script>
+const KEY = 'bench:muse spark 1.3 - run 1';
+let state = {};
+try { state = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch (e) {}
+function scale() {
+document.querySelectorAll('.stage[data-w]').forEach(stage => {
+const f = stage.querySelector('iframe'); if (!f) return;
+const w = +stage.dataset.w, h = +stage.dataset.h;
+const s = stage.clientWidth / w;
+f.style.width = w + 'px'; f.style.height = h + 'px';
+f.style.transform = 'scale(' + s + ')';
+stage.style.height = (h * s) + 'px';
+});
+}
+addEventListener('resize', scale); scale();
+document.querySelectorAll('[data-replay]').forEach(b => b.addEventListener('click', () => {
+const f = b.closest('.frame').querySelector('iframe');
+if (f) { const s = f.src; f.src = 'about:blank'; f.src = s; }
+}));
+const inputs = [...document.querySelectorAll('input[data-score]')];
+inputs.forEach(el => {
+const k = el.dataset.score;
+if (state[k] != null) el.value = state[k];
+el.addEventListener('input', () => {
+const v = Math.max(0, Math.min(5, Math.round(Number(el.value) || 0)));
+el.value = v; state[k] = v;
+localStorage.setItem(KEY, JSON.stringify(state)); total();
+});
+});
+function total() {
+const tasks = [...document.querySelectorAll('.task[data-task]')];
+const axes = ['fulfils','craft','original','restraint'];
+let rows = '<tr><th>Task</th><th>Thin</th><th>Thick</th><th>Δ</th></tr>';
+let st = 0, kt = 0, n = 0;
+tasks.forEach(t => {
+const id = t.dataset.task;
+const sum = r => axes.reduce((a, x) => a + (Number(state[id + '.' + r + '.' + x]) || 0), 0);
+const a = sum('thin'), b = sum('thick');
+st += a; kt += b; n++;
+rows += '<tr><td>' + t.querySelector('h2').textContent + '</td><td>' + a +'</td><td>' + b + '</td><td>' + (b - a >= 0 ? '+' : '') + (b - a) + '</td></tr>';
+});
+rows += '<tr><td><b>Total</b></td><td><b>' + st + '</b></td><td><b>' + kt +'</b></td><td><b>' + (kt - st >= 0 ? '+' : '') + (kt - st) + '</b></td></tr>';
+document.getElementById('sum').innerHTML = rows;
+}
+total();
+</script>
+</body>
+</html>

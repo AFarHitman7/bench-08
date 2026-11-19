@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1280, initial-scale=1">
+<title>DRIFT — Title Card</title>
+<style>
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    width: 1280px; height: 720px;
+    overflow: hidden;
+    background: #05060f;
+  }
+  #stage {
+    position: relative;
+    width: 1280px; height: 720px;
+    overflow: hidden;
+    background:
+      radial-gradient(1200px 800px at 50% 45%, #141a3a 0%, #0a0c1f 45%, #05060f 100%);
+    font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: #eef1ff;
+    user-select: none;
+  }
+  .aurora {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(70px);
+    opacity: .55;
+    will-change: transform;
+  }
+  .a1 { width: 620px; height: 620px; left: -80px;  top: -180px;
+        background: radial-gradient(circle, #3a2a8f 0%, rgba(58,42,143,0) 70%); }
+  .a2 { width: 700px; height: 700px; right: -120px; top: 120px;
+        background: radial-gradient(circle, #1c6f8f 0%, rgba(28,111,143,0) 70%); }
+  .a3 { width: 560px; height: 560px; left: 380px; bottom: -240px;
+        background: radial-gradient(circle, #7a2a6f 0%, rgba(122,42,111,0) 70%); }
+  #particles { position: absolute; inset: 0; }
+  .p { position: absolute; border-radius: 50%; background: #cfe0ff; will-change: transform, opacity; }
+
+  .vignette {
+    position: absolute; inset: 0; pointer-events: none;
+    background: radial-gradient(900px 520px at 50% 50%, rgba(0,0,0,0) 40%, rgba(0,0,0,.55) 100%);
+  }
+  .scan {
+    position: absolute; inset: 0; pointer-events: none; opacity: .06;
+    background: repeating-linear-gradient(0deg, #fff 0 1px, transparent 1px 3px);
+  }
+
+  .center {
+    position: absolute; left: 0; right: 0; top: 50%;
+    transform: translateY(-50%);
+    text-align: center;
+  }
+  #title {
+    display: inline-flex;
+    gap: 6px;
+    font-size: 168px;
+    font-weight: 800;
+    letter-spacing: 14px;
+    line-height: 1;
+  }
+  #title span {
+    display: inline-block;
+    will-change: transform, opacity, filter;
+    background: linear-gradient(180deg, #ffffff 0%, #cdd6ff 55%, #8aa0ff 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-shadow: 0 0 40px rgba(120,150,255,.18);
+  }
+  #rule {
+    width: 0; height: 1px; margin: 26px auto 0;
+    background: linear-gradient(90deg, transparent, #9fb2ff, transparent);
+    will-change: width, opacity;
+  }
+  #sub {
+    margin-top: 20px;
+    font-size: 15px; letter-spacing: 8px; font-weight: 600;
+    color: #a9b6e8; text-transform: uppercase;
+    will-change: opacity, transform;
+  }
+
+  #bar {
+    position: absolute; left: 60px; right: 60px; bottom: 46px; height: 2px;
+    background: rgba(255,255,255,.10);
+  }
+  #barFill {
+    height: 100%; width: 0;
+    background: linear-gradient(90deg, #6d7dff, #b6c4ff);
+    box-shadow: 0 0 10px rgba(120,140,255,.6);
+  }
+  #meta {
+    position: absolute; left: 60px; bottom: 60px;
+    font-size: 11px; letter-spacing: 4px; color: #6f79a8; text-transform: uppercase;
+  }
+  #count {
+    position: absolute; right: 60px; bottom: 60px;
+    font-size: 11px; letter-spacing: 3px; color: #6f79a8;
+    font-variant-numeric: tabular-nums;
+  }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div class="aurora a1" id="au1"></div>
+  <div class="aurora a2" id="au2"></div>
+  <div class="aurora a3" id="au3"></div>
+  <div id="particles"></div>
+  <div class="scan"></div>
+  <div class="vignette"></div>
+
+  <div class="center">
+    <div id="title"></div>
+    <div id="rule"></div>
+    <div id="sub">Let the moment carry you</div>
+  </div>
+
+  <div id="meta">DRIFT — 8s loop</div>
+  <div id="count">00:00.00</div>
+  <div id="bar"><div id="barFill"></div></div>
+</div>
+
+<script>
+(function () {
+  "use strict";
+  var DURATION = 8;
+  var W = 1280, H = 720;
+
+  var titleEl = document.getElementById("title");
+  var letters = "DRIFT".split("").map(function (ch) {
+    var s = document.createElement("span");
+    s.textContent = ch;
+    titleEl.appendChild(s);
+    return s;
+  });
+  var ruleEl = document.getElementById("rule");
+  var subEl = document.getElementById("sub");
+  var barFill = document.getElementById("barFill");
+  var countEl = document.getElementById("count");
+  var au = [document.getElementById("au1"), document.getElementById("au2"), document.getElementById("au3")];
+
+  // deterministic pseudo-random from integer seed
+  function rnd(n) {
+    var x = Math.sin(n * 127.1 + 311.7) * 43758.5453;
+    return x - Math.floor(x);
+  }
+  var NP = 70, particles = [];
+  var pWrap = document.getElementById("particles");
+  for (var i = 0; i < NP; i++) {
+    var d = document.createElement("div");
+    d.className = "p";
+    var size = 1 + rnd(i + 1) * 2.6;
+    d.style.width = size + "px";
+    d.style.height = size + "px";
+    pWrap.appendChild(d);
+    particles.push({
+      el: d,
+      x0: rnd(i + 11) * W,
+      y0: rnd(i + 23) * H,
+      sp: 6 + rnd(i + 37) * 18,
+      drift: 10 + rnd(i + 51) * 34,
+      ph: rnd(i + 67) * Math.PI * 2,
+      a: 0.18 + rnd(i + 83) * 0.55
+    });
+  }
+
+  function clamp01(x) { return x < 0 ? 0 : (x > 1 ? 1 : x); }
+  function easeOut(x) { return 1 - Math.pow(1 - x, 3); }
+  function easeInOut(x) { return x < .5 ? 4*x*x*x : 1 - Math.pow(-2*x+2,3)/2; }
+  function mod(n, m) { return ((n % m) + m) % m; }
+
+  function render(t) {
+    t = mod(t, DURATION);
+
+    // letters: staggered drift-in, hold with breathing, staggered drift-out
+    for (var i = 0; i < letters.length; i++) {
+      var inStart = 0.30 + i * 0.14;
+      var inP = easeOut(clamp01((t - inStart) / 0.95));
+      var outStart = 6.25 + (letters.length - 1 - i) * 0.06;
+      var outP = easeInOut(clamp01((t - outStart) / 0.95));
+
+      var breathe = (inP > 0.99 && outP < 0.01)
+        ? Math.sin(t * 1.5 + i * 0.6) * 3.2 : 0;
+      var y = (1 - inP) * (-46) + outP * 38 + breathe;
+      var rot = (1 - inP) * (-9) + outP * 7;
+      var sc = 0.88 + 0.12 * inP;
+      var blur = (1 - inP) * 13 + outP * 11;
+      var op = inP * (1 - outP);
+
+      letters[i].style.transform =
+        "translateY(" + y.toFixed(2) + "px) rotate(" + rot.toFixed(2) + "deg) scale(" + sc.toFixed(3) + ")";
+      letters[i].style.opacity = op.toFixed(3);
+      letters[i].style.filter = blur > 0.05 ? "blur(" + blur.toFixed(2) + "px)" : "none";
+    }
+
+    // horizontal rule grows then contracts
+    var rp = easeInOut(clamp01((t - 1.35) / 0.8));
+    var ro = easeInOut(clamp01((t - 6.0) / 0.8));
+    ruleEl.style.width = (rp * (1 - ro) * 660).toFixed(1) + "px";
+    ruleEl.style.opacity = (rp * (1 - ro)).toFixed(3);
+
+    // subtitle fades in, drifts up, then leaves
+    var sIn = easeOut(clamp01((t - 1.7) / 0.9));
+    var sOut = easeInOut(clamp01((t - 6.1) / 0.8));
+    subEl.style.opacity = (sIn * (1 - sOut)).toFixed(3);
+    subEl.style.transform = "translateY(" + ((1 - sIn) * 12 - sOut * 10).toFixed(2) + "px)";
+
+    // particles drift upward with looping wrap
+    for (var j = 0; j < particles.length; j++) {
+      var q = particles[j];
+      var py = mod(q.y0 - t * q.sp, H);
+      var px = q.x0 + Math.sin(t * 0.45 + q.ph) * q.drift;
+      var edge = Math.min(1, py / 60, (H - py) / 60);
+      var twinkle = 0.6 + 0.4 * Math.sin(t * 2.0 + q.ph * 3);
+      q.el.style.transform = "translate3d(" + px.toFixed(1) + "px," + py.toFixed(1) + "px,0)";
+      q.el.style.opacity = (q.a * Math.max(0, edge) * twinkle).toFixed(3);
+    }
+
+    // aurora slow drift
+    for (var k = 0; k < au.length; k++) {
+      var dx = Math.sin(t * 0.27 + k * 2.1) * 46;
+      var dy = Math.cos(t * 0.21 + k * 1.4) * 34;
+      au[k].style.transform = "translate(" + dx.toFixed(1) + "px," + dy.toFixed(1) + "px)";
+    }
+
+    // progress + timecode
+    barFill.style.width = (t / DURATION * 100).toFixed(3) + "%";
+    var cs = t.toFixed(2);
+    countEl.textContent = "00:" + (cs < 10 ? "0" : "") + cs;
+  }
+
+  var current = 0, playing = false, last = 0, raf = null;
+  function frame(now) {
+    if (!playing) return;
+    if (!last) last = now;
+    current += (now - last) / 1000;
+    last = now;
+    if (current >= DURATION) current = mod(current, DURATION);
+    render(current);
+    raf = requestAnimationFrame(frame);
+  }
+  function play() {
+    if (playing) return;
+    playing = true; last = 0;
+    raf = requestAnimationFrame(frame);
+  }
+  function pause() {
+    playing = false; last = 0;
+    if (raf) { cancelAnimationFrame(raf); raf = null; }
+  }
+  function seek(t) {
+    t = Number(t) || 0;
+    current = mod(t, DURATION);
+    render(current);
+  }
+
+  window.__anim = { duration: DURATION, seek: seek, play: play, pause: pause };
+
+  seek(0);
+  play();
+})();
+</script>
+</body>
+</html>

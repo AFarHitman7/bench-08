@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1350" viewBox="0 0 1080 1350">
+  <rect x="0" y="0" width="1080" height="1350" fill="#ECE7DC"/>
+
+  <text x="80" y="110" font-family="'Courier New', Courier, monospace" font-size="24" fill="#111111">VELL FERRY CO. / NIGHT SERVICE</text>
+  <text x="1000" y="110" text-anchor="end" font-family="'Courier New', Courier, monospace" font-size="24" fill="#111111">ferry.vell/1140</text>
+  <rect x="80" y="124" width="920" height="6" fill="#111111"/>
+
+  <text x="76" y="320" font-family="Impact, 'Franklin Gothic Condensed', 'Arial Narrow', sans-serif" font-size="200" fill="#111111">THE</text>
+  <text x="76" y="530" font-family="Impact, 'Franklin Gothic Condensed', 'Arial Narrow', sans-serif" font-size="200" fill="#111111">LAST</text>
+  <text x="76" y="740" font-family="Impact, 'Franklin Gothic Condensed', 'Arial Narrow', sans-serif" font-size="200" fill="#111111">FERRY</text>
+
+  <text x="76" y="940" font-family="Impact, 'Franklin Gothic Condensed', 'Arial Narrow', sans-serif" font-size="200" fill="#E5492B">11:40PM</text>
+
+  <text x="80" y="1000" font-family="'Arial Narrow', Arial, Helvetica, sans-serif" font-size="40" fill="#111111">Miss it and you sleep on the quay.</text>
+
+  <rect x="80" y="1030" width="920" height="130" fill="#111111"/>
+  <text x="110" y="1060" font-family="'Courier New', Courier, monospace" font-size="20" fill="#ECE7DC">ROUTE</text>
+  <text x="640" y="1060" font-family="'Courier New', Courier, monospace" font-size="20" fill="#ECE7DC">DEPART</text>
+  <text x="840" y="1060" font-family="'Courier New', Courier, monospace" font-size="20" fill="#ECE7DC">ARRIVE</text>
+  <text x="110" y="1097" font-family="'Courier New', Courier, monospace" font-size="28" fill="#ECE7DC">SAN REMO → VELL</text>
+  <text x="640" y="1097" font-family="'Courier New', Courier, monospace" font-size="28" fill="#E5492B">23:40</text>
+  <text x="840" y="1097" font-family="'Courier New', Courier, monospace" font-size="28" fill="#ECE7DC">00:25</text>
+  <text x="110" y="1136" font-family="'Courier New', Courier, monospace" font-size="28" fill="#ECE7DC">VELL → SAN REMO</text>
+  <text x="640" y="1136" font-family="'Courier New', Courier, monospace" font-size="28" fill="#E5492B">23:40</text>
+  <text x="840" y="1136" font-family="'Courier New', Courier, monospace" font-size="28" fill="#ECE7DC">00:25</text>
+
+  <line x1="80" y1="1190" x2="1000" y2="1190" stroke="#111111" stroke-width="3" stroke-dasharray="14 10"/>
+
+  <rect x="80" y="1206" width="207" height="68" fill="#111111"/>
+  <text x="96" y="1248" font-family="'Courier New', Courier, monospace" font-size="24" fill="#ECE7DC">SAN REMO</text>
+  <rect x="317" y="1206" width="207" height="68" fill="#111111"/>
+  <text x="333" y="1248" font-family="'Courier New', Courier, monospace" font-size="24" fill="#ECE7DC">VELL</text>
+  <rect x="554" y="1206" width="207" height="68" fill="#111111"/>
+  <text x="570" y="1248" font-family="'Courier New', Courier, monospace" font-size="24" fill="#ECE7DC">23:40</text>
+  <rect x="791" y="1206" width="209" height="68" fill="#E5492B"/>
+  <text x="807" y="1248" font-family="'Courier New', Courier, monospace" font-size="24" fill="#111111">1140</text>
+</svg>

@@ -1,0 +1,1023 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1440">
+<title>Inkwell — handwriting to LaTeX</title>
+<style>
+  :root{
+    --paper:#F2EEE3;
+    --paper-deep:#E9E3D3;
+    --ink:#211E19;
+    --ink-soft:#4F4A3F;
+    --muted:#6E685B;
+    --faint:#8C8576;
+    --line:#D6CEBC;
+    --line-soft:#DFD8C8;
+    --rust:#9C4F35;
+    --sage:#5D6B52;
+    --photo:#FAF4E4;
+    --sheet:#FEFCF6;
+    --serif:"Palatino Linotype","Book Antiqua",Palatino,Georgia,"Times New Roman",serif;
+    --sans:"Segoe UI","Helvetica Neue",Helvetica,Arial,sans-serif;
+    --mono:"Cascadia Mono","SF Mono",Consolas,"Liberation Mono",monospace;
+    --script:"Segoe Script","Bradley Hand","Ink Free","Comic Sans MS",cursive;
+  }
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;height:100%;overflow:hidden;background:var(--paper);}
+  body{
+    color:var(--ink);
+    font-family:var(--sans);
+    -webkit-font-smoothing:antialiased;
+    text-rendering:optimizeLegibility;
+  }
+  a{color:inherit;}
+
+  .page{
+    position:relative;
+    width:1440px;
+    height:900px;
+    margin:0 auto;
+    overflow:hidden;
+    background:var(--paper);
+    display:flex;
+    flex-direction:column;
+  }
+  .page::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    z-index:0;
+    pointer-events:none;
+    opacity:.38;
+    mix-blend-mode:multiply;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23n)' opacity='0.22'/%3E%3C/svg%3E");
+  }
+  header,main{position:relative;z-index:1;}
+  main{
+    flex:1 1 auto;
+    min-height:0;
+    display:flex;
+    flex-direction:column;
+  }
+
+  /* ---------- top bar ---------- */
+  .top{
+    flex:0 0 68px;
+    height:68px;
+    padding:0 56px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    border-bottom:1px solid var(--line);
+  }
+  .brand{
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    text-decoration:none;
+  }
+  .brand svg{display:block;color:var(--ink);}
+  .brand .word{
+    font-family:var(--serif);
+    font-size:23px;
+    line-height:1;
+    letter-spacing:-.01em;
+    padding-bottom:2px;
+  }
+  .nav{
+    display:flex;
+    align-items:center;
+    gap:28px;
+    font-size:13px;
+    letter-spacing:.005em;
+    color:#5B564A;
+  }
+  .nav a{text-decoration:none;transition:color .15s ease;}
+  .nav a:hover{color:var(--ink);}
+  .nav .signin{
+    color:var(--ink);
+    padding-left:26px;
+    border-left:1px solid var(--line);
+  }
+
+  /* ---------- hero ---------- */
+  .hero{
+    flex:0 0 auto;
+    padding:36px 56px 26px;
+    display:grid;
+    grid-template-columns:452px minmax(0,1fr);
+    column-gap:56px;
+    align-items:start;
+  }
+  .hero-copy{
+    padding-top:8px;
+    height:464px;
+    display:flex;
+    flex-direction:column;
+    align-items:flex-start;
+  }
+
+  h1{
+    margin:0 0 24px;
+    font-family:var(--serif);
+    font-weight:400;
+    font-size:59px;
+    line-height:1.03;
+    letter-spacing:-.022em;
+    color:var(--ink);
+  }
+  h1 em{
+    font-style:italic;
+    letter-spacing:-.03em;
+  }
+
+  .lede{
+    margin:0 0 30px;
+    max-width:412px;
+    font-size:16.5px;
+    line-height:1.58;
+    color:var(--ink-soft);
+    letter-spacing:-.002em;
+  }
+
+  .actions{
+    display:flex;
+    align-items:center;
+    gap:26px;
+  }
+  .btn-primary{
+    appearance:none;
+    border:1px solid #171410;
+    background:var(--ink);
+    color:#F8F4E9;
+    font-family:var(--sans);
+    font-size:14px;
+    font-weight:600;
+    letter-spacing:.005em;
+    height:50px;
+    padding:0 21px;
+    border-radius:3px;
+    display:inline-flex;
+    align-items:center;
+    gap:13px;
+    cursor:pointer;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.12), 0 2px 0 rgba(60,48,26,.18);
+    transition:background .15s ease, transform .15s ease;
+  }
+  .btn-primary:hover{background:#332E25;}
+  .btn-primary:active{transform:translateY(1px);}
+  .btn-primary svg{display:block;}
+
+  .btn-secondary{
+    font-size:13.5px;
+    font-weight:500;
+    color:var(--ink);
+    text-decoration:none;
+    padding:4px 0 5px;
+    border-bottom:1px solid #A79D86;
+    display:inline-flex;
+    align-items:center;
+    gap:7px;
+    transition:border-color .15s ease;
+  }
+  .btn-secondary:hover{border-color:var(--ink);}
+  .btn-secondary svg{display:block;margin-top:1px;}
+
+  .hero-note{
+    margin:26px 0 0;
+    display:flex;
+    flex-wrap:wrap;
+    align-items:center;
+    gap:0 9px;
+    font-size:11.8px;
+    line-height:1.5;
+    color:#7C7566;
+    letter-spacing:.005em;
+  }
+  .hero-note .dot{
+    width:3px;height:3px;border-radius:50%;
+    background:#B4AB98;
+    display:inline-block;
+  }
+  .hero-foot{
+    margin-top:auto;
+    display:flex;
+    align-items:flex-start;
+    gap:10px;
+    max-width:404px;
+    padding-top:14px;
+    border-top:1px solid var(--line);
+  }
+  .hero-foot svg{display:block;flex:0 0 auto;margin-top:2px;color:var(--rust);}
+  .hero-foot p{
+    margin:0;
+    font-size:12.2px;
+    line-height:1.55;
+    color:#77705F;
+    letter-spacing:.002em;
+  }
+
+  /* ---------- conversion bench ---------- */
+  .bench{
+    position:relative;
+    padding:17px 20px 15px;
+    background:var(--paper-deep);
+    border:1px solid #D5CCB7;
+    border-radius:2px;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.55), 0 1px 2px rgba(70,56,30,.05);
+  }
+  .bench-top{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding-bottom:12px;
+    border-bottom:1px solid rgba(120,108,84,.20);
+    font-family:var(--mono);
+    font-size:9.5px;
+    letter-spacing:.115em;
+    text-transform:uppercase;
+    color:#7C7462;
+  }
+  .bench-top .status{
+    display:inline-flex;
+    align-items:center;
+    gap:7px;
+    color:#66705C;
+  }
+  .bench-top .status i{
+    width:5px;height:5px;border-radius:50%;
+    background:var(--sage);
+    box-shadow:0 0 0 3px rgba(93,107,82,.13);
+    display:inline-block;
+  }
+
+  .sheets{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    padding:16px 0 14px;
+  }
+  .shot{
+    margin:0;
+    width:330px;
+    flex:0 0 330px;
+  }
+  .shot .paper{
+    width:330px;
+    height:330px;
+    position:relative;
+  }
+  .shot figcaption{
+    margin-top:9px;
+    display:flex;
+    align-items:baseline;
+    gap:8px;
+    font-family:var(--mono);
+    font-size:9px;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    color:#857C69;
+    padding-left:2px;
+  }
+  .shot figcaption .fname{
+    font-family:var(--sans);
+    font-size:11px;
+    letter-spacing:0;
+    text-transform:none;
+    color:#5F5A4D;
+  }
+  .shot figcaption .sep{
+    color:#B1A78F;
+    font-size:9px;
+  }
+
+  .arrow{
+    flex:0 0 42px;
+    height:330px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding-top:0;
+  }
+  .arrow span{
+    width:36px;height:36px;
+    border-radius:50%;
+    background:var(--paper);
+    border:1px solid #CFC5AF;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#4A453A;
+    box-shadow:0 1px 0 rgba(255,255,255,.7);
+  }
+
+  /* photograph of handwriting */
+  .photo{
+    background-color:var(--photo);
+    background-image:
+      radial-gradient(circle at 1px 1px, rgba(87,105,124,.155) 1px, transparent 0),
+      linear-gradient(90deg, rgba(126,100,58,.055), rgba(255,255,255,0) 13%, rgba(255,255,255,0) 88%, rgba(116,92,52,.06));
+    background-size:22px 22px, 100% 100%;
+    background-position:13px 16px, 0 0;
+    border:1px solid rgba(122,106,78,.20);
+    border-radius:1px;
+    transform:rotate(-1.15deg);
+    transform-origin:50% 50%;
+    box-shadow:
+      0 30px 34px -28px rgba(58,44,20,.62),
+      0 5px 12px -6px rgba(58,44,20,.20),
+      inset 0 0 46px rgba(124,92,42,.05);
+    overflow:hidden;
+  }
+  .photo::before{
+    content:"";
+    position:absolute;
+    top:0;bottom:0;left:23px;
+    width:1px;
+    background:rgba(164,94,72,.30);
+  }
+  .photo::after{
+    content:"";
+    position:absolute;
+    inset:0;
+    pointer-events:none;
+    opacity:.5;
+    mix-blend-mode:multiply;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='p'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23p)' opacity='0.20'/%3E%3C/svg%3E");
+  }
+  .hw{
+    position:relative;
+    z-index:1;
+    padding:14px 22px 0 38px;
+  }
+  .hw-head{
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    font-family:var(--script);
+    font-size:13px;
+    color:#2B3A52;
+    letter-spacing:.01em;
+  }
+  .hw-date{
+    font-size:11.5px;
+    color:#5E6A7C;
+    opacity:.9;
+  }
+  .hw-rule{
+    display:block;
+    width:100%;
+    height:4px;
+    margin:2px 0 8px;
+    color:rgba(43,58,82,.55);
+  }
+  .hw-line{
+    display:block;
+    font-family:var(--script);
+    font-size:14.8px;
+    line-height:28px;
+    color:#2C3A52;
+    letter-spacing:.005em;
+    white-space:nowrap;
+  }
+  .hw-line:nth-of-type(2){transform:rotate(-.25deg);}
+  .hw-line:nth-of-type(3){transform:rotate(.2deg);}
+  .hw-eq{
+    display:block;
+    width:204px;
+    height:49px;
+    margin:2px 0 2px 0;
+    overflow:visible;
+  }
+  .hw-body{
+    margin:0;
+    font-family:var(--script);
+    font-size:14.4px;
+    line-height:28px;
+    color:#2C3A52;
+    letter-spacing:.005em;
+  }
+  .hw-body + .hw-body{margin-top:2px;}
+  .hw-note{
+    margin:10px 0 0 7px;
+    display:flex;
+    align-items:center;
+    gap:5px;
+    font-family:var(--script);
+    font-size:11.5px;
+    color:#6B6353;
+    transform:rotate(-.8deg);
+    opacity:.95;
+  }
+  .hw-note svg{display:block;flex:0 0 auto;margin-top:1px;}
+  .hw-body sup,
+  .hw-note sup{
+    font-size:.64em;
+    line-height:0;
+    vertical-align:.55em;
+    color:inherit;
+    letter-spacing:0;
+  }
+  .hw-page{
+    position:absolute;
+    right:23px;
+    bottom:14px;
+    z-index:1;
+    font-family:var(--script);
+    font-size:12px;
+    color:#5B6472;
+    opacity:.85;
+  }
+
+  /* rendered page */
+  .pdf{
+    background:var(--sheet);
+    border:1px solid #DED5C2;
+    border-radius:1px;
+    box-shadow:0 16px 28px -24px rgba(58,44,20,.46), 0 2px 5px -3px rgba(58,44,20,.10);
+    overflow:hidden;
+  }
+  .pdf-inner{
+    position:absolute;
+    inset:0;
+    padding:22px 26px 18px;
+  }
+  .running{
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    font-family:var(--serif);
+    font-size:8.5px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:#6D6759;
+  }
+  .pdf-rule{
+    height:1px;
+    background:#3B372E;
+    opacity:.55;
+    margin:6px 0 17px;
+  }
+  .pdf-text{
+    margin:0;
+    font-family:var(--serif);
+    font-size:13.6px;
+    line-height:1.72;
+    color:#292620;
+    letter-spacing:.002em;
+  }
+  .pdf-eq{
+    position:relative;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    margin:16px 0 17px;
+    color:#24211B;
+  }
+  .math{
+    font-family:var(--serif);
+    font-size:19px;
+    letter-spacing:.005em;
+    white-space:nowrap;
+  }
+  .math i{font-style:italic;letter-spacing:.01em;}
+  .math sub{
+    font-size:.58em;
+    vertical-align:-.28em;
+    letter-spacing:.01em;
+    margin-left:.5px;
+  }
+  .math .ss{
+    font-size:.68em;
+    vertical-align:.42em;
+    line-height:0;
+  }
+  .math .rel{padding:0 .38em;font-size:.95em;}
+  .math .norm{padding:0 .04em;}
+  .eqno{
+    position:absolute;
+    right:0;
+    bottom:2px;
+    font-family:var(--serif);
+    font-size:10px;
+    color:#5C5648;
+  }
+  .footnote{
+    position:absolute;
+    left:26px;
+    right:26px;
+    bottom:22px;
+  }
+  .footnote .rule{
+    width:54px;
+    height:1px;
+    background:#5E594C;
+    opacity:.55;
+    margin-bottom:6px;
+  }
+  .footnote p{
+    margin:0;
+    font-family:var(--serif);
+    font-size:9.2px;
+    line-height:1.45;
+    color:#4E493D;
+    max-width:250px;
+  }
+  .footnote sup{font-size:.72em;vertical-align:.35em;}
+
+  .bench-foot{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding-top:11px;
+    border-top:1px solid rgba(120,108,84,.20);
+    font-family:var(--mono);
+    font-size:9px;
+    letter-spacing:.08em;
+    color:#847A66;
+  }
+  .bench-foot .r{display:inline-flex;align-items:center;gap:8px;}
+  .bench-foot .r b{font-weight:400;color:#5F6A54;}
+
+  /* ---------- value section ---------- */
+  .values{
+    flex:1 1 auto;
+    min-height:0;
+    border-top:1px solid var(--line);
+    padding:18px 56px 20px;
+    display:flex;
+    flex-direction:column;
+  }
+  .values-head{
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    gap:24px;
+    padding-bottom:2px;
+  }
+  .values-head h2{
+    margin:0;
+    font-family:var(--serif);
+    font-weight:400;
+    font-size:21px;
+    letter-spacing:-.012em;
+    color:var(--ink);
+  }
+  .values-head .pkgs{
+    font-family:var(--mono);
+    font-size:9.5px;
+    letter-spacing:.06em;
+    color:#8A806C;
+    white-space:nowrap;
+  }
+
+  .rows{
+    display:flex;
+    flex-direction:column;
+    margin-top:auto;
+    margin-bottom:auto;
+  }
+  .row{
+    display:grid;
+    grid-template-columns:34px minmax(0,1fr) 318px;
+    align-items:center;
+    column-gap:24px;
+    padding:7px 0;
+    border-top:1px solid var(--line-soft);
+  }
+  .row:first-child{border-top:0;}
+  .row .num{
+    font-family:var(--mono);
+    font-size:10px;
+    letter-spacing:.06em;
+    color:#9A907B;
+    align-self:start;
+    padding-top:3px;
+  }
+  .row h3{
+    margin:0 0 3px;
+    font-size:14.5px;
+    font-weight:600;
+    letter-spacing:-.004em;
+    color:var(--ink);
+  }
+  .row p{
+    margin:0;
+    font-size:12.8px;
+    line-height:1.5;
+    color:#5E594C;
+    letter-spacing:.002em;
+  }
+  .evidence{
+    border-left:1px solid var(--line);
+    padding:3px 0 3px 20px;
+    min-height:38px;
+    display:flex;
+    align-items:center;
+  }
+
+  /* evidence 1: typeset fraction + table */
+  .ev-typeset{
+    display:flex;
+    align-items:center;
+    gap:20px;
+    width:100%;
+    justify-content:space-between;
+  }
+  .mini-eq{
+    font-family:var(--serif);
+    font-size:13px;
+    color:#2A2720;
+    white-space:nowrap;
+    display:inline-flex;
+    align-items:center;
+    gap:.18em;
+  }
+  .frac{
+    display:inline-flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    vertical-align:middle;
+    font-size:.78em;
+    line-height:1.12;
+    margin:0 .1em;
+    transform:translateY(-.04em);
+  }
+  .frac .num{
+    padding:0 2px 1px;
+    border-bottom:.8px solid #3E3A30;
+  }
+  .frac .den{padding:1px 2px 0;}
+  .mini-eq .tiny{font-size:.72em;vertical-align:.35em;line-height:0;}
+  .mini-table{
+    border-collapse:collapse;
+    font-family:var(--serif);
+    font-size:9.5px;
+    color:#2F2B23;
+    font-variant-numeric:tabular-nums;
+    margin-left:auto;
+  }
+  .mini-table th,
+  .mini-table td{
+    padding:2px 9px;
+    text-align:right;
+    font-weight:400;
+  }
+  .mini-table thead th{
+    border-top:1px solid #4B463B;
+    border-bottom:.7px solid #4B463B;
+    font-size:9px;
+    letter-spacing:.02em;
+  }
+  .mini-table tbody tr:last-child td{border-bottom:1px solid #4B463B;}
+
+  /* evidence 2: history */
+  .history{
+    list-style:none;
+    margin:0;
+    padding:0;
+    width:100%;
+    display:flex;
+    flex-direction:column;
+    gap:3px;
+    position:relative;
+  }
+  .history::before{
+    content:"";
+    position:absolute;
+    left:2px;
+    top:5px;
+    bottom:5px;
+    width:1px;
+    background:#D2C9B5;
+  }
+  .history li{
+    position:relative;
+    display:grid;
+    grid-template-columns:12px 22px minmax(0,1fr) auto;
+    align-items:center;
+    column-gap:6px;
+    font-size:10.5px;
+    color:#575245;
+    line-height:1.35;
+  }
+  .history .pip{
+    width:5px;height:5px;
+    border-radius:50%;
+    background:#C9C0AC;
+    margin-left:0;
+    position:relative;
+    z-index:1;
+    box-shadow:0 0 0 2px var(--paper);
+  }
+  .history li:first-child .pip{
+    background:var(--rust);
+  }
+  .history .v{
+    font-family:var(--mono);
+    font-size:9.5px;
+    color:#6C6556;
+  }
+  .history li:first-child .v{color:var(--ink);}
+  .history .what{
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    font-size:10.5px;
+  }
+  .history .when{
+    font-family:var(--mono);
+    font-size:9px;
+    letter-spacing:.01em;
+    color:#8A806C;
+    white-space:nowrap;
+  }
+
+  /* evidence 3: export */
+  .files{
+    width:100%;
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+  }
+  .file-row{display:flex;align-items:center;gap:12px;}
+  .file{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    height:24px;
+    padding:0 8px 0 9px;
+    border:1px solid #CFC5B0;
+    border-radius:2px;
+    background:rgba(255,253,247,.55);
+    font-size:10.5px;
+    color:#4B463A;
+    white-space:nowrap;
+  }
+  .file b{
+    font-family:var(--mono);
+    font-size:9.5px;
+    font-weight:400;
+    color:#7B5B44;
+    letter-spacing:.01em;
+  }
+  .file-rule{
+    flex:1;
+    height:1px;
+    background:repeating-linear-gradient(90deg,#CFC5B0 0 2px,transparent 2px 5px);
+    opacity:.8;
+  }
+  .files-note{
+    margin:0;
+    font-family:var(--mono);
+    font-size:9px;
+    letter-spacing:.03em;
+    color:#8A806C;
+    padding-left:1px;
+  }
+
+  :focus-visible{outline:2px solid var(--rust);outline-offset:3px;}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header class="top">
+    <a class="brand" href="#" aria-label="Inkwell home">
+      <svg width="21" height="21" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+        <path d="M10 18.4c-2.7-3.1-4.7-5.8-4.7-8.6 0-3.2 2.1-5.6 4.7-7.4 2.6 1.8 4.7 4.2 4.7 7.4 0 2.8-2 5.5-4.7 8.6Z" stroke="currentColor" stroke-width="1.15" stroke-linejoin="round"/>
+        <path d="M10 7.6v8.3" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/>
+        <circle cx="10" cy="6.5" r=".95" fill="currentColor"/>
+      </svg>
+      <span class="word">Inkwell</span>
+    </a>
+    <nav class="nav" aria-label="Primary">
+      <a href="#conversion">How it works</a>
+      <a href="#">Docs</a>
+      <a href="#">Changelog</a>
+      <a href="#">Pricing</a>
+      <a class="signin" href="#">Sign in</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-copy">
+        <h1>Handwriting in.<br><em>LaTeX</em> out.</h1>
+        <p class="lede">Photograph a page of handwritten notes, and Inkwell returns clean, compilable LaTeX — the scan and the typeset page side by side.</p>
+
+        <div class="actions">
+          <button class="btn-primary" type="button">
+            Try a page free
+            <svg width="15" height="12" viewBox="0 0 15 12" fill="none" aria-hidden="true">
+              <path d="M1 6h12M9 1.5 13.5 6 9 10.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+          <a class="btn-secondary" href="#conversion">
+            See a real conversion
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true">
+              <path d="M1.5 8.5 8.5 1.5M3 1.5h5.5V7" stroke="currentColor" stroke-width="1.15" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </div>
+
+        <p class="hero-note">
+          <span>First page free</span><span class="dot"></span>
+          <span>No account</span><span class="dot"></span>
+          <span>amsmath, booktabs and your own preamble</span>
+        </p>
+
+        <div class="hero-foot">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+            <path d="M2 10 10 2M4 2h6v6" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <p>The scan above is the whole input. Nothing was retyped; every line of the .tex traces back to it.</p>
+        </div>
+      </div>
+
+      <div class="bench" id="conversion">
+        <div class="bench-top">
+          <span>Page 41 · Energy estimate</span>
+          <span class="status"><i></i>Compiled</span>
+        </div>
+
+        <div class="sheets">
+          <figure class="shot">
+            <div class="paper photo">
+              <div class="hw">
+                <div class="hw-head">
+                  <span>3.2 &nbsp;Energy estimate</span>
+                  <span class="hw-date">14 Nov.</span>
+                </div>
+                <svg class="hw-rule" viewBox="0 0 270 4" preserveAspectRatio="none" aria-hidden="true">
+                  <path d="M0 2.4C54 1.2 133 3.1 204 2.2c24-.3 45-.5 66-.2" fill="none" stroke="currentColor" stroke-width="1"/>
+                </svg>
+
+                <span class="hw-line">Start with the weak form and</span>
+                <span class="hw-line">integrate by parts twice. The</span>
+
+                <svg class="hw-eq" viewBox="0 0 186 48" fill="none" role="img" aria-label="Handwritten: norm of u in H1 is at most C times norm of f in L2">
+                  <g stroke="#2C3A52" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" transform="rotate(-.7 93 24)">
+                    <path d="M6 10c-.2 7-.3 14 .1 22"/>
+                    <path d="M11 10c-.2 7-.3 14 .1 22"/>
+                    <path d="M18 15c-.8 7-.1 13 3.4 14 3.6.9 4.9-5 4.9-13"/>
+                    <path d="M26.3 25c.5 3.2 2.6 4.6 5.2 3.6"/>
+                    <path d="M38 10c-.2 7-.3 14 .1 22"/>
+                    <path d="M43 10c-.2 7-.3 14 .1 22"/>
+                    <g stroke-width="1.25">
+                      <path d="M46.5 27.5v11"/>
+                      <path d="M53.5 27.5v11"/>
+                      <path d="M46.5 33h7"/>
+                      <path d="M56 22.5 58.5 21.4v8.2"/>
+                    </g>
+                    <path d="M83 12.5 68 20.5l15 6.2"/>
+                    <path d="M67 33c5.3-.4 10.7-.5 16-.4"/>
+                    <path d="M102 14.5c-4-3.6-10.6-2-11.4 5.4-.8 7 4 11 10.4 8.6"/>
+                    <path d="M112 10c-.2 7-.3 14 .1 22"/>
+                    <path d="M117 10c-.2 7-.3 14 .1 22"/>
+                    <path d="M135 8.5c-4-.4-5.7 3.1-5 8.4l-3.2 20.6c-.4 2.6 1.1 3.7 3.1 2.7"/>
+                    <path d="M123 19.5c4-.9 8.6-.9 12.4 0"/>
+                    <path d="M144 10c-.2 7-.3 14 .1 22"/>
+                    <path d="M149 10c-.2 7-.3 14 .1 22"/>
+                    <g stroke-width="1.25">
+                      <path d="M152.5 27.5v11h7.5"/>
+                      <path d="M164.5 29.5c.8-2.3 4.4-2.6 5.2-.2.7 2.2-2.9 4.8-5.5 8h6.4"/>
+                    </g>
+                    <circle cx="177" cy="36" r="1.1" fill="#2C3A52" stroke="none"/>
+                  </g>
+                </svg>
+
+                <p class="hw-body">only delicate term is the<br>boundary; the rest follows from<br>the usual elliptic estimate.<sup>1</sup></p>
+
+                <p class="hw-note">
+                  <sup>1</sup>
+                  n = 3 checked, M.
+                  <svg width="10" height="9" viewBox="0 0 11 10" fill="none" aria-hidden="true">
+                    <path d="M1 5.2 4 8.4 10 1" stroke="#6B6353" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </p>
+              </div>
+              <span class="hw-page">41</span>
+            </div>
+            <figcaption><span>Original</span><span class="sep">/</span><span class="fname">page-41.jpg</span></figcaption>
+          </figure>
+
+          <div class="arrow" aria-hidden="true">
+            <span>
+              <svg width="14" height="12" viewBox="0 0 14 12" fill="none">
+                <path d="M1 6h11M8 1.5 12.5 6 8 10.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+          </div>
+
+          <figure class="shot">
+            <div class="paper pdf">
+              <div class="pdf-inner">
+                <div class="running">
+                  <span>3.2 · Energy estimate</span>
+                  <span>41</span>
+                </div>
+                <div class="pdf-rule"></div>
+
+                <p class="pdf-text">Start with the weak form and integrate by parts twice:</p>
+
+                <div class="pdf-eq">
+                  <span class="math">
+                    &#8214;<i>u</i>&#8214;<sub><i>H</i><span class="ss">1</span>(&Omega;)</sub>
+                    <span class="rel">&le;</span>
+                    <i>C</i>(&Omega;)
+                    &#8214;<i>f</i>&#8214;<sub><i>L</i><span class="ss">2</span>(&Omega;)</sub>
+                  </span>
+                  <span class="eqno">(3.4)</span>
+                </div>
+
+                <p class="pdf-text">The only delicate term is the boundary; the rest follows from the usual elliptic estimate.<sup>1</sup></p>
+
+                <div class="footnote">
+                  <div class="rule"></div>
+                  <p><sup>1</sup>&nbsp;Checked by hand for <i>n</i> = 3.</p>
+                </div>
+              </div>
+            </div>
+            <figcaption><span>Output</span><span class="sep">/</span><span class="fname">chapter3.pdf</span></figcaption>
+          </figure>
+        </div>
+
+        <div class="bench-foot">
+          <span>rev 3 · 19 Nov, 09:12</span>
+          <span class="r"><b>1 equation</b> · 1 note · 118 words</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="values" aria-labelledby="values-title">
+      <div class="values-head">
+        <h2 id="values-title">Output you can compile without touching it.</h2>
+        <span class="pkgs">amsmath · booktabs · hyperref · your preamble</span>
+      </div>
+
+      <div class="rows">
+        <article class="row">
+          <span class="num">01</span>
+          <div>
+            <h3>Equations and tables, as real LaTeX.</h3>
+            <p>Fractions, sums and booktabs tables return as environments you can edit — not pictures of maths.</p>
+          </div>
+          <div class="evidence">
+            <div class="ev-typeset">
+              <span class="mini-eq">
+                <span class="frac"><span class="num">&part;<i>u</i></span><span class="den">&part;<i>t</i></span></span>
+                &minus; &Delta;<i>u</i> = <i>f</i>
+              </span>
+              <table class="mini-table" aria-label="Table of constants">
+                <thead><tr><th><i>n</i></th><th><i>C</i></th></tr></thead>
+                <tbody>
+                  <tr><td>2</td><td>1.41</td></tr>
+                  <tr><td>3</td><td>2.07</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </article>
+
+        <article class="row">
+          <span class="num">02</span>
+          <div>
+            <h3>Revision history, kept per page.</h3>
+            <p>Re-photograph a page and the earlier version stays attached to it, with the scan it came from.</p>
+          </div>
+          <div class="evidence">
+            <ol class="history">
+              <li><span class="pip"></span><span class="v">v3</span><span class="what">eq. (3.4) corrected</span><span class="when">today 09:12</span></li>
+              <li><span class="pip"></span><span class="v">v2</span><span class="what">margin note added</span><span class="when">14 Nov 22:40</span></li>
+              <li><span class="pip"></span><span class="v">v1</span><span class="what">page photographed</span><span class="when">14 Nov 08:05</span></li>
+            </ol>
+          </div>
+        </article>
+
+        <article class="row">
+          <span class="num">03</span>
+          <div>
+            <h3>Export to .tex or .pdf.</h3>
+            <p>Drop the .tex into your project or send the PDF; labels, macros and preamble stay intact.</p>
+          </div>
+          <div class="evidence">
+            <div class="files">
+              <div class="file-row">
+                <span class="file"><b>.tex</b> chapter3.tex</span>
+                <span class="file"><b>.pdf</b> chapter3.pdf</span>
+              </div>
+              <p class="files-note">\label{eq:energy} intact · arXiv-ready</p>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+  </main>
+
+</div>
+</body>
+</html>

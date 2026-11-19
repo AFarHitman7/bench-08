@@ -1,0 +1,317 @@
+<!doctype html>
+<!--
+Ferryline landing page — five most damaging problems, fixed in impact order:
+
+1. Dead booking path. "Get started" linked to "#". The hero now holds a working
+   search — route, date, passengers — with real validation and inline feedback;
+   the pill CTA became its "Search sailings" submit.
+2. Phone-hostile build (this audience books on phones). Added the viewport meta,
+   fluid clamp() type, a stacked form under 640px, auto-fitting cards, 46px
+   touch targets, 16px inputs, native date pickers.
+3. Inflated, brand-first copy. Subhead and the Fast/Simple/Reliable cards became
+   concrete passenger outcomes, using only claims the page already made.
+4. Decoration over task. Quieter maritime palette, the search leads, and the
+   page fits 1440x900 with no scrolling.
+5. No control semantics. Real labels, focus-visible rings, aria-live status.
+
+Left alone: the H1, the three claims themselves, section structure and footer
+text; no invented routes, prices or extra sections.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ferryline — Book your crossing</title>
+<style>
+:root{
+  --ink:#12262e;
+  --muted:#46606b;
+  --line:#dfe8ec;
+  --teal:#13707f;
+  --accent:#c2410c;
+  --accent-dark:#9a3412;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  color:var(--ink);
+  background:#fff;
+}
+
+/* ---------- Hero ---------- */
+.hero{
+  flex:1 0 auto;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+  padding:56px 48px 64px;
+  color:#fff;
+  background:
+    radial-gradient(1100px 420px at 78% -12%, rgba(255,255,255,.10), rgba(255,255,255,0) 62%),
+    linear-gradient(168deg,#0c344c 0%,#10566b 58%,#13707f 100%);
+}
+h1{
+  width:100%;
+  margin:0 0 12px;
+  font-size:clamp(30px,3vw,42px);
+  line-height:1.12;
+  letter-spacing:-.01em;
+}
+.sub{
+  width:100%;
+  max-width:56ch;
+  margin:0 0 28px;
+  font-size:clamp(16px,1.2vw,18px);
+  line-height:1.5;
+  color:#d9e8ee;
+}
+
+/* ---------- Search ---------- */
+.search{
+  width:100%;
+  max-width:1080px;
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr .8fr auto;
+  gap:12px 14px;
+  align-items:end;
+  padding:16px;
+  background:#fff;
+  border-radius:16px;
+  box-shadow:0 24px 48px -12px rgba(4,26,38,.45);
+  color:var(--ink);
+  text-align:left;
+}
+.field label{
+  display:block;
+  margin:0 0 6px;
+  font-size:12.5px;
+  font-weight:600;
+  letter-spacing:.01em;
+  color:#33525f;
+}
+.field input,.field select{
+  width:100%;
+  height:46px;
+  padding:0 12px;
+  font:inherit;
+  font-size:16px;
+  color:var(--ink);
+  background:#f6f8f9;
+  border:1px solid #ccd7db;
+  border-radius:10px;
+}
+.field input.invalid,.field select.invalid{
+  border-color:#d64545;
+  background:#fdf3f3;
+}
+.go{
+  height:46px;
+  padding:0 22px;
+  border:0;
+  border-radius:10px;
+  background:var(--accent);
+  color:#fff;
+  font:inherit;
+  font-size:16px;
+  font-weight:600;
+  cursor:pointer;
+  transition:background .15s;
+}
+.go:hover{background:var(--accent-dark)}
+.go:disabled{opacity:.75;cursor:default}
+input:focus-visible,select:focus-visible,button:focus-visible{
+  outline:3px solid rgba(194,65,12,.45);
+  outline-offset:1px;
+}
+.status{
+  width:100%;
+  max-width:1080px;
+  min-height:21px;
+  margin:14px 0 0;
+  font-size:15px;
+  line-height:1.4;
+  color:#cfe3ea;
+}
+.status.error{color:#ffb59e}
+
+/* ---------- Cards ---------- */
+.cards{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+  gap:20px;
+  padding:52px 48px;
+}
+.card{
+  padding:22px 24px;
+  background:#f7fafb;
+  border:1px solid var(--line);
+  border-radius:14px;
+}
+.card svg{
+  display:block;
+  margin:0 0 10px;
+  color:var(--teal);
+}
+.card h3{
+  margin:0 0 8px;
+  font-size:17px;
+  line-height:1.25;
+  color:#14333f;
+}
+.card p{
+  margin:0;
+  font-size:15px;
+  line-height:1.55;
+  color:var(--muted);
+}
+
+/* ---------- Footer ---------- */
+footer{
+  margin-top:auto;
+  padding:16px 24px;
+  text-align:center;
+  font-size:13px;
+  color:#5a6b74;
+  background:#eef3f5;
+  border-top:1px solid var(--line);
+}
+
+/* ---------- Phones ---------- */
+@media (max-width:920px){
+  .hero{padding:44px 24px 52px}
+  .search{grid-template-columns:1fr 1fr}
+  .go{grid-column:1/-1}
+}
+@media (max-width:640px){
+  .hero{padding:36px 16px 44px}
+  .search{grid-template-columns:1fr}
+  .go{grid-column:auto;width:100%}
+  .cards{padding:36px 16px;gap:14px}
+  .card{padding:18px}
+}
+</style>
+</head>
+<body>
+
+<section class="hero">
+  <h1>Book your crossing in seconds</h1>
+  <p class="sub">Route, date and passengers is all it takes — the total price
+  shows before you pay.</p>
+  <form class="search" id="booking" novalidate>
+    <div class="field">
+      <label for="from">From</label>
+      <input id="from" type="text" placeholder="Departure port" autocomplete="off">
+    </div>
+    <div class="field">
+      <label for="to">To</label>
+      <input id="to" type="text" placeholder="Destination port" autocomplete="off">
+    </div>
+    <div class="field">
+      <label for="date">Date</label>
+      <input id="date" type="date">
+    </div>
+    <div class="field">
+      <label for="pax">Passengers</label>
+      <select id="pax">
+        <option>1</option><option>2</option><option>3</option><option>4</option>
+        <option>5</option><option>6</option><option>7</option><option>8</option>
+        <option>9</option>
+      </select>
+    </div>
+    <button class="go" id="go" type="submit">Search sailings</button>
+  </form>
+  <p class="status" id="status" role="status" aria-live="polite"></p>
+</section>
+
+<section class="cards">
+  <div class="card">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+    <h3>Under a minute to book</h3>
+    <p>Route, date, passengers, pay — one streamlined flow, start to finish.</p>
+  </div>
+  <div class="card">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.83z"/><circle cx="7" cy="7" r="1.4" fill="currentColor" stroke="none"/></svg>
+    <h3>The price you see is the price you pay</h3>
+    <p>Clear pricing with no hidden fees and no surprises at checkout.</p>
+  </div>
+  <div class="card">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+    <h3>Trusted every day</h3>
+    <p>Thousands of travellers book their island crossings with us.</p>
+  </div>
+</section>
+
+<footer>© Ferryline 2026 — All rights reserved</footer>
+
+<script>
+(function(){
+  var form=document.getElementById('booking'),
+      from=document.getElementById('from'),
+      to=document.getElementById('to'),
+      date=document.getElementById('date'),
+      pax=document.getElementById('pax'),
+      btn=document.getElementById('go'),
+      status=document.getElementById('status');
+
+  var n=new Date();
+  function pad(v){return (v<10?'0':'')+v;}
+  var today=n.getFullYear()+'-'+pad(n.getMonth()+1)+'-'+pad(n.getDate());
+  date.min=today;
+  date.value=today;
+
+  function mark(el){
+    el.classList.add('invalid');
+    el.setAttribute('aria-invalid','true');
+  }
+  function clearMarks(){
+    [from,to,date].forEach(function(el){
+      el.classList.remove('invalid');
+      el.removeAttribute('aria-invalid');
+    });
+  }
+  function fail(msg,el){
+    if(el){mark(el);el.focus();}
+    status.className='status error';
+    status.textContent=msg;
+  }
+
+  form.addEventListener('submit',function(e){
+    e.preventDefault();
+    clearMarks();
+    status.className='status';
+
+    var f=from.value.trim(), t=to.value.trim();
+    if(!f){fail('Enter a departure port.',from);return;}
+    if(!t){fail('Enter a destination port.',to);return;}
+    if(f.toLowerCase()===t.toLowerCase()){
+      mark(from);mark(to);
+      fail('Departure and destination can\u2019t be the same port.');
+      return;
+    }
+    if(!date.value){fail('Choose a travel date.',date);return;}
+    if(date.value<today){fail('Pick today or a later date.',date);return;}
+
+    var when=new Date(date.value+'T00:00');
+    var label=when.toLocaleDateString(undefined,{weekday:'short',day:'numeric',month:'short'});
+    var paxLabel=pax.value+(pax.value==='1'?' passenger':' passengers');
+    status.textContent='Checking sailings from '+f+' to '+t+', '+paxLabel+', '+label+'\u2026';
+    btn.disabled=true;
+    btn.textContent='Searching\u2026';
+
+    setTimeout(function(){
+      status.textContent='Preview build \u2014 the live site lists sailings and takes payment here.';
+      btn.disabled=false;
+      btn.textContent='Search sailings';
+    },1100);
+  });
+})();
+</script>
+
+</body>
+</html>

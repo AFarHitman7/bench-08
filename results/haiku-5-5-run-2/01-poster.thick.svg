@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1350" viewBox="0 0 1080 1350">
+  <rect x="0" y="0" width="1080" height="1350" fill="#E9E4D6"/>
+
+  <text x="80" y="128" font-family="'Courier New', Consolas, monospace" font-size="26" letter-spacing="4" fill="#15171C">VELL FERRY CO. / NIGHT CROSSING</text>
+  <rect x="80" y="160" width="920" height="6" fill="#15171C"/>
+
+  <text x="80" y="236" font-family="'Courier New', Consolas, monospace" font-size="26" letter-spacing="3" fill="#E5482A">SAN REMO &lt;-&gt; VELL</text>
+
+  <text x="76" y="424" font-family="'Arial Narrow', 'Roboto Condensed', 'Helvetica Neue', Impact, sans-serif" font-stretch="condensed" font-weight="700" font-size="220" textLength="928" lengthAdjust="spacing" fill="#15171C">THE LAST</text>
+  <text x="76" y="644" font-family="'Arial Narrow', 'Roboto Condensed', 'Helvetica Neue', Impact, sans-serif" font-stretch="condensed" font-weight="700" font-size="220" textLength="928" lengthAdjust="spacing" fill="#15171C">FERRY</text>
+
+  <text x="74" y="908" font-family="'Arial Narrow', 'Roboto Condensed', 'Helvetica Neue', Impact, sans-serif" font-stretch="condensed" font-weight="700" font-size="330" fill="#E5482A">23:40</text>
+
+  <text x="80" y="990" font-family="'Arial Narrow', 'Roboto Condensed', 'Helvetica Neue', Arial, sans-serif" font-stretch="condensed" font-size="42" fill="#15171C">Shift ends at eleven. The last boat doesn't wait.</text>
+
+  <rect x="80" y="1030" width="920" height="150" fill="none" stroke="#15171C" stroke-width="4"/>
+  <line x1="80" y1="1105" x2="1000" y2="1105" stroke="#15171C" stroke-width="3"/>
+  <line x1="560" y1="1030" x2="560" y2="1180" stroke="#15171C" stroke-width="3"/>
+  <text x="110" y="1078" font-family="'Courier New', Consolas, monospace" font-size="28" font-weight="700" fill="#15171C">SAN REMO -&gt; VELL</text>
+  <text x="590" y="1078" font-family="'Courier New', Consolas, monospace" font-size="28" font-weight="700" fill="#E5482A">DEP 23:40</text>
+  <text x="110" y="1152" font-family="'Courier New', Consolas, monospace" font-size="28" font-weight="700" fill="#15171C">VELL -&gt; SAN REMO</text>
+  <text x="590" y="1152" font-family="'Courier New', Consolas, monospace" font-size="28" font-weight="700" fill="#E5482A">DEP 23:40</text>
+
+  <line x1="80" y1="1212" x2="1000" y2="1212" stroke="#15171C" stroke-width="3" stroke-dasharray="16 12"/>
+
+  <text x="80" y="1274" font-family="'Courier New', Consolas, monospace" font-size="34" font-weight="700" fill="#15171C">ferry.vell/1140</text>
+  <text x="1000" y="1274" text-anchor="end" font-family="'Courier New', Consolas, monospace" font-size="24" letter-spacing="3" fill="#15171C">TEAR HERE</text>
+</svg>

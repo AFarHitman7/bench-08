@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1440, height=900">
+<title>Inkwell — Handwriting in. LaTeX out.</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{width:1440px;height:900px;overflow:hidden;background:#0E0E0C}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Inter","SF Pro Display","Segoe UI",Helvetica,Arial,sans-serif;color:#131310;display:flex;justify-content:center;align-items:flex-start}
+  .page{width:1440px;height:900px;background:#FAF6EE;color:#131310;position:relative;overflow:hidden;display:flex;flex-direction:column}
+  nav{height:72px;display:flex;align-items:center;justify-content:space-between;padding:0 48px}
+  .brand{display:flex;align-items:center;gap:12px}
+  .mark{width:34px;height:34px;border-radius:10px;background:#131310;color:#FAF6EE;display:grid;place-items:center;font-family:Georgia,serif;font-style:italic;font-size:22px}
+  .brand b{font-size:19px}
+  .brand span{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#6B675E;font-weight:700;margin-left:2px;border-left:1px solid #DDD5C2;padding-left:12px}
+  .links{display:flex;gap:28px;font-size:14px;font-weight:500;color:#4A4740}
+  .links a{color:inherit;text-decoration:none}
+  .nav-cta{display:flex;align-items:center;gap:12px}
+  .btn{background:#131310;color:#FAF6EE;border:0;border-radius:999px;padding:11px 20px;font-size:14px;font-weight:650;cursor:pointer}
+  .hero{display:grid;grid-template-columns:560px 1fr;gap:24px;padding:28px 48px 20px;align-items:center}
+  .eyebrow{display:inline-flex;align-items:center;gap:8px;background:#fff;border:1px solid #E8DFC8;border-radius:999px;padding:7px 12px;font-size:12.5px;font-weight:650}
+  h1{font-family:Georgia,"Times New Roman",serif;font-size:74px;line-height:.92;letter-spacing:-.04em;margin:18px 0 16px;font-weight:500}
+  h1 em{font-style:italic}
+  .sub{font-size:17.5px;line-height:1.55;color:#55524A;max-width:480px}
+  .cta-row{display:flex;gap:12px;margin:24px 0 18px}
+  .btn.big{padding:15px 24px;font-size:15px}
+  .btn.blue{background:#2438FF}
+  .proof{display:flex;align-items:center;gap:14px}
+  .proof small{font-size:13px;color:#6B675E;line-height:1.4}
+  .stage{position:relative;height:500px}
+  .paper-card{position:absolute;background:#fff;border:1px solid #E7DDC5;border-radius:18px}
+  .hand{left:24px;top:18px;width:360px;height:420px;padding:22px}
+  .latex{right:24px;top:58px;width:420px;height:400px;background:#131310;color:#EDE9DD;overflow:hidden}
+  .latex-head{display:flex;align-items:center;gap:8px;padding:14px 18px;border-bottom:1px solid rgba(255,255,255,.12)}
+  .value{margin:8px 48px 0;background:#131310;color:#EDE7DA;border-radius:20px;padding:24px 28px;display:grid;grid-template-columns:280px 1fr 1fr 1fr;gap:28px;align-items:center;height:208px}
+  .value h2{font-family:Georgia,serif;font-size:30px;font-weight:500}
+  .feat{border-left:1px solid rgba(255,255,255,.14);padding-left:24px}
+  .feat h3{font-size:15px;margin-bottom:6px}
+  .feat p{font-size:13px;color:#A8A49A}
+  .foot{display:flex;justify-content:space-between;padding:14px 52px 0;font-size:12px;color:#8A867C;font-weight:600}
+</style>
+</head>
+<body>
+<div class="page">
+<nav>
+  <div class="brand"><div class="mark">I</div><b>Inkwell</b><span>LaTeX Engine</span></div>
+  <div class="links"><a href="#">Product</a><a href="#">Accuracy</a><a href="#">Templates</a><a href="#">Pricing</a></div>
+  <div class="nav-cta"><a href="#" style="font-size:14px;color:#131310;text-decoration:none">Sign in</a><button class="btn">Get Inkwell free</button></div>
+</nav>
+<div class="hero">
+  <div>
+    <div class="eyebrow">New — Inkwell 2.0 reads messy marginalia</div>
+    <h1>Handwriting<br>in. <em>LaTeX</em> out.</h1>
+    <p class="sub">Snap a photo of lecture notes, lab books, or napkin math. Inkwell transcribes handwriting into clean, compilable LaTeX — equations, matrices, and all.</p>
+    <div class="cta-row">
+      <button class="btn big blue">Transcribe notes →</button>
+      <button class="btn big" style="background:#fff;color:#131310;border:1px solid #E6DDC8">See how it works</button>
+    </div>
+    <div class="proof"><small><b>4.9/5</b> from 6,200 reviews<br>Trusted by 42,000 researchers</small></div>
+  </div>
+  <div class="stage">
+    <div class="paper-card hand">
+      <div style="font-size:11px;font-weight:800">Phys 201 — Oct 12</div>
+      <div style="font-family:cursive;color:#1E2A8A;font-size:28px;margin-top:18px">Stokes theorem<br>∮ F·dr = ∬ (∇×F)·n dS</div>
+      <div style="margin-top:16px;font-size:14px;color:#1E2A8A">flux integral — check bounds!</div>
+    </div>
+    <div class="paper-card latex">
+      <div class="latex-head"><span>stokes.tex — compiles</span></div>
+      <pre style="padding:18px;font-family:monospace;font-size:13px">\begin{theorem}[Stokes]
+  \oint_C F \cdot dr = \iint_S curl F
+\end{theorem}</pre>
+      <div style="margin:6px 16px;background:#FAF6EE;color:#131310;border-radius:12px;padding:14px">∮ F·dr = ∬ (∇×F)·n dS — RENDERED</div>
+    </div>
+  </div>
+</div>
+<div class="value">
+  <div><h2>Why ink<br>beats typing?</h2><p style="font-size:13px;color:#B9B5A8;margin-top:10px">Keep thinking on paper. Let Inkwell do the typesetting.</p></div>
+  <div class="feat"><h3>Pixel-perfect equations</h3><p>Integrals, matrices preserved.</p></div>
+  <div class="feat"><h3>Searchable archive</h3><p>Every page becomes searchable text.</p></div>
+  <div class="feat"><h3>Export anywhere</h3><p>One click to Overleaf, Markdown, or PDF.</p></div>
+</div>
+<div class="foot"><span>● SOC 2 TYPE II ● WORKS OFFLINE ● FREE FOR STUDENTS</span><span>No credit card required.</span></div>
+</div>
+</body>
+</html>

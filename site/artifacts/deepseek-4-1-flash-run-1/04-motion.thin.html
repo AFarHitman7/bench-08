@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>DRIFT</title>
+<style>
+  html, body {
+    margin: 0;
+    padding: 0;
+    width: 1280px;
+    height: 720px;
+    overflow: hidden;
+    background: #060709;
+  }
+  #stage {
+    position: relative;
+    width: 1280px;
+    height: 720px;
+    overflow: hidden;
+    background:
+      radial-gradient(125% 95% at 50% 42%, #11161d 0%, #0a0d11 45%, #050607 100%);
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ambient haze — pure gradients, no filters, so edges stay invisible */
+  .haze {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+    will-change: transform, opacity;
+  }
+  #haze1 {
+    width: 1180px; height: 760px;
+    left: -40px; top: -10px;
+    background: radial-gradient(closest-side,
+      rgba(112,162,250,0.26) 0%,
+      rgba(112,162,250,0.16) 30%,
+      rgba(112,162,250,0.055) 56%,
+      rgba(112,162,250,0) 78%);
+  }
+  #haze2 {
+    width: 980px; height: 660px;
+    left: 470px; top: 130px;
+    background: radial-gradient(closest-side,
+      rgba(255,166,112,0.18) 0%,
+      rgba(255,166,112,0.10) 32%,
+      rgba(255,166,112,0.035) 58%,
+      rgba(255,166,112,0) 80%);
+  }
+
+  /* hairline rules */
+  .rule {
+    position: absolute;
+    left: 50%;
+    height: 1px;
+    width: 780px;
+    margin-left: -390px;
+    background: linear-gradient(90deg,
+      rgba(186,206,232,0) 0%,
+      rgba(186,206,232,0.34) 50%,
+      rgba(186,206,232,0) 100%);
+    transform-origin: 50% 50%;
+    opacity: 0;
+  }
+  #ruleTop { top: 212px; }
+  #ruleBot { top: 536px; }
+
+  /* mirrored reflection */
+  #reflection {
+    position: absolute;
+    left: 0;
+    top: 401px;
+    width: 1280px;
+    height: 182px;
+    overflow: hidden;
+    opacity: 0;
+    pointer-events: none;
+    -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.28) 45%, rgba(0,0,0,0) 88%);
+    mask-image: linear-gradient(to bottom, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.28) 45%, rgba(0,0,0,0) 88%);
+  }
+  #reflectionInner {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 1280px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    transform-origin: 50% 0;
+    transform: translateY(60%) scaleY(-0.6);
+    will-change: transform;
+  }
+  #reflectionInner .ch {
+    display: inline-block;
+    font-size: 200px;
+    font-weight: 300;
+    line-height: 1;
+    color: #a4b8d2;
+    will-change: transform, opacity, filter;
+  }
+
+  /* wordmark */
+  #wordWrap {
+    position: absolute;
+    left: 0;
+    top: -54px;
+    width: 1280px;
+    height: 720px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  #word {
+    position: relative;
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    white-space: nowrap;
+    will-change: transform, filter;
+  }
+  #word .ch {
+    display: inline-block;
+    font-size: 200px;
+    font-weight: 300;
+    line-height: 1;
+    color: #eff3f9;
+    transform-origin: 50% 62%;
+    will-change: transform, opacity, filter;
+    text-shadow: 0 0 36px rgba(146,186,255,0.18);
+  }
+
+  /* light sweep */
+  #sweep {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 520px;
+    height: 100%;
+    background: linear-gradient(90deg,
+      rgba(214,230,255,0) 0%,
+      rgba(214,230,255,0) 9%,
+      rgba(214,230,255,0.055) 30%,
+      rgba(240,247,255,0.16) 50%,
+      rgba(214,230,255,0.055) 70%,
+      rgba(214,230,255,0) 91%,
+      rgba(214,230,255,0) 100%);
+    opacity: 0;
+    pointer-events: none;
+    transform: translate3d(-540px,0,0);
+    will-change: transform, opacity;
+  }
+
+  /* caption */
+  #sub {
+    position: absolute;
+    left: 0;
+    top: 566px;
+    width: 1280px;
+    text-align: center;
+    font-size: 12px;
+    font-weight: 400;
+    letter-spacing: 0.62em;
+    text-indent: 0.62em;
+    text-transform: uppercase;
+    color: rgba(190,206,226,0.74);
+    opacity: 0;
+    white-space: nowrap;
+    will-change: transform, opacity;
+  }
+
+  #meta {
+    position: absolute;
+    bottom: 54px;
+    left: 0;
+    width: 1280px;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 78px;
+    box-sizing: border-box;
+    font-size: 10px;
+    letter-spacing: 0.36em;
+    text-transform: uppercase;
+    color: rgba(150,168,190,0.45);
+    opacity: 0;
+    will-change: opacity;
+  }
+
+  /* grain + vignette on top */
+  #grain {
+    position: absolute;
+    inset: -200px;
+    opacity: 0.05;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='160' height='160' filter='url(%23n)'/></svg>");
+    background-size: 160px 160px;
+    pointer-events: none;
+    will-change: transform;
+  }
+  #vignette {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(78% 78% at 50% 48%, rgba(0,0,0,0) 38%, rgba(0,0,0,0.58) 100%);
+    pointer-events: none;
+  }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div class="haze" id="haze1"></div>
+  <div class="haze" id="haze2"></div>
+
+  <div id="sweep"></div>
+
+  <div class="rule" id="ruleTop"></div>
+  <div class="rule" id="ruleBot"></div>
+
+  <div id="reflection"><div id="reflectionInner"></div></div>
+
+  <div id="wordWrap"><div id="word"></div></div>
+
+  <div id="sub">a study in unhurried motion</div>
+
+  <div id="meta">
+    <span>no. 08</span>
+    <span>ambient / loop</span>
+  </div>
+
+  <div id="grain"></div>
+  <div id="vignette"></div>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  var DURATION = 8;
+  var WORD = "DRIFT";
+
+  var wordEl = document.getElementById("word");
+  var reflectionEl = document.getElementById("reflection");
+  var reflectionInner = document.getElementById("reflectionInner");
+  var haze1 = document.getElementById("haze1");
+  var haze2 = document.getElementById("haze2");
+  var sweep = document.getElementById("sweep");
+  var ruleTop = document.getElementById("ruleTop");
+  var ruleBot = document.getElementById("ruleBot");
+  var sub = document.getElementById("sub");
+  var meta = document.getElementById("meta");
+  var grain = document.getElementById("grain");
+
+  /* ---- build the wordmark and its mirrored twin ---- */
+  var chars = [];
+  var refChars = [];
+  var i, s, r;
+  for (i = 0; i < WORD.length; i++) {
+    s = document.createElement("span");
+    s.className = "ch";
+    s.textContent = WORD.charAt(i);
+    wordEl.appendChild(s);
+    chars.push(s);
+
+    r = document.createElement("span");
+    r.className = "ch";
+    r.textContent = WORD.charAt(i);
+    reflectionInner.appendChild(r);
+    refChars.push(r);
+  }
+
+  /* ---- helpers ---- */
+  function clamp(v, a, b) { return v < a ? a : (v > b ? b : v); }
+  function smooth(t) { t = clamp(t, 0, 1); return t * t * (3 - 2 * t); }
+  function easeOutCubic(t) { t = clamp(t, 0, 1); return 1 - Math.pow(1 - t, 3); }
+  function easeOutQuint(t) { t = clamp(t, 0, 1); return 1 - Math.pow(1 - t, 5); }
+  function easeInOutQuint(t) {
+    t = clamp(t, 0, 1);
+    return t < 0.5 ? 16 * t * t * t * t * t : 1 - Math.pow(-2 * t + 2, 5) / 2;
+  }
+  function seg(t, a, b, ease) {
+    if (b === a) return t >= b ? 1 : 0;
+    return (ease || smooth)(clamp((t - a) / (b - a), 0, 1));
+  }
+  function f(n) { return n.toFixed(4); }
+
+  /* ---------------- timeline ----------------
+     0.00 – 0.60   haze blooms in
+     0.05 – 2.30   letters rise out of blur, staggered, tracking settles
+     0.55 – 2.10   hairlines draw outward
+     0.90 – 1.85   corner meta fades in
+     1.50 – 3.30   tracking settles wide -> tight
+     2.05 – 3.05   caption settles in
+     3.20 – 4.35   single light sweep crosses
+     1.40 – 6.45   slow parallax drift, breathing scale
+     6.45 – 7.60   outro: letters lift and defocus, reversed stagger
+     6.20 – 7.50   rules retract, caption and reflection fade
+     7.60 – 8.00   near-black hold, returns seamlessly to frame 0
+    -------------------------------------------- */
+
+  function seek(tIn) {
+    var t = Number(tIn);
+    if (!isFinite(t)) t = 0;
+    t = ((t % DURATION) + DURATION) % DURATION;
+
+    /* ---- global motion (all terms are 8s-periodic, so the loop never jumps) ---- */
+    var W = Math.PI * 2 / DURATION;
+    var drift = Math.sin(W * t) * 8 - Math.sin(2 * W * t) * 4;
+    var breathe = 1 + Math.sin(W * t + 0.6) * 0.006;
+    var floatY = Math.sin(W * t + 1.1) * 5;
+    var alive = seg(t, 0.18, 1.35);
+    var outro = seg(t, 6.18, 7.42, easeInOutQuint);
+
+    /* ---- the wordmark as one breathing unit ---- */
+    var enterScale = (1 - seg(t, 0.30, 1.70, easeOutQuint)) * 0.06;
+    var wordScale = (1 + enterScale - outro * 0.028) * breathe;
+    var wordBlur = (1 - seg(t, 0.55, 2.35)) * 6.5 + outro * 3.6;
+
+    wordEl.style.transform =
+      "translate3d(" + f(drift) + "px," + f(floatY) + "px,0) scale(" + wordScale.toFixed(5) + ")";
+    wordEl.style.filter = wordBlur > 0.03 ? "blur(" + wordBlur.toFixed(2) + "px)" : "none";
+
+    /* ---- tracking ---- */
+    var spacing = 0.012 + (1 - seg(t, 1.50, 3.30, easeOutQuint)) * 0.085;
+
+    /* ---- per-letter stagger ---- */
+    var last = chars.length - 1;
+    for (i = 0; i < chars.length; i++) {
+      var d = i * 0.155;
+
+      var enter = easeOutQuint(seg(t, 0.05 + d, 1.35 + d));
+      var rise = (1 - enter) * 48;
+
+      var outA = 6.45 + (last - i) * 0.05;
+      var outB = 7.40 + (last - i) * 0.05;
+      var out = seg(t, outA, outB, easeInOutQuint);
+      rise += out * 32;
+
+      var wob = Math.sin(2 * W * t + i * 0.9) * 1.7;
+      var tilt = Math.sin(W * t + i * 1.3) * 0.4;
+
+      var chOpacity = enter * (1 - clamp(out * 1.03, 0, 1)) * alive;
+      var chBlur = (1 - enter) * 9.5 + out * 3.2;
+      var chScale = 0.965 + enter * 0.035 - out * 0.018;
+      var skew = (1 - enter) * 2.6 + out * 2.2;
+
+      chars[i].style.transform =
+        "translate3d(" + f(wob) + "px," + f(rise) + "px,0) " +
+        "rotate(" + tilt.toFixed(3) + "deg) skewX(" + skew.toFixed(3) + "deg) " +
+        "scale(" + chScale.toFixed(5) + ")";
+      chars[i].style.opacity = f(clamp(chOpacity, 0, 1));
+      chars[i].style.filter = chBlur > 0.03 ? "blur(" + chBlur.toFixed(2) + "px)" : "none";
+      chars[i].style.marginRight = (i < last ? spacing : 0) + "em";
+
+      var rc = refChars[i];
+      rc.style.marginRight = (i < last ? spacing * 0.94 : 0) + "em";
+      rc.style.transform =
+        "translate3d(" + f(wob * 1.5) + "px," + f(rise * -0.42) + "px,0) " +
+        "skewX(" + (skew * -1).toFixed(3) + "deg) scale(" + chScale.toFixed(5) + ")";
+      rc.style.opacity = f(clamp(chOpacity * 0.9, 0, 1));
+      rc.style.filter = "blur(" + (chBlur + 2.4).toFixed(2) + "px)";
+    }
+
+    /* ---- reflection block ---- */
+    var refIn = seg(t, 0.10, 0.75);
+    var refOut = seg(t, 6.85, 7.50, easeInOutQuint);
+    reflectionEl.style.opacity = f(refIn * (1 - refOut) * 0.38);
+    reflectionEl.style.transform =
+      "translate3d(" + f(drift) + "px," + f(floatY * -0.5) + "px,0)";
+
+    /* ---- haze ---- */
+    var h1 = seg(t, 0.00, 1.25);
+    var h2 = seg(t, 0.20, 1.65);
+    var hOut = seg(t, 6.45, 7.70, easeInOutQuint);
+
+    haze1.style.opacity = f(h1 * (1 - hOut) * 0.95);
+    haze1.style.transform =
+      "translate3d(" + f(-40 + Math.sin(W * t) * 64) + "px," +
+      f(16 + Math.cos(W * t) * 34) + "px,0) scale(" +
+      (1 + Math.sin(W * t) * 0.09).toFixed(4) + ")";
+
+    haze2.style.opacity = f(h2 * (1 - hOut) * 0.85);
+    haze2.style.transform =
+      "translate3d(" + f(36 + Math.cos(W * t) * 58) + "px," +
+      f(-20 + Math.sin(W * t) * 30) + "px,0) scale(" +
+      (1 + Math.cos(W * t) * 0.10).toFixed(4) + ")";
+
+    /* ---- hairlines ---- */
+    var rIn = easeOutQuint(seg(t, 0.55, 2.15));
+    var rOut = easeInOutQuint(seg(t, 6.20, 7.25));
+    var ruleOp = rIn * (1 - rOut) * 0.85;
+    var ruleScale = (0.05 + rIn * 0.95) * (1 - rOut * 0.92);
+
+    ruleTop.style.opacity = f(ruleOp);
+    ruleBot.style.opacity = f(ruleOp * 0.75);
+    ruleTop.style.transform = "scaleX(" + ruleScale.toFixed(4) + ")";
+    ruleBot.style.transform = "scaleX(" + ruleScale.toFixed(4) + ")";
+
+    /* ---- one light sweep, 3.20 -> 4.35 ---- */
+    var sw = (t - 3.20) / 1.15;
+    if (sw > 0 && sw < 1) {
+      sweep.style.opacity = f(Math.sin(sw * Math.PI) * 0.95);
+      sweep.style.transform = "translate3d(" + f(-540 + sw * 1860) + "px,0,0)";
+    } else {
+      sweep.style.opacity = "0";
+      sweep.style.transform = "translate3d(-540px,0,0)";
+    }
+
+    /* ---- caption ---- */
+    var capIn = easeOutCubic(seg(t, 2.05, 3.05));
+    var capOut = easeInOutQuint(seg(t, 6.30, 7.10));
+    sub.style.opacity = f(capIn * (1 - capOut));
+    sub.style.transform =
+      "translate3d(0," + f((1 - capIn) * 16 - capOut * 12) + "px,0)";
+
+    /* ---- corner meta ---- */
+    var mIn = easeOutCubic(seg(t, 0.90, 1.90));
+    var mOut = easeInOutQuint(seg(t, 6.55, 7.35));
+    meta.style.opacity = f(mIn * (1 - mOut) * 0.92);
+
+    /* ---- grain: deterministic time-quantised jitter ---- */
+    var gx = Math.round((Math.sin(t * 91.7) * 0.5 + 0.5) * 160);
+    var gy = Math.round((Math.cos(t * 77.3) * 0.5 + 0.5) * 160);
+    grain.style.transform = "translate3d(" + (-gx) + "px," + (-gy) + "px,0)";
+    grain.style.opacity = f(0.038 + 0.022 * (1 - seg(t, 0, 1.4)));
+  }
+
+  /* ---- playback ---- */
+  var rafId = null;
+  var playing = false;
+  var startWall = 0;
+  var startOffset = 0;
+  var currentT = 0;
+
+  function now() {
+    return (typeof performance !== "undefined" && performance.now)
+      ? performance.now() : Date.now();
+  }
+
+  function wrap(v) {
+    v = v % DURATION;
+    return v < 0 ? v + DURATION : v;
+  }
+
+  function tick() {
+    if (!playing) return;
+    var t = wrap(startOffset + (now() - startWall) / 1000);
+    currentT = t;
+    seek(t);
+    rafId = requestAnimationFrame(tick);
+  }
+
+  function play() {
+    if (playing) return;
+    playing = true;
+    startWall = now();
+    startOffset = currentT;
+    rafId = requestAnimationFrame(tick);
+  }
+
+  function pause() {
+    if (!playing) return;
+    currentT = wrap(startOffset + (now() - startWall) / 1000);
+    playing = false;
+    if (rafId !== null) {
+      cancelAnimationFrame(rafId);
+      rafId = null;
+    }
+    seek(currentT);
+  }
+
+  window.__anim = {
+    duration: DURATION,
+    seek: function (t) {
+      /* a scrub is a still frame: stop the clock so the pose is exact */
+      currentT = wrap(Number(t) || 0);
+      if (playing) {
+        playing = false;
+        if (rafId !== null) {
+          cancelAnimationFrame(rafId);
+          rafId = null;
+        }
+      }
+      seek(currentT);
+    },
+    play: play,
+    pause: pause
+  };
+
+  /* deterministic first frame, then loop unless reduced motion is requested */
+  seek(0);
+  var reduce = false;
+  try {
+    reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  } catch (e) { reduce = false; }
+
+  if (reduce) {
+    seek(4.6);
+  } else {
+    play();
+  }
+})();
+</script>
+</body>
+</html>

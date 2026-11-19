@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1440, initial-scale=1">
+<title>Inkwell — LaTeX from handwriting</title>
+<style>
+  :root{
+    --paper:#f4f1e9;
+    --paper-deep:#ebe5d8;
+    --surface:#fffdf8;
+    --ink:#24261f;
+    --muted:#66685d;
+    --faint:#8b8b7e;
+    --rule:#d7d1c1;
+    --accent:#2f5561;
+    --accent-deep:#24424c;
+    --hand:#2b3540;
+    --hand-red:#a85545;
+    --ok:#4d7757;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;height:100%;}
+  body{
+    width:1440px;height:900px;margin:0 auto;overflow:hidden;
+    background:var(--paper);color:var(--ink);
+    font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .serif{font-family:"Iowan Old Style","Palatino Linotype","Book Antiqua",Palatino,Georgia,serif;}
+  a{color:inherit;text-decoration:none;}
+
+  /* ---------- header ---------- */
+  header{
+    height:62px;padding:0 60px;border-bottom:1px solid var(--rule);
+    display:flex;align-items:center;justify-content:space-between;
+    background:rgba(255,255,255,.25);
+  }
+  .brand{display:flex;align-items:center;gap:10px;}
+  .brand svg{color:var(--accent);}
+  .wordmark{font-size:23px;letter-spacing:-.2px;font-weight:600;}
+  .header-note{font-size:12.5px;color:var(--faint);letter-spacing:.2px;}
+  nav{display:flex;align-items:center;gap:20px;font-size:13px;color:var(--muted);}
+  nav a:hover{color:var(--accent);}
+  .sep{width:1px;height:14px;background:var(--rule);}
+  .login{
+    border:1px solid var(--rule);padding:7px 14px;border-radius:3px;
+    color:var(--ink);font-size:12.5px;
+  }
+
+  /* ---------- hero ---------- */
+  .hero{
+    height:560px;padding:0 60px;display:flex;align-items:center;gap:56px;
+  }
+  .hero-copy{width:560px;flex:none;}
+  .eyebrow{
+    font-size:11px;letter-spacing:2.4px;color:var(--accent);
+    font-weight:700;text-transform:uppercase;margin-bottom:22px;
+  }
+  h1{
+    font-size:60px;line-height:1.06;font-weight:600;letter-spacing:-1.6px;
+    margin:0 0 22px;
+  }
+  h1 em{font-style:italic;color:var(--accent);}
+  .lede{
+    font-size:17px;line-height:1.62;color:var(--muted);
+    max-width:500px;margin:0 0 32px;
+  }
+  .actions{display:flex;align-items:center;gap:26px;}
+  .btn-primary{
+    display:inline-flex;align-items:center;gap:10px;
+    background:var(--accent-deep);color:#f6f3ea;
+    padding:14px 20px;border-radius:3px;font-size:14.5px;font-weight:600;
+    box-shadow:0 1px 0 rgba(0,0,0,.12);
+  }
+  .btn-primary:hover{background:#1c3540;}
+  .btn-secondary{
+    display:inline-flex;align-items:center;gap:8px;
+    font-size:14.5px;color:var(--accent);font-weight:600;
+    border-bottom:1px solid rgba(47,85,97,.35);padding-bottom:3px;
+  }
+  .micro{margin-top:26px;font-size:12px;color:var(--faint);letter-spacing:.1px;}
+  .micro b{color:var(--muted);font-weight:600;}
+
+  /* ---------- demo visual ---------- */
+  .hero-visual{width:700px;flex:none;}
+  .demo{
+    position:relative;width:700px;height:430px;
+    background:var(--paper-deep);border:1px solid var(--rule);
+    border-radius:4px;
+  }
+  .demo-label{
+    position:absolute;top:15px;font-size:10px;letter-spacing:1.6px;
+    font-weight:700;color:var(--faint);text-transform:uppercase;
+  }
+  .label-input{left:26px;}
+  .label-output{left:396px;}
+
+  .paper-photo{
+    position:absolute;left:24px;top:46px;width:280px;height:350px;
+    background-color:#fbf6e9;
+    background-image:
+      linear-gradient(to right,transparent 40px,rgba(169,85,69,.45) 40px,rgba(169,85,69,.45) 41px,transparent 41px),
+      repeating-linear-gradient(to bottom,transparent 0,transparent 27px,rgba(120,150,165,.30) 27px,rgba(120,150,165,.30) 28px);
+    border:1px solid #e3dac2;
+    box-shadow:0 16px 26px rgba(40,35,25,.20),0 2px 5px rgba(40,35,25,.12);
+    transform:rotate(-2.2deg);
+    overflow:hidden;
+  }
+  .paper-photo:after{
+    content:"";position:absolute;top:0;right:0;
+    border-width:0 22px 22px 0;border-style:solid;
+    border-color:transparent #ece2ca transparent transparent;
+    box-shadow:-2px 2px 3px rgba(0,0,0,.08);
+  }
+  .hand-content{
+    position:relative;z-index:2;padding:30px 22px 0 50px;
+    font-family:"Segoe Print","Bradley Hand","Comic Sans MS",cursive;
+    color:var(--hand);font-size:13.5px;line-height:2.05;
+  }
+  .hw-line{transform:rotate(-.5deg);white-space:nowrap;}
+  .hw-line.b{transform:rotate(.6deg);padding-left:6px;}
+  .hw-underline{display:block;margin:-2px 0 4px;}
+  .hw-eq{
+    font-size:16px;margin:2px 0 0 -6px;transform:rotate(-.9deg);
+    letter-spacing:.2px;white-space:nowrap;
+  }
+  .hw-eq sub,.hw-eq sup{font-size:.7em;}
+  .hw-note{color:var(--hand-red);font-size:12.5px;transform:rotate(2deg);margin-left:40px;}
+  .hw-table{margin-top:14px;transform:rotate(.4deg);font-size:12.5px;line-height:1.95;}
+  .hw-table .row{display:flex;gap:18px;}
+  .hw-table .row span:first-child{width:74px;}
+
+  .flow{
+    position:absolute;left:312px;top:196px;width:76px;
+    display:flex;flex-direction:column;align-items:center;gap:6px;
+  }
+  .flow-circle{
+    width:38px;height:38px;border-radius:50%;background:var(--surface);
+    border:1px solid var(--rule);display:flex;align-items:center;justify-content:center;
+    color:var(--accent);box-shadow:0 2px 5px rgba(40,35,25,.10);
+  }
+  .flow-cap{font-size:9px;letter-spacing:1.2px;color:var(--faint);text-transform:uppercase;}
+
+  .rendered{
+    position:absolute;right:24px;top:46px;width:280px;height:350px;
+    background:#fff;border:1px solid #dcd8cf;border-radius:1px;
+    box-shadow:0 10px 20px rgba(40,35,25,.10),0 2px 4px rgba(40,35,25,.06);
+    padding:26px 26px;font-family:Georgia,"Times New Roman",serif;color:#1c1c1a;
+  }
+  .compiles{
+    position:absolute;top:14px;right:14px;display:flex;align-items:center;gap:5px;
+    font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-size:9.5px;letter-spacing:.6px;color:var(--ok);font-weight:700;
+    text-transform:uppercase;border:1px solid rgba(77,119,87,.35);
+    padding:3px 7px;border-radius:2px;background:#f3f7f3;
+  }
+  .r-heading{font-size:15px;font-weight:700;margin-bottom:8px;}
+  .r-body{font-size:12.5px;line-height:1.55;margin-bottom:10px;}
+  .r-eq{
+    font-style:italic;font-size:15px;text-align:center;margin:12px 0 12px;
+    letter-spacing:.2px;white-space:nowrap;
+  }
+  .r-eq sub,.r-eq sup{font-size:.68em;font-style:normal;}
+  .r-table{border-collapse:collapse;width:100%;font-size:11.5px;margin-top:8px;}
+  .r-table th,.r-table td{text-align:left;padding:5px 2px;}
+  .r-table thead th{border-bottom:1px solid #1c1c1a;font-weight:700;}
+  .r-table tbody tr:last-child td{border-top:1px solid #cfcbc2;}
+  .r-table td:last-child,.r-table th:last-child{text-align:right;}
+  .r-caption{font-size:10px;color:#777;margin-top:6px;}
+
+  .demo-caption{
+    margin-top:15px;text-align:center;font-size:11.5px;color:var(--faint);
+    letter-spacing:.2px;
+  }
+  .demo-caption b{color:var(--muted);font-weight:600;}
+
+  /* ---------- value section ---------- */
+  .value{
+    height:278px;border-top:1px solid var(--rule);
+    padding:30px 60px 0;background:rgba(255,255,255,.18);
+  }
+  .value-head{display:flex;align-items:baseline;justify-content:space-between;}
+  .value-kicker{
+    font-size:11px;letter-spacing:2.2px;font-weight:700;color:var(--accent);
+    text-transform:uppercase;
+  }
+  .value-note{font-size:12px;color:var(--faint);font-style:italic;}
+  .caps{display:grid;grid-template-columns:repeat(3,1fr);margin-top:26px;}
+  .cap{padding:0 38px;border-left:1px solid var(--rule);}
+  .cap:first-child{padding-left:0;border-left:none;}
+  .cap-top{display:flex;align-items:center;gap:14px;margin-bottom:14px;height:28px;}
+  .cap-top svg{color:var(--accent);flex:none;}
+  .num{font-size:14px;color:var(--accent);font-weight:600;letter-spacing:.5px;}
+  .cap h3{font-size:20px;font-weight:600;margin:0 0 8px;letter-spacing:-.3px;}
+  .cap p{font-size:13.5px;line-height:1.6;color:var(--muted);margin:0;max-width:300px;}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round">
+      <path d="M12 2 L17 11 L12 22 L7 11 Z"/>
+      <path d="M12 2 L12 22"/>
+      <path d="M7 11 L17 11"/>
+    </svg>
+    <span class="wordmark serif">Inkwell</span>
+  </div>
+  <div class="header-note">LaTeX, from a photograph of your notes.</div>
+  <nav>
+    <a href="#">How it works</a>
+    <span class="sep"></span>
+    <a href="#">Pricing</a>
+    <a href="#" class="login">Log in</a>
+  </nav>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="hero-copy">
+      <div class="eyebrow">Inkwell · handwriting → LaTeX</div>
+      <h1 class="serif">Your handwriting,<br><em>compiled.</em></h1>
+      <p class="lede">Photograph a page of pen-and-paper math and Inkwell returns clean, compilable LaTeX — with the original beside the rendered output, so you can check every line.</p>
+      <div class="actions">
+        <a href="#" class="btn-primary">
+          Try a page free
+          <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 8 h11 M9 4 l4 4 -4 4"/></svg>
+        </a>
+        <a href="#" class="btn-secondary">
+          See a real conversion
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 8 h11 M9 4 l4 4 -4 4"/></svg>
+        </a>
+      </div>
+      <div class="micro">No signup for your first page &nbsp;·&nbsp; <b>Built for people who write LaTeX every day.</b></div>
+    </div>
+
+    <div class="hero-visual">
+      <div class="demo">
+        <div class="demo-label label-input">01 · Photographed page</div>
+        <div class="demo-label label-output">02 · Compiled output</div>
+
+        <!-- photographed handwriting -->
+        <div class="paper-photo">
+          <div class="hand-content">
+            <div class="hw-line">Theorem 2.1 — if f ∈ L²(ℝ) has</div>
+            <div class="hw-line">compact support, then</div>
+            <svg class="hw-underline" width="150" height="6" viewBox="0 0 150 6" fill="none" stroke="#2b3540" stroke-width="1.3" stroke-linecap="round"><path d="M1 4 C30 1 60 5 90 2 S130 4 149 2"/></svg>
+            <div class="hw-eq">∫<sub>ℝ</sub> |f̂(ξ)|² (1+ξ²)<sup>s</sup> dξ &lt; ∞</div>
+            <div class="hw-line b">for s &gt; 3/2. &nbsp; yes, really.</div>
+            <div class="hw-note">s &gt; 3/2 ?</div>
+            <div class="hw-table">
+              <div class="row"><span>method</span><span>error</span></div>
+              <div class="row"><span>ours</span><span>1.2e-4</span></div>
+              <div class="row"><span>baseline</span><span>8.7e-3</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- transformation -->
+        <div class="flow">
+          <div class="flow-circle">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12 h16 M14 7 l5 5 -5 5"/></svg>
+          </div>
+          <div class="flow-cap">OCR + LaTeX</div>
+        </div>
+
+        <!-- rendered output -->
+        <div class="rendered">
+          <div class="compiles">
+            <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 6 l2.5 2.5 L10 3"/></svg>
+            compiles
+          </div>
+          <div class="r-heading">Theorem 2.1.</div>
+          <div class="r-body">Let f ∈ L²(ℝ) have compact support. Then</div>
+          <div class="r-eq">∫<sub>ℝ</sub> |f̂(ξ)|² (1+|ξ|²)<sup>s</sup> dξ &lt; ∞</div>
+          <div class="r-body">for every s &gt; 3/2.</div>
+          <table class="r-table">
+            <thead><tr><th>method</th><th>error</th></tr></thead>
+            <tbody>
+              <tr><td>ours</td><td>1.2×10⁻⁴</td></tr>
+              <tr><td>baseline</td><td>8.7×10⁻³</td></tr>
+            </tbody>
+          </table>
+          <div class="r-caption">Table 1: reconstruction error.</div>
+        </div>
+      </div>
+      <div class="demo-caption">Same page, before and after. <b>Nothing here is a picture of text.</b></div>
+    </div>
+  </section>
+
+  <section class="value">
+    <div class="value-head">
+      <span class="value-kicker">What it actually handles</span>
+      <span class="value-note">No magic claims — just the parts that usually break.</span>
+    </div>
+    <div class="caps">
+      <div class="cap">
+        <div class="cap-top">
+          <span class="num serif">01</span>
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round">
+            <path d="M4 7 h9 l-4.5 7 L13 21 H4"/>
+            <rect x="17" y="7" width="8" height="14" rx=".5"/>
+            <path d="M17 14 h8 M21 7 v14"/>
+          </svg>
+        </div>
+        <h3 class="serif">Equations &amp; tables</h3>
+        <p>Handwritten sums, fractions and ruled tables come back as real LaTeX source — not images pasted into your document.</p>
+      </div>
+      <div class="cap">
+        <div class="cap-top">
+          <span class="num serif">02</span>
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 8 A8 8 0 1 0 22 15"/>
+            <path d="M22 4 v5 h-5"/>
+            <path d="M9 13 h8 M9 17 h5"/>
+          </svg>
+        </div>
+        <h3 class="serif">Revision history</h3>
+        <p>Every page keeps its versions. Cross a line out, photograph it again, and pull up any earlier pass whenever you need it.</p>
+      </div>
+      <div class="cap">
+        <div class="cap-top">
+          <span class="num serif">03</span>
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M5 4 h10 l4 4 v14 H5 Z"/>
+            <path d="M15 4 v4 h4"/>
+            <path d="M9 14 h7 M12 11 l3 3 -3 3"/>
+          </svg>
+        </div>
+        <h3 class="serif">Export to .tex or .pdf</h3>
+        <p>Download editable <b>.tex</b> for your repo or a typeset <b>.pdf</b> for your advisor. The source is yours to keep and compile anywhere.</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+</body>
+</html>

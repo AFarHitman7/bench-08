@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1280, height=720">
+<title>DRIFT — Title Card</title>
+<style>html,body{margin:0;padding:0;width:1280px;height:720px;overflow:hidden;background:#0B1518}body{font-family:Georgia,'Times New Roman',serif}#stage{position:relative;width:1280px;height:720px;background:#0B1518;color:#E9E6DC;overflow:hidden}#title{position:absolute;left:0;top:268px;width:1280px;text-align:center;font-size:168px;line-height:1;letter-spacing:0.30em;color:#E9E6DC}#rule{position:absolute;left:534px;top:478px;width:212px;height:1px;background:#E9E6DC;opacity:0.45}#sub{position:absolute;left:0;top:502px;width:1280px;text-align:center;font-size:17px;letter-spacing:0.52em;color:#E9E6DC}</style>
+</head>
+<body>
+<div id="stage"><div id="title">DRIFT</div><div id="rule"></div><div id="sub">A FERRY CROSSING · NIGHT</div></div>
+<script>
+(function(){var DUR=8;var title=document.getElementById('title');var sub=document.getElementById('sub');var rule=document.getElementById('rule');
+function clamp01(x){return x<0?0:x>1?1:x}function smooth(a,b,x){var u=clamp01((x-a)/(b-a));return u*u*(3-2*u)}function norm(t){t=t%DUR;if(t<0)t+=DUR;return t}
+function render(rawT){var t=norm(rawT);var fadeIn=smooth(0,1.8,t);var fadeOut=smooth(6.6,8,t);var titleOp=(0.38+0.62*fadeIn)*(1-fadeOut)+0.38*fadeOut;var x=0,y=0;if(t>=4.5&&t<=7.5){var u=(t-4.5)/3;var s=Math.sin(Math.PI*u);s=s*s;x=38*s;y=-10*s}var capOp=smooth(1.8,2.4,t)*(1-smooth(6.4,7.2,t));title.style.opacity=titleOp.toFixed(3);title.style.transform='translate('+x.toFixed(2)+'px,'+y.toFixed(2)+'px)';sub.style.opacity=(capOp*0.85).toFixed(3);rule.style.opacity=(0.18+0.30*fadeIn*(1-fadeOut)).toFixed(3)}
+var cur=0,playing=true,raf=null,last=null;function tick(now){if(!playing)return;if(last===null)last=now;var dt=(now-last)/1000;last=now;cur=norm(cur+dt);render(cur);raf=requestAnimationFrame(tick)}
+window.__anim={duration:DUR,seek:function(t){cur=norm(Number(t));render(cur);if(playing){last=null}},play:function(){if(playing)return;playing=true;last=null;raf=requestAnimationFrame(tick)},pause:function(){playing=false;if(raf!==null)cancelAnimationFrame(raf);raf=null;last=null}};
+render(0);raf=requestAnimationFrame(tick)})();
+</script>
+</body>
+</html>

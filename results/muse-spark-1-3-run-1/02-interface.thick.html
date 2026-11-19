@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1440, height=900">
+<title>Inkwell — Handwriting to LaTeX</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{width:1440px;height:900px;overflow:hidden;background:#EDE7DA;}
+  body{font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;color:#1A1E1C;display:flex;justify-content:center;align-items:center;}
+  .page{width:1440px;height:900px;background:#F6F1E7;display:flex;flex-direction:column;position:relative;}
+  .serif{font-family:"Iowan Old Style",Palatino,"Palatino Linotype",Georgia,"Times New Roman",serif;}
+  .nav{height:72px;display:flex;align-items:center;padding:0 48px;border-bottom:1px solid #D9D1C0;flex-shrink:0;}
+  .logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:19px;letter-spacing:-.02em;}
+  .logo-mark{width:28px;height:28px;background:#1A1E1C;color:#F6F1E7;display:flex;align-items:center;justify-content:center;border-radius:7px;font-family:Georgia,serif;font-style:italic;font-size:18px;}
+  .nav-links{display:flex;gap:28px;margin-left:48px;font-size:14px;color:#5B564D;}
+  .nav-right{margin-left:auto;display:flex;align-items:center;gap:16px;font-size:14px;}
+  .signin{color:#1A1E1C;text-decoration:none;font-weight:500;}
+  .btn-primary{background:#1E4A3A;color:#F6F1E7;border:0;border-radius:8px;padding:11px 18px;font-size:14px;font-weight:600;cursor:pointer;}
+  .main{flex:1;display:flex;padding:36px 48px 0 48px;gap:48px;}
+  .left{width:460px;flex-shrink:0;padding-top:14px;}
+  .kicker{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:#7A7468;font-weight:700;display:flex;align-items:center;gap:10px;}
+  .kicker:before{content:"";width:22px;height:2px;background:#B54A2E;display:inline-block;}
+  h1{font-size:62px;line-height:.98;letter-spacing:-.03em;font-weight:500;margin:16px 0 16px;color:#161412;}
+  h1 em{font-style:italic;font-weight:400;}
+  .sub{font-size:17px;line-height:1.55;color:#4A453E;max-width:420px;}
+  .cta-row{display:flex;gap:12px;margin-top:26px;align-items:center;}
+  .btn-big-primary{background:#1E4A3A;color:#F6F1E7;border-radius:10px;padding:14px 22px;font-size:15px;font-weight:650;border:0;cursor:pointer;}
+  .btn-secondary{background:transparent;border:1px solid #C4BBA7;border-radius:10px;padding:13px 18px;font-size:15px;font-weight:600;color:#1A1E1C;display:flex;align-items:center;gap:9px;cursor:pointer;}
+  .play{width:20px;height:20px;border:1px solid #1A1E1C;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:9px;}
+  .proof{margin-top:22px;display:flex;gap:18px;font-size:12.5px;color:#6B665C;border-top:1px solid #D9D1C0;padding-top:16px;}
+  .proof b{color:#1A1E1C;}
+  .demo{flex:1;background:#FFFEFB;border:1px solid #D9D1C0;border-radius:16px 16px 0 0;border-bottom:0;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 24px 60px rgba(26,30,28,.10);}
+  .demo-bar{height:46px;display:flex;align-items:center;padding:0 16px;border-bottom:1px solid #E6DDCC;gap:8px;background:#FBF8F1;}
+  .dot{width:10px;height:10px;border-radius:50%;}
+  .demo-tabs{margin-left:12px;display:flex;gap:6px;font-size:12.5px;}
+  .tab{padding:6px 12px;border-radius:20px;background:#EFE8D8;color:#5B564D;}
+  .tab.active{background:#1A1E1C;color:#fff;font-weight:600;}
+  .demo-meta{margin-left:auto;font-size:12px;color:#7A7468;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;}
+  .demo-body{display:flex;flex:1;min-height:0;}
+  .pane{flex:1;padding:20px 22px;position:relative;}
+  .pane:first-child{background:#F2ECDF;border-right:1px solid #D9D1C0;}
+  .pane-label{font-size:11px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;color:#8A8478;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center;}
+  .badge{font-size:11px;background:#fff;border:1px solid #D9D1C0;border-radius:20px;padding:3px 9px;letter-spacing:0;text-transform:none;font-weight:600;color:#5B564D;}
+  .hand{font-family:"Segoe Script","Bradley Hand",Georgia,serif;font-style:italic;color:#24366B;line-height:1.5;}
+  .hand p{margin-bottom:10px;}
+  .hand .eq{font-size:22px;}
+  .hand .small{font-size:16px;}
+  .hand-sketch{border:1px solid rgba(36,54,107,.6);border-radius:2px;margin-top:6px;padding:6px 8px;font-size:14px;line-height:1.7;}
+  .tape{position:absolute;top:-10px;left:50%;transform:translateX(-50%) rotate(-2deg);width:92px;height:22px;background:rgba(216,204,172,.9);border-left:1px dashed #B9AD93;border-right:1px dashed #B9AD93;}
+  .rendered h4{font-family:Georgia,serif;font-size:16px;margin-bottom:10px;}
+  .rendered-eq{background:#fff;border:1px solid #E6DDCC;border-radius:8px;padding:14px 16px;text-align:center;font-family:Georgia,serif;font-size:20px;margin-bottom:14px;}
+  .rendered table{width:100%;border-collapse:collapse;font-size:13px;background:#fff;}
+  .rendered th{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:#7A7468;border-bottom:2px solid #1A1E1C;padding:7px 8px;text-align:left;}
+  .rendered td{border-bottom:1px solid #E6DDCC;padding:7px 8px;}
+  .code{margin-top:12px;background:#1A1E1C;color:#E8E0CE;border-radius:8px;padding:10px 12px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11.5px;line-height:1.6;}
+  .code span.c{color:#9AA38F;}
+  .value{background:#1A1E1C;color:#EDE7DA;margin:0 48px 24px;border-radius:14px;display:flex;align-items:stretch;padding:0;overflow:hidden;flex-shrink:0;height:212px;}
+  .value-intro{width:300px;padding:28px 28px;border-right:1px solid #2E3634;display:flex;flex-direction:column;justify-content:center;}
+  .value-intro h2{font-size:26px;line-height:1.1;letter-spacing:-.02em;font-weight:500;}
+  .value-intro p{font-size:13px;color:#B9B3A6;margin-top:10px;line-height:1.5;}
+  .caps{flex:1;display:flex;}
+  .cap{flex:1;padding:24px 26px;border-right:1px solid #2E3634;display:flex;flex-direction:column;justify-content:center;}
+  .cap:last-child{border-right:0;background:#21352C;}
+  .cap-num{font-size:12px;color:#9AA38F;font-weight:700;letter-spacing:.12em;margin-bottom:10px;}
+  .cap h3{font-size:15px;margin-bottom:8px;}
+  .cap p{font-size:13px;line-height:1.55;color:#C6C0B3;}
+  .cap p b,.cap p code{color:#fff;}
+  .cap code{font-family:ui-monospace,Menlo,monospace;font-size:12px;background:#2E3B34;padding:2px 6px;border-radius:4px;}
+  .icon{width:28px;height:28px;border:1px solid #4A5551;border-radius:8px;display:flex;align-items:center;justify-content:center;margin-bottom:12px;color:#EDE7DA;}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="nav">
+    <div class="logo"><div class="logo-mark">I</div> Inkwell</div>
+    <div class="nav-links"><span>How it works</span><span>Pricing</span><span>Docs</span><span>Changelog</span></div>
+    <div class="nav-right"><a class="signin" href="#">Sign in</a><button class="btn-primary">Try a page free</button></div>
+  </div>
+  <div class="main">
+    <div class="left">
+      <div class="kicker">Handwriting to LaTeX</div>
+      <h1 class="serif">Photograph the page. <em>Keep the math.</em></h1>
+      <p class="sub">Inkwell reads a photo of your handwritten notes and returns clean, editable LaTeX — displayed next to the original so you can verify every symbol.</p>
+      <div class="cta-row">
+        <button class="btn-big-primary">Try a page free</button>
+        <button class="btn-secondary"><span class="play">▶</span> See a real conversion</button>
+      </div>
+      <div class="proof"><span><b>98.2%</b> symbol accuracy on 12k test pages</span><span><b>→ .tex</b> diff-checked line by line</span><span>No account needed</span></div>
+    </div>
+    <div class="demo">
+      <div class="demo-bar">
+        <span class="dot" style="background:#D96A5A"></span><span class="dot" style="background:#D9B44A"></span><span class="dot" style="background:#6FA287"></span>
+        <div class="demo-tabs"><span class="tab">page_042.jpg</span><span class="tab active">page_042.tex</span></div>
+        <div class="demo-meta">conf 0.98 &nbsp;•&nbsp; 1.4s</div>
+      </div>
+      <div class="demo-body">
+        <div class="pane">
+          <div class="tape"></div>
+          <div class="pane-label">Original photo <span class="badge">deskewed + cropped</span></div>
+          <div class="hand">
+            <p class="small">Gaussian integral, p.42 —</p>
+            <p class="eq">∫<sub>−∞</sub><sup>∞</sup> e<sup>−x²</sup> dx = √π</p>
+            <p class="small">proof by squaring → polar:</p>
+            <div class="hand-sketch">θ | 0 &nbsp;&nbsp; π/4 &nbsp;&nbsp; π/2<br>r &nbsp;| 1 &nbsp;&nbsp; 1.2 &nbsp;&nbsp; 1.4</div>
+            <p class="small" style="margin-top:8px">∴ I² = π ✓</p>
+          </div>
+        </div>
+        <div class="pane rendered">
+          <div class="pane-label">Rendered output <span class="badge">compiled</span></div>
+          <h4>Gaussian integral</h4>
+          <div class="rendered-eq">∫ e<sup>−x²</sup> dx = √π</div>
+          <table><tr><th>θ</th><th>0</th><th>π/4</th><th>π/2</th></tr><tr><td><i>r</i></td><td>1.0</td><td>1.2</td><td>1.4</td></tr></table>
+          <div class="code"><span class="c">% generated by Inkwell</span><br>\[ \int_{-\infty}^{\infty} e^{-x^2}\,dx = \sqrt{\pi} \]<br>\begin{tabular}{c|ccc} theta &amp; 0 &amp; pi/4 &amp; pi/2 \end{tabular}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="value">
+    <div class="value-intro"><h2 class="serif">Made for drafts you keep.</h2><p>Not a demo trick. Versioning, tables and export that fit an existing TeX workflow.</p></div>
+    <div class="caps">
+      <div class="cap"><div class="cap-num">01</div><div class="icon">∑</div><h3>Equations + tables, intact</h3><p>Alignments, matrices and <b>ruled tables</b> keep their structure.</p></div>
+      <div class="cap"><div class="cap-num">02</div><div class="icon">◍</div><h3>Revision history per page</h3><p>Every scan keeps its <b>photo, .tex and PDF</b>. Diff v3 against v4.</p></div>
+      <div class="cap"><div class="cap-num">03</div><div class="icon">⤓</div><h3>Export to <code>.tex</code> or <code>.pdf</code></h3><p>Drop into Overleaf or <b>arxiv-ready</b> projects. No lock-in.</p><button class="btn-primary" style="margin-top:12px;background:#EDE7DA;color:#1A1E1C;align-self:flex-start">Try a page free →</button></div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

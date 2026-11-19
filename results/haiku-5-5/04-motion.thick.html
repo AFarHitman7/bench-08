@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1280, height=720">
+<title>DRIFT</title>
+<style>
+  html, body {
+    margin: 0;
+    width: 1280px;
+    height: 720px;
+    overflow: hidden;
+    background: #0d1520;
+  }
+  #stage {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 1280px;
+    height: 720px;
+    background: #0d1520;
+  }
+  #horizon {
+    position: absolute;
+    left: 0;
+    top: 430px;
+    width: 1280px;
+    height: 2px;
+    background: #e9e3d3;
+    transform-origin: 50% 50%;
+    transform: scaleX(0);
+  }
+  #word {
+    position: absolute;
+    left: 50%;
+    top: 330px;
+    transform: translate(-50%, -50%);
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 180px;
+    line-height: 1;
+    color: #e9e3d3;
+    white-space: nowrap;
+    opacity: 0;
+    letter-spacing: 0.6em;
+  }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="horizon"></div>
+  <div id="word">DRIFT</div>
+</div>
+<script>
+(function () {
+  var D = 8;
+  var FS = 180;
+  var horizon = document.getElementById('horizon');
+  var word = document.getElementById('word');
+
+  function clamp01(x) { return x < 0 ? 0 : (x > 1 ? 1 : x); }
+  function seg(t, a, b) { return clamp01((t - a) / (b - a)); }
+  function easeOut(p) { return 1 - Math.pow(1 - p, 3); }
+  function easeIO(p) { return -(Math.cos(Math.PI * p) - 1) / 2; }
+  function lerp(a, b, k) { return a + (b - a) * k; }
+
+  var cur = 0;
+  var raf = null;
+  var startStamp = 0;
+
+  function render(t) {
+    var grow = easeOut(seg(t, 0, 1.4));
+    var retract = 1 - easeIO(seg(t, 6.8, 7.6));
+    horizon.style.transform = 'scaleX(' + (grow * retract).toFixed(4) + ')';
+
+    var fadeIn = easeOut(seg(t, 1.0, 2.2));
+    var fadeOut = 1 - easeIO(seg(t, 6.4, 7.5));
+    var op = fadeIn * fadeOut;
+
+    var tighten = easeOut(seg(t, 1.0, 2.8));
+    var loosen = easeIO(seg(t, 6.4, 7.5));
+    var ls = lerp(0.6, 0.18, tighten);
+    ls = lerp(ls, 0.34, loosen);
+
+    var dx = -16 * easeIO(seg(t, 4.4, 6.4));
+
+    word.style.opacity = op.toFixed(4);
+    word.style.letterSpacing = ls.toFixed(4) + 'em';
+    word.style.paddingLeft = (ls * FS).toFixed(2) + 'px';
+    word.style.transform = 'translate(calc(-50% + ' + dx.toFixed(3) + 'px), -50%)';
+  }
+
+  function seek(t) {
+    var n = Number(t);
+    if (!isFinite(n)) n = 0;
+    n = ((n % D) + D) % D;
+    cur = n;
+    render(cur);
+  }
+
+  function tick(now) {
+    seek((now - startStamp) / 1000);
+    raf = requestAnimationFrame(tick);
+  }
+
+  function play() {
+    if (raf !== null) return;
+    startStamp = performance.now() - cur * 1000;
+    raf = requestAnimationFrame(tick);
+  }
+
+  function pause() {
+    if (raf !== null) {
+      cancelAnimationFrame(raf);
+      raf = null;
+    }
+  }
+
+  window.__anim = { duration: D, seek: seek, play: play, pause: pause };
+
+  seek(0);
+  play();
+})();
+</script>
+</body>
+</html>

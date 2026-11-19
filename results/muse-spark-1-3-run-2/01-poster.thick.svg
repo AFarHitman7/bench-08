@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1350" viewBox="0 0 1080 1350">
+<style>
+.g { font-family: "Arial Narrow", "HelveticaNeue-CondensedBold", "Franklin Gothic Condensed", "Oswald", Impact, Haettenschweiler, sans-serif; font-stretch: condensed; }
+.m { font-family: "Courier New", Courier, "Nimbus Mono PS", Menlo, Consolas, monospace; }
+</style>
+<rect width="1080" height="1350" fill="#EDE6CF"/>
+<g fill="#131B29">
+<rect x="80" y="80" width="28" height="4"/>
+<rect x="80" y="80" width="4" height="28"/>
+<rect x="972" y="80" width="28" height="4"/>
+<rect x="996" y="80" width="4" height="28"/>
+<rect x="80" y="1266" width="28" height="4"/>
+<rect x="80" y="1242" width="4" height="28"/>
+<rect x="972" y="1266" width="28" height="4"/>
+<rect x="996" y="1242" width="4" height="28"/>
+</g>
+<text x="80" y="132" class="m" font-size="23" letter-spacing="1" fill="#131B29">VELL ISLAND FERRY — NIGHT SERVICE</text>
+<text x="1000" y="132" class="m" font-size="23" text-anchor="end" font-weight="700" fill="#131B29">7/7</text>
+<rect x="80" y="154" width="920" height="8" fill="#131B29"/>
+<rect x="80" y="168" width="920" height="2" fill="#131B29"/>
+<text x="80" y="208" class="m" font-size="22" letter-spacing="2.5" fill="#131B29">LAST BOAT — DON'T MISS IT</text>
+<text x="1000" y="208" class="m" font-size="22" text-anchor="end" letter-spacing="1" fill="#131B29">N°11 — WINTER</text>
+<text x="76" y="386" class="g" font-size="192" font-weight="900" letter-spacing="-2" fill="#131B29">THE LAST</text>
+<text x="76" y="600" class="g" font-size="252" font-weight="900" letter-spacing="-4" fill="#131B29">FERRY<tspan fill="#C23A05">.</tspan></text>
+<rect x="80" y="612" width="184" height="14" fill="#C23A05"/>
+<rect x="80" y="650" width="920" height="264" fill="#131B29"/>
+<rect x="80" y="650" width="14" height="264" fill="#C23A05"/>
+<text x="118" y="805" class="g" font-size="156" font-weight="900" letter-spacing="-3" fill="#EDE6CF">11:40<tspan font-size="52" baseline-shift="62">PM</tspan></text>
+<text x="118" y="872" class="m" font-size="22" letter-spacing="2" fill="#EDE6CF">SAN REMO — 23:40 SHARP</text>
+<rect x="518" y="678" width="2" height="208" fill="#EDE6CF" opacity="0.35"/>
+<g class="m" fill="#EDE6CF">
+<rect x="548" y="700" width="14" height="14" fill="#C23A05"/>
+<text x="576" y="713" font-size="21" letter-spacing="1.5" fill="#EDE6CF">OUTBOUND</text>
+<text x="548" y="753" font-size="33" font-weight="700" fill="#EDE6CF">SAN REMO → VELL</text>
+<text x="548" y="788" font-size="24" fill="#EDE6CF">23:40 ─── 00:05 / 25MIN</text>
+<rect x="548" y="814" width="14" height="14" fill="#EDE6CF"/>
+<text x="576" y="827" font-size="21" letter-spacing="1.5" fill="#EDE6CF">RETURN</text>
+<text x="548" y="867" font-size="33" font-weight="700" fill="#EDE6CF">VELL → SAN REMO</text>
+<text x="548" y="892" font-size="24" fill="#EDE6CF">00:20 ─── 00:45 / 25MIN</text>
+</g>
+<text x="80" y="970" class="m" font-size="23" font-weight="700" letter-spacing="2.5" fill="#131B29">TIMETABLE — EVERY NIGHT</text>
+<text x="1000" y="970" class="m" font-size="23" text-anchor="end" fill="#131B29">FOOT + BIKE</text>
+<rect x="80" y="988" width="920" height="4" fill="#131B29"/>
+<g class="m" fill="#131B29">
+<text x="80" y="1034" font-size="30" font-weight="700">23:40</text>
+<text x="225" y="1034" font-size="30">SAN REMO ──→ VELL</text>
+<text x="1000" y="1034" font-size="30" font-weight="700" text-anchor="end">00:05</text>
+</g>
+<rect x="80" y="1054" width="920" height="2" fill="#131B29"/>
+<g class="m" fill="#131B29">
+<text x="80" y="1100" font-size="30" font-weight="700">00:20</text>
+<text x="225" y="1100" font-size="30">VELL ──→ SAN REMO</text>
+<text x="1000" y="1100" font-size="30" font-weight="700" text-anchor="end">00:45</text>
+</g>
+<rect x="80" y="1120" width="920" height="4" fill="#131B29"/>
+<text x="80" y="1152" class="m" font-size="21" letter-spacing="1" fill="#131B29">NIGHT FARE $4 — NO BOOKING — HOLD ON TIGHT</text>
+<text x="80" y="1198" class="g" font-size="32" font-weight="700" font-style="italic" letter-spacing="-0.5" fill="#131B29">For the night shift — show this screen and ride home.</text>
+<rect x="80" y="1216" width="920" height="54" fill="#131B29"/>
+<text x="102" y="1252" class="m" font-size="32" font-weight="700" letter-spacing="-0.5" fill="#EDE6CF">ferry.vell/1140</text>
+<text x="978" y="1252" class="m" font-size="20" text-anchor="end" letter-spacing="1.5" fill="#EDE6CF">SHOW SCREEN TO BOARD</text>
+</svg>

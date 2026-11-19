@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>DRIFT</title>
+<style>
+  html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    background: #070A0F;
+    overflow: hidden;
+  }
+
+  #stage {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 1280px;
+    height: 720px;
+    margin-left: -640px;
+    margin-top: -360px;
+    background: #070A0F;
+    overflow: hidden;
+  }
+
+  /* The horizon: the fixed point of the card. It heaves by a few pixels
+     as the swell passes under it, and nothing else. */
+  #horizon {
+    position: absolute;
+    left: 0;
+    top: 456px;
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      rgba(233, 227, 213, 0) 0%,
+      rgba(233, 227, 213, 0.20) 5%,
+      rgba(233, 227, 213, 0.20) 95%,
+      rgba(233, 227, 213, 0) 100%
+    );
+    will-change: transform;
+  }
+
+  #word {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    margin: 0;
+    font-family: "Helvetica Neue", "Segoe UI", Helvetica, Arial, sans-serif;
+    font-size: 150px;
+    font-weight: 400;
+    line-height: 1;
+    letter-spacing: 45px;
+    color: #E9E3D5;
+    text-transform: uppercase;
+    white-space: nowrap;
+    transform: translate(22.5px, 14px) translate(-50%, -50%);
+    transform-origin: 50% 50%;
+    will-change: transform, letter-spacing;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    user-select: none;
+  }
+</style>
+</head>
+<body>
+  <div id="stage">
+    <div id="horizon"></div>
+    <div id="word">DRIFT</div>
+  </div>
+
+<script>
+(function () {
+  'use strict';
+
+  var DUR = 8;
+  var TAU = Math.PI * 2;
+  var INV_PEAK = 1 / ((3 * Math.sqrt(3)) / 8); // 1.5396…, normalises sin(φ)·w to 1
+
+  var FONT     = 150;   // px
+  var BASE_LS  = 0.30;  // em, rest tracking
+  var ADD_LS   = 0.042; // em, opened at the crest of the swell
+  var BASE_Y   = 14;    // px, optical offset of the word from frame centre
+  var LIFT     = 18;    // px, how far the swell lifts the title
+  var DRIFT    = 28;    // px, fore-and-aft surge
+  var ROLL     = 0.75;  // deg, how far the title leans
+  var SEA_LIFT = 6;     // px, how far the horizon rides up
+
+  // The sea leads; the title follows a beat later.
+  var SEA_A = 2.10, SEA_B = 6.90;
+  var WRD_A = 2.45, WRD_B = 7.10;
+
+  var word    = document.getElementById('word');
+  var horizon = document.getElementById('horizon');
+
+  var sea = { w: 0, s: 0 };
+  var wrd = { w: 0, s: 0 };
+
+  /* One passing swell, sampled as a raised cosine inside its window.
+     Both ends sit at exactly zero with zero velocity, so the motion
+     starts and finishes from stillness with nothing to snap. */
+  function sample(t, a, b, out) {
+    var u = (t - a) / (b - a);
+    if (u > 0 && u < 1) {
+      var ph = u * TAU;
+      out.w = (1 - Math.cos(ph)) * 0.5;                 // heave: 0 → 1 → 0
+      out.s = Math.sin(ph) * out.w * INV_PEAK;          // surge: 0 → + → - → 0
+    } else {
+      out.w = 0;
+      out.s = 0;
+    }
+  }
+
+  function render(t) {
+    t = ((t % DUR) + DUR) % DUR;
+
+    sample(t, SEA_A, SEA_B, sea);
+    sample(t, WRD_A, WRD_B, wrd);
+
+    horizon.style.transform =
+      'translateY(' + (-SEA_LIFT * sea.w).toFixed(3) + 'px)';
+
+    var ls  = FONT * (BASE_LS + ADD_LS * wrd.w);
+    var dx  = DRIFT * wrd.s + ls * 0.5; // + half a track: kills the trailing space
+    var dy  = BASE_Y - LIFT * wrd.w;
+    var rot = ROLL * wrd.s;
+
+    word.style.letterSpacing = ls.toFixed(3) + 'px';
+    word.style.transform =
+      'translate(' + dx.toFixed(3) + 'px, ' + dy.toFixed(3) + 'px) ' +
+      'translate(-50%, -50%) ' +
+      'rotate(' + rot.toFixed(4) + 'deg)';
+  }
+
+  var cur = 0;
+  var playing = false;
+  var rafId = 0;
+  var origin = 0;
+
+  function now() {
+    return window.performance && performance.now ? performance.now() : Date.now();
+  }
+
+  function tick(ts) {
+    if (!playing) return;
+    cur = ((ts - origin) / 1000) % DUR;
+    if (cur < 0) cur += DUR;
+    render(cur);
+    rafId = requestAnimationFrame(tick);
+  }
+
+  function play() {
+    if (playing) return;
+    playing = true;
+    origin = now() - cur * 1000;
+    rafId = requestAnimationFrame(tick);
+  }
+
+  function pause() {
+    if (!playing) return;
+    playing = false;
+    cancelAnimationFrame(rafId);
+  }
+
+  function seek(t) {
+    if (typeof t !== 'number' || !isFinite(t)) t = 0;
+    cur = ((t % DUR) + DUR) % DUR;
+    render(cur);
+    if (playing) origin = now() - cur * 1000;
+  }
+
+  window.__anim = {
+    duration: DUR,
+    seek: seek,
+    play: play,
+    pause: pause
+  };
+
+  render(0);
+  play();
+})();
+</script>
+</body>
+</html>

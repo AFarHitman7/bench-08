@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1440">
+<title>Inkwell: handwriting to LaTeX</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1440px;height:900px;overflow:hidden;background:#f3efe6;color:#1f1d1a;font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;font-size:15px;-webkit-font-smoothing:antialiased}
+.page{width:1440px;height:900px;padding:0 72px;display:flex;flex-direction:column}
+.serif{font-family:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,serif}
+.mono{font-family:"SF Mono",Menlo,Consolas,"Liberation Mono",monospace}
+header{height:84px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #d8d0bf;flex:0 0 auto}
+.mark{font-family:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;font-size:26px;letter-spacing:-.01em}
+.mark i{color:#7a3b2e}
+nav a{color:#6b665c;margin-left:30px;text-decoration:none;font-size:14px}
+.hero{height:520px;flex:0 0 auto;display:grid;grid-template-columns:500px 1fr;gap:56px;padding-top:52px}
+.eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:#7a3b2e;font-weight:700}
+h1{font-family:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;font-weight:400;font-size:58px;line-height:1.04;letter-spacing:-.015em;margin:18px 0 22px}
+.lede{font-size:18px;line-height:1.5;color:#3d3a34;max-width:470px}
+.ctas{margin-top:38px;display:flex;gap:26px;align-items:center}
+.btn{height:46px;padding:0 22px;display:inline-flex;align-items:center;border-radius:3px;font-size:15px;font-weight:600;text-decoration:none}
+.primary{background:#1f1d1a;color:#f3efe6}
+.secondary{color:#1f1d1a;border-bottom:1px solid #1f1d1a;height:46px;display:inline-flex;align-items:center;text-decoration:none;font-weight:600;font-size:15px}
+.note{margin-top:30px;font-size:13px;color:#6b665c}
+.evidence{display:grid;grid-template-columns:1fr 44px 1fr;align-items:start;padding-top:4px}
+.cap{font-size:12px;color:#6b665c;margin-bottom:12px;display:flex;justify-content:space-between}
+.photo{height:360px;background:#e9e2cf;position:relative;transform:rotate(-1.1deg);box-shadow:0 1px 1px rgba(40,30,10,.12),0 14px 30px -12px rgba(40,30,10,.35);overflow:hidden;background-image:repeating-linear-gradient(to bottom,transparent 0 33px,rgba(120,140,165,.28) 33px 34px);}
+.photo::after{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at 40% 35%,rgba(255,250,235,.25),rgba(60,45,20,.22) 85%);pointer-events:none}
+.photo svg{position:absolute;inset:0;width:100%;height:100%}
+.hw{font-family:"Segoe Script","Bradley Hand","Comic Sans MS","Snell Roundhand",cursive;fill:#26324a}
+.exif{margin-top:10px;font-size:11px;color:#8a8474}
+.arrow{display:flex;align-items:center;justify-content:center;height:360px;color:#7a3b2e;font-size:26px}
+.arrow span{width:38px;height:38px;border:1px solid #c9bfa8;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#f3efe6}
+.render{height:360px;background:#fdfbf6;border:1px solid #ddd5c3;padding:30px 30px 0;font-family:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;font-size:16px;line-height:1.5;color:#1f1d1a;position:relative;box-shadow:0 1px 2px rgba(40,30,10,.06)}
+.render p{margin-bottom:12px}
+.render b{font-weight:700}
+.math{font-family:"Latin Modern Math","STIX Two Math","Cambria Math","Times New Roman",serif;font-style:italic}
+.eq{text-align:center;margin:14px 0 16px;font-family:"Latin Modern Math","STIX Two Math","Cambria Math","Times New Roman",serif;font-size:18px;font-style:normal}
+.eq sub,.eq sup{font-size:12px}
+.frac{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;margin:0 3px;line-height:1.2}
+.frac>span:first-child{border-bottom:1px solid #1f1d1a;padding:0 4px}
+.frac>span:last-child{padding:0 4px}
+.tbl{margin:4px auto 0;border-collapse:collapse;font-size:14px;font-family:"Latin Modern Math","STIX Two Math","Cambria Math",serif}
+.tbl td{padding:3px 14px;text-align:center}
+.tbl tr:first-child td{border-top:1.4px solid #1f1d1a;border-bottom:.8px solid #1f1d1a}
+.tbl tr:last-child td{border-bottom:1.4px solid #1f1d1a}
+.status{position:absolute;left:30px;right:30px;bottom:12px;display:flex;justify-content:space-between;font-family:"SF Mono",Menlo,Consolas,monospace;font-size:11px;color:#7d7766;border-top:1px solid #e6dfcd;padding-top:8px}
+.values{flex:1;border-top:1px solid #d8d0bf;margin-top:0;padding-top:34px;display:flex;flex-direction:column}
+.vhead{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:24px}
+.vhead h2{font-family:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;font-weight:400;font-size:28px;letter-spacing:-.01em}
+.vhead span{font-size:13px;color:#6b665c}
+.cols{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0;flex:1}
+.col{padding:0 34px;border-left:1px solid #d8d0bf;display:flex;flex-direction:column}
+.col:first-child{padding-left:0;border-left:none}
+.num{font-size:12px;color:#7a3b2e;font-weight:700;letter-spacing:.08em}
+.col h3{font-family:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;font-weight:400;font-size:22px;margin:6px 0 8px}
+.col p{font-size:14px;line-height:1.5;color:#4a463e;max-width:360px}
+.viz{margin-top:auto;padding-top:14px;font-size:12px}
+.rev{display:flex;flex-direction:column;gap:6px}
+.rev div{display:flex;gap:12px;color:#4a463e;font-family:"SF Mono",Menlo,Consolas,monospace;font-size:11.5px}
+.rev div b{color:#7a3b2e;font-weight:600;min-width:44px}
+.files{display:flex;flex-direction:column;gap:6px}
+.file{display:flex;justify-content:space-between;border:1px solid #d8d0bf;background:#faf7f0;padding:6px 10px;font-family:"SF Mono",Menlo,Consolas,monospace;font-size:11.5px;color:#3d3a34}
+.file em{font-style:normal;color:#8a8474}
+.tex{display:inline-flex;gap:8px;margin-top:4px}
+.tex span{border:1px solid #1f1d1a;padding:4px 10px;font-size:12px;font-weight:600}
+</style>
+</head>
+<body>
+<div class="page">
+  <header>
+    <div class="mark">Ink<i>well</i></div>
+    <nav>
+      <a href="#">Docs</a>
+      <a href="#">Pricing</a>
+      <a href="#">Log in</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <div>
+      <div class="eyebrow">Inkwell for handwritten notes</div>
+      <h1>Photograph a page of handwriting. Get clean LaTeX back.</h1>
+      <p class="lede">Inkwell reads your notes, lemmas and worked derivations from a phone photo and returns compilable LaTeX, shown beside the original so you can check every symbol before it goes into your thesis.</p>
+      <div class="ctas">
+        <a class="btn primary" href="#">Try a page free</a>
+        <a class="secondary" href="#">See a real conversion</a>
+      </div>
+      <div class="note">First page free, no card. Nothing is used for training.</div>
+    </div>
+
+    <div class="evidence">
+      <div>
+        <div class="cap"><span>Original</span><span class="mono">IMG_2291.HEIC</span></div>
+        <div class="photo">
+          <svg viewBox="0 0 348 360" preserveAspectRatio="xMidYMid slice" aria-label="Photograph of handwritten lemma">
+            <g transform="rotate(-0.6 174 180)">
+              <text class="hw" x="26" y="50" font-size="26" font-weight="700">Lemma 2.</text>
+              <text class="hw" x="26" y="90" font-size="19">Let f be continuous on [a,b],</text>
+              <text class="hw" x="26" y="122" font-size="19">then ∀ε&gt;0 ∃δ&gt;0 s.t.</text>
+              <text class="hw" x="26" y="154" font-size="19">|x−y|&lt;δ ⇒ |f(x)−f(y)|&lt;ε.</text>
+              <line x1="104" y1="98" x2="176" y2="98" stroke="#26324a" stroke-width="1.6" opacity=".7"/>
+              <text class="hw" x="46" y="222" font-size="21">Σ k² = n(n+1)(2n+1)/6</text>
+              <text class="hw" x="26" y="278" font-size="18">n   1   2   3   4</text>
+              <text class="hw" x="26" y="306" font-size="18">S   1   5  14  30</text>
+              <line x1="22" y1="262" x2="232" y2="262" stroke="#26324a" stroke-width="1.2" opacity=".6"/>
+              <path d="M 180 300 q 26 -6 46 -2" fill="none" stroke="#26324a" stroke-width="1.4" opacity=".55"/>
+            </g>
+            <circle cx="300" cy="332" r="18" fill="#6e7c95" opacity=".16"/>
+          </svg>
+        </div>
+        <div class="exif mono">4032 × 3024 · page 7 of 12 · 1 photo</div>
+      </div>
+
+      <div class="arrow"><span>→</span></div>
+
+      <div>
+        <div class="cap"><span>Rendered LaTeX</span><span class="mono">page-07.tex · rev 3</span></div>
+        <div class="render">
+          <p><b>Lemma 2.</b> Let <span class="math">f</span> be continuous on [<span class="math">a</span>, <span class="math">b</span>], then for every <span class="math">ε</span> &gt; 0 there is <span class="math">δ</span> &gt; 0 such that <span class="math">|x − y|</span> &lt; <span class="math">δ</span> <span>⇒</span> <span class="math">|f(x) − f(y)|</span> &lt; <span class="math">ε</span>.</p>
+          <div class="eq">
+            ∑<sub><i>k</i>=1</sub><sup><i>n</i></sup> <i>k</i><sup>2</sup> =
+            <span class="frac"><span><i>n</i>(<i>n</i>+1)(2<i>n</i>+1)</span><span>6</span></span>
+          </div>
+          <table class="tbl">
+            <tr><td><i>n</i></td><td>1</td><td>2</td><td>3</td><td>4</td></tr>
+            <tr><td><i>S</i></td><td>1</td><td>5</td><td>14</td><td>30</td></tr>
+          </table>
+          <div class="status"><span>compiled · 0 errors</span><span>1 warning: overfull hbox l.14</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="values">
+    <div class="vhead">
+      <h2>What it does with each page</h2>
+      <span>Three things that matter once the first conversion works.</span>
+    </div>
+    <div class="cols">
+      <div class="col">
+        <div class="num">01</div>
+        <h3>Equations and tables</h3>
+        <p>Display and inline maths, aligned multi-line blocks and tabular layouts come out as the source intended. Primes, hats and bold vectors are kept rather than dropped.</p>
+        <div class="viz">
+          <table class="tbl" style="margin:0;font-size:13px">
+            <tr><td><i>x</i></td><td>ŷ</td><td><b>v</b></td><td>α′</td></tr>
+            <tr><td><i>n</i></td><td>1</td><td>2</td><td>3</td></tr>
+          </table>
+        </div>
+      </div>
+      <div class="col">
+        <div class="num">02</div>
+        <h3>Revision history per page</h3>
+        <p>Every capture and every correction is stored against its page. Restore an earlier version or diff two of them to see what changed in the source.</p>
+        <div class="viz rev">
+          <div><b>rev 3</b>fixed δ subscript, line 14</div>
+          <div><b>rev 2</b>merged table columns</div>
+          <div><b>rev 1</b>first capture, 09:12</div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="num">03</div>
+        <h3>Export to .tex or .pdf</h3>
+        <p>Get a standalone .tex that compiles under your own preamble, or a typeset PDF for review. Pages from one project export as a single document.</p>
+        <div class="viz">
+          <div class="files">
+            <div class="file"><span>page-07.tex</span><em>4.2 KB</em></div>
+            <div class="file"><span>page-07.pdf</span><em>112 KB</em></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+</body>
+</html>

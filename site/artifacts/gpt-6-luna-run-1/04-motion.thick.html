@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1280, initial-scale=1">
+<title>DRIFT</title>
+<style>
+  * { box-sizing: border-box; }
+  html, body {
+    width: 1280px;
+    height: 720px;
+    margin: 0;
+    overflow: hidden;
+    background: #08161c;
+  }
+  svg { display: block; width: 1280px; height: 720px; }
+</style>
+</head>
+<body>
+<svg viewBox="0 0 1280 720" role="img" aria-label="DRIFT, a ferry crossing at night">
+  <defs>
+    <pattern id="sea" width="360" height="180" patternUnits="userSpaceOnUse">
+      <g fill="none" stroke="#e7dfcc" stroke-width="1">
+        <path d="M12 24c22-6 42-6 64 0s42 6 64 0"/>
+        <path d="M218 48c28-7 54-7 82 0s40 7 60 1"/>
+        <path d="M82 78c18-5 34-5 52 0s34 5 52 0"/>
+        <path d="M250 104c20-5 38-5 58 0s33 5 48 1"/>
+        <path d="M8 132c27-6 51-6 78 0s50 6 75 0"/>
+        <path d="M166 157c17-4 33-4 50 0s31 4 45 0"/>
+      </g>
+    </pattern>
+  </defs>
+
+  <rect width="1280" height="720" fill="#08161c"/>
+  <circle cx="964" cy="176" r="31" fill="#e7dfcc" opacity=".78"/>
+  <path d="M0 412H1280" stroke="#e7dfcc" stroke-width="1" opacity=".22"/>
+  <rect x="0" y="413" width="1280" height="307" fill="url(#sea)" opacity=".38" id="seaSurface"/>
+
+  <g fill="#e7dfcc" opacity=".2">
+    <path d="M948 450h32v1h-32zM990 479h20v1h-20zM935 511h26v1h-26z"/>
+    <path d="M970 548h39v1h-39zM948 586h23v1h-23zM985 622h31v1h-31z"/>
+  </g>
+
+  <g id="ferry">
+    <path d="M542 493h196c-11 17-26 25-57 28H586c-23-4-35-12-44-28Z" fill="#e7dfcc"/>
+    <path d="M575 464h111v29H575z" fill="#e7dfcc"/>
+    <path d="M607 444h63v20h-63z" fill="#e7dfcc"/>
+    <path d="M625 432h28v12h-28z" fill="#e7dfcc"/>
+    <path d="M586 472h13v9h-13zM607 472h13v9h-13zM628 472h13v9h-13zM649 472h13v9h-13zM670 472h9v9h-9z" fill="#08161c"/>
+    <path d="M616 450h10v8h-10zM634 450h10v8h-10zM652 450h10v8h-10z" fill="#08161c"/>
+    <path d="M557 489h168" fill="none" stroke="#08161c" stroke-width="2" opacity=".75"/>
+  </g>
+
+  <g id="titleGroup" opacity="0">
+    <text id="title"
+      x="640" y="354"
+      text-anchor="middle"
+      fill="#e7dfcc"
+      font-family="Georgia, serif"
+      font-size="158"
+      font-weight="400"
+      letter-spacing="34">DRIFT</text>
+    <path id="titleRule" d="M584 389H696" fill="none" stroke="#e7dfcc" stroke-width="1" opacity=".7"/>
+  </g>
+</svg>
+
+<script>
+(() => {
+  const duration = 8;
+  const titleGroup = document.getElementById("titleGroup");
+  const title = document.getElementById("title");
+  const titleRule = document.getElementById("titleRule");
+  const ferry = document.getElementById("ferry");
+  const sea = document.getElementById("sea");
+  let time = 0;
+  let playing = false;
+  let frame = 0;
+  let origin = 0;
+
+  const mod = (value, base) => ((value % base) + base) % base;
+  const smooth = value => {
+    const x = Math.max(0, Math.min(1, value));
+    return x * x * (3 - 2 * x);
+  };
+  const easeOut = value => {
+    const x = Math.max(0, Math.min(1, value));
+    return 1 - Math.pow(1 - x, 3);
+  };
+
+  function render(t) {
+    time = mod(Number.isFinite(t) ? t : 0, duration);
+
+    const entrance = easeOut((time - 0.45) / 1.05);
+    const exit = smooth((time - 6.2) / 1.05);
+    const visibility = entrance * (1 - exit);
+    const tracking = 34 - 19 * entrance + 19 * exit;
+
+    titleGroup.setAttribute("opacity", visibility.toFixed(4));
+    title.setAttribute("letter-spacing", tracking.toFixed(3));
+    title.setAttribute("y", (354 + 5 * (1 - entrance) + 5 * exit).toFixed(3));
+    titleRule.setAttribute("opacity", (0.7 * visibility).toFixed(4));
+
+    const seconds = time / duration;
+    const bob = 1.4 * Math.sin(2 * Math.PI * seconds);
+    ferry.setAttribute("transform", `translate(0 ${bob.toFixed(3)})`);
+    sea.setAttribute("patternTransform", `translate(${-360 * seconds} 0)`);
+  }
+
+  function tick(now) {
+    if (!playing) return;
+    render((now - origin) / 1000);
+    frame = requestAnimationFrame(tick);
+  }
+
+  window.__anim = {
+    duration,
+    seek(t) {
+      render(t);
+      if (playing) origin = performance.now() - time * 1000;
+    },
+    play() {
+      if (playing) return;
+      playing = true;
+      origin = performance.now() - time * 1000;
+      frame = requestAnimationFrame(tick);
+    },
+    pause() {
+      playing = false;
+      cancelAnimationFrame(frame);
+    }
+  };
+
+  render(0);
+})();
+</script>
+</body>
+</html>

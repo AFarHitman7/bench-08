@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Artifact — Bench 08</title>
+<meta name="description" content="A single benchmark artifact with its run metadata and technical note.">
+<script>
+  (function () {
+    var saved = null;
+    try { saved = localStorage.getItem('bench-theme'); } catch (e) {}
+    var params = new URLSearchParams(location.search);
+    var q = params.get('theme');
+    if (q === 'dark' || q === 'light') document.documentElement.dataset.theme = q;
+    else if (saved === 'dark' || saved === 'light') document.documentElement.dataset.theme = saved;
+    ['task', 'model', 'variant'].forEach(function (key) {
+      var value = params.get(key);
+      if (value) document.documentElement.setAttribute('data-filter-' + key, value);
+    });
+  })();
+</script>
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body data-page="artifact.html">
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="nav">
+  <div class="nav-inner">
+    <a class="brand" href="index.html" aria-label="Bench 08 home">
+      <span class="brand-mark">B08</span>
+      <span class="brand-name">Bench <em>08</em></span>
+    </a>
+    <nav class="nav-links" aria-label="Main">
+      <a href="index.html">Overview</a><a href="results.html">Results</a><a href="compare.html">Compare</a><a href="method.html">Method</a>
+    </nav>
+    <button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch colour theme">
+      <span class="theme-glyph" aria-hidden="true"></span>
+      <span class="theme-word">Theme</span>
+    </button>
+  </div>
+</header>
+<main id="main">
+
+<section class="artifact-shell" id="artifactShell">
+  <p class="kicker"><a href="results.html" class="breadcrumb">All results</a> / <span id="artifactCrumb">Artifact</span></p>
+  <div id="artifactContent"></div>
+</section>
+
+</main>
+<footer class="footer">
+  <div class="footer-inner">
+    <div>
+      <p class="footer-mark">Bench <em>08</em></p>
+      <p class="footer-note">A small, open-ended benchmark. Creative work is presented, not scored. Technical work gets a note.</p>
+    </div>
+    <div class="footer-links">
+      <a href="results.html">Results</a>
+      <a href="compare.html">Compare</a>
+      <a href="method.html">Method &amp; caveats</a>
+    </div>
+  </div>
+</footer>
+<script src="data.js"></script>
+<script src="assets/app.js"></script>
+</body>
+</html>

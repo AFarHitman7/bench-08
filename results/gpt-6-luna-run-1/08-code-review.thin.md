@@ -1,0 +1,4 @@
+- **`prune` (line 5):** `hits[0]` is an object, so comparing it with a number coerces it to `NaN`. Expired entries are never removed; compare `hits[0].time` instead. This can cause stale hits to block requests indefinitely and the array to grow without bound.
+- **`reset` (lines 19–21):** Splicing while iterating forward skips adjacent matching entries after the first removal. Iterate backward or filter the array so all hits for the key are removed.
+- **`allow` (line 11):** Counting with `filter` scans the full array on every call. With the pruning bug, this cost grows over time; even after fixing pruning, large limits or high traffic may make this a bottleneck.
+- **Configuration:** `limit` and `windowMs` are not validated. Negative, zero, or non-finite values can produce surprising behavior.

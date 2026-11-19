@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1280, height=720">
+<title>DRIFT — Title Card</title>
+<style>
+  html,body{margin:0;padding:0;width:1280px;height:720px;overflow:hidden;background:#060a13;}
+  body{font-family:Inter,Helvetica,Arial,sans-serif;}
+  #stage{position:relative;width:1280px;height:720px;overflow:hidden;background:#060a13;color:#fff;}
+  #center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+  #kicker{font-size:15px;letter-spacing:.58em;color:#7dd3fc;margin:0 0 10px 0;font-weight:600;}
+  #word{display:flex;justify-content:center;}
+  .l{display:inline-block;font-size:192px;font-weight:800;color:#f8fafc;}
+  #sub{margin:18px 0 0 0;font-size:16px;letter-spacing:.42em;color:rgba(255,255,255,.72);}
+  #barWrap{width:280px;height:3px;background:rgba(255,255,255,.16);margin-top:22px}
+  #bar{height:100%;width:0%;background:#22d3ee;}
+  #time{font-family:monospace;font-size:13px;color:rgba(255,255,255,.75);margin-top:8px}
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="center">
+    <p id="kicker">A STUDY IN MOTION</p>
+    <div id="word"><span class="l">D</span><span class="l">R</span><span class="l">I</span><span class="l">F</span><span class="l">T</span></div>
+    <p id="sub">EVERYTHING MOVES · NOTHING LEAVES</p>
+    <div id="barWrap"><div id="bar"></div></div>
+    <div id="time">0.00 / 8.00</div>
+  </div>
+</div>
+<script>
+(function(){
+  var DURATION = 8;
+  var letters = Array.prototype.slice.call(document.querySelectorAll('.l'));
+  var bar = document.getElementById('bar');
+  var timeEl = document.getElementById('time');
+  function wrapT(t){ t = t % DURATION; if(t<0) t+=DURATION; return t; }
+  function render(t){
+    t = wrapT(t);
+    var p = t / DURATION;
+    for(var k=0;k<letters.length;k++){
+      var y = 14*Math.sin(2*Math.PI*p*2 + k*0.7);
+      letters[k].style.transform = 'translateY('+y.toFixed(2)+'px)';
+    }
+    bar.style.width = (p*100).toFixed(3)+'%';
+    timeEl.textContent = t.toFixed(2)+' / 8.00';
+    current = t;
+  }
+  var current = 0, playing = true, last = performance.now(), raf = 0;
+  function tick(now){
+    if(!playing) return;
+    var dt = (now-last)/1000; last = now;
+    current = wrapT(current+dt);
+    render(current);
+    raf = requestAnimationFrame(tick);
+  }
+  window.__anim = {
+    duration: DURATION,
+    seek: function(t){ current = wrapT(Number(t)||0); render(current); return current; },
+    play: function(){ if(playing) return; playing=true; last=performance.now(); raf=requestAnimationFrame(tick); },
+    pause: function(){ playing=false; if(raf) cancelAnimationFrame(raf); }
+  };
+  render(0);
+  raf = requestAnimationFrame(tick);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1350" viewBox="0 0 1080 1350" role="img" aria-label="The Last Ferry. 11:40 PM crossing, both directions, between San Remo and Vell island.">
+  <title>The Last Ferry — 11:40 PM, San Remo / Vell</title>
+  <style>
+    .paper { fill: #EDE7D9; }
+    .ink   { fill: #1C1A17; }
+    .red   { fill: #BF2A1E; }
+    .d {
+      font-family: 'Arial Narrow', 'Helvetica Neue Condensed', 'Roboto Condensed',
+                   'Liberation Sans Narrow', 'Helvetica Neue', Arial, sans-serif;
+    }
+    .m {
+      font-family: 'DejaVu Sans Mono', 'SF Mono', Menlo, Consolas,
+                   'Liberation Mono', monospace;
+    }
+  </style>
+
+  <!-- paper -->
+  <rect class="paper" x="0" y="0" width="1080" height="1350"/>
+
+  <!-- header rail -->
+  <text class="m ink" x="84" y="110" font-size="16" letter-spacing="3">VELL ISLAND FERRY CO.</text>
+  <text class="m ink" x="996" y="110" font-size="16" letter-spacing="3" text-anchor="end">NIGHT CROSSING / TIMETABLE</text>
+  <rect class="ink" x="84" y="124" width="912" height="3"/>
+
+  <!-- kicker -->
+  <text class="m ink" x="84" y="190" font-size="17" letter-spacing="5">DEPARTURES / BOTH DIRECTIONS</text>
+
+  <!-- title -->
+  <text class="d ink" x="84" y="360" font-size="190" font-weight="700"
+        textLength="700" lengthAdjust="spacingAndGlyphs">THE LAST</text>
+  <text class="d ink" x="84" y="516" font-size="190" font-weight="700"
+        textLength="470" lengthAdjust="spacingAndGlyphs">FERRY</text>
+
+  <!-- the time -->
+  <text class="d red" x="84" y="830" font-size="340" font-weight="700"
+        textLength="800" lengthAdjust="spacingAndGlyphs">11:40</text>
+  <text class="m red" x="912" y="830" font-size="38" letter-spacing="2">PM</text>
+
+  <!-- timetable head -->
+  <text class="m ink" x="84" y="898" font-size="20" letter-spacing="3">FROM</text>
+  <text class="m ink" x="400" y="898" font-size="20" letter-spacing="3">TO</text>
+  <text class="m ink" x="996" y="898" font-size="20" letter-spacing="3" text-anchor="end">DEPARTS</text>
+  <rect class="ink" x="84" y="912" width="912" height="3"/>
+
+  <!-- row 1 -->
+  <text class="m ink" x="84" y="966" font-size="32">SAN REMO</text>
+  <text class="m ink" x="400" y="966" font-size="32">VELL ISLAND</text>
+  <text class="m red" x="996" y="966" font-size="32" text-anchor="end">11:40 PM</text>
+  <rect class="ink" x="84" y="984" width="912" height="1.5"/>
+
+  <!-- row 2 -->
+  <text class="m ink" x="84" y="1042" font-size="32">VELL ISLAND</text>
+  <text class="m ink" x="400" y="1042" font-size="32">SAN REMO</text>
+  <text class="m red" x="996" y="1042" font-size="32" text-anchor="end">11:40 PM</text>
+  <rect class="ink" x="84" y="1060" width="912" height="3"/>
+
+  <!-- one line of copy -->
+  <text class="d ink" x="84" y="1140" font-size="30">For everyone still working when the island goes quiet.</text>
+
+  <!-- address and imprint -->
+  <text class="m red" x="84" y="1230" font-size="42" letter-spacing="1">ferry.vell/1140</text>
+  <text class="m ink" x="996" y="1230" font-size="15" letter-spacing="2" text-anchor="end">PIER 3, SAN REMO / VELL HARBOUR</text>
+  <rect class="ink" x="84" y="1266" width="912" height="3"/>
+</svg>

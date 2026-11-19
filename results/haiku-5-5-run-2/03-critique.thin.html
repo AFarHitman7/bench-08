@@ -1,0 +1,85 @@
+<!doctype html>
+<!--
+Critique of the original: the purple-to-pink gradient is a generic template look and the 90%-opacity white body text on it has weak contrast. The headline "puts you first" and the feature cards are vague and say nothing concrete. The CTA "Get started" doesn't tell the user what happens next, and the page has no product preview. It also needs a 120px-padded hero, which pushes content past 900px.
+
+Changes: a calmer sea-navy and sand palette with solid colours and high-contrast text. The hero is now split, with a specific headline and an honest subhead, a primary action ("Check sailing times") and a secondary one, plus a static booking-card preview that shows the product. Feature cards now state concrete promises (live timetables, one price with fees included, tickets by email). Added visible focus styles and semantic landmarks. Everything is sized to fit a 1440×900 viewport without scrolling.
+-->
+<html lang="en"><head><meta charset="utf-8"><title>Ferryline — Book your crossing</title>
+<style>
+ *{box-sizing:border-box}
+ html,body{height:100%}
+ body{margin:0;font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;color:#0b1f33;background:#f6f4ef;display:flex;flex-direction:column;min-height:900px;overflow:hidden}
+ a:focus-visible{outline:3px solid #f5b84b;outline-offset:3px}
+ header{display:flex;align-items:center;justify-content:space-between;padding:0 64px;height:80px;background:#0e3b5c;color:#fff}
+ .logo{font-weight:700;font-size:22px;letter-spacing:-.01em}
+ nav a{color:#d6e4ef;text-decoration:none;font-size:15px;margin-left:32px}
+ nav a:hover{color:#fff}
+ .hero{flex:1;display:grid;grid-template-columns:1.1fr 1fr;gap:64px;align-items:center;padding:64px;background:#0e3b5c;color:#fff}
+ .eyebrow{font-size:14px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#f5b84b;margin:0 0 20px}
+ h1{font-size:60px;line-height:1.05;letter-spacing:-.02em;margin:0 0 24px;font-weight:700}
+ .lead{font-size:20px;line-height:1.5;color:#d6e4ef;max-width:560px;margin:0 0 36px}
+ .actions{display:flex;gap:16px;align-items:center}
+ .cta{display:inline-block;padding:16px 28px;border-radius:999px;background:#f5b84b;color:#0b1f33;font-weight:600;text-decoration:none;font-size:16px}
+ .cta:hover{background:#ffc766}
+ .ghost{color:#fff;text-decoration:none;font-weight:600;font-size:16px;padding:16px 8px}
+ .ghost:hover{text-decoration:underline}
+ .booking{background:#fff;color:#0b1f33;border-radius:20px;padding:32px;box-shadow:0 24px 48px rgba(0,0,0,.25)}
+ .booking h2{font-size:18px;margin:0 0 20px}
+ .field{display:flex;flex-direction:column;gap:6px;margin-bottom:16px}
+ .field span{font-size:13px;font-weight:600;color:#4a5b6c}
+ .input{border:1px solid #cdd7e1;border-radius:10px;padding:14px 16px;font-size:16px;color:#0b1f33;background:#fbfcfd}
+ .row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+ .total{display:flex;justify-content:space-between;align-items:baseline;border-top:1px solid #e3e9ef;margin-top:8px;padding-top:20px}
+ .total strong{font-size:28px}
+ .total small{display:block;color:#4a5b6c;font-size:13px;margin-top:4px}
+ .book-btn{display:block;width:100%;margin-top:20px;padding:16px;border:0;border-radius:12px;background:#0e3b5c;color:#fff;font-size:16px;font-weight:600;text-align:center}
+ .features{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;padding:48px 64px}
+ .card{background:#fff;border:1px solid #e3e9ef;border-radius:16px;padding:28px}
+ .card h3{margin:0 0 8px;font-size:20px}
+ .card p{margin:0;font-size:16px;line-height:1.5;color:#4a5b6c}
+ footer{display:flex;justify-content:space-between;align-items:center;padding:0 64px;height:64px;font-size:14px;color:#4a5b6c;border-top:1px solid #e3e9ef}
+</style></head>
+<body>
+<header>
+  <div class="logo">Ferryline</div>
+  <nav><a href="#">Routes</a><a href="#">Timetables</a><a href="#">Help</a></nav>
+</header>
+<main>
+<section class="hero">
+  <div>
+    <p class="eyebrow">Island ferries · Book online</p>
+    <h1>Book your crossing in under a minute.</h1>
+    <p class="lead">Live timetables, one price shown up front with every fee included, and tickets in your inbox the moment you pay.</p>
+    <div class="actions">
+      <a class="cta" href="#">Check sailing times</a>
+      <a class="ghost" href="#">See all routes</a>
+    </div>
+  </div>
+  <div class="booking" aria-label="Booking preview">
+    <h2>Find a sailing</h2>
+    <div class="row">
+      <div class="field"><span>From</span><div class="input">Harbour Quay</div></div>
+      <div class="field"><span>To</span><div class="input">Isle of Calla</div></div>
+    </div>
+    <div class="row">
+      <div class="field"><span>Date</span><div class="input">Sat 12 Dec</div></div>
+      <div class="field"><span>Passengers</span><div class="input">2 adults</div></div>
+    </div>
+    <div class="total">
+      <div><strong>£48.00</strong><small>Return, all fees included</small></div>
+      <div class="oc-num" style="font-size:14px;color:#4a5b6c">Next sailing 08:15</div>
+    </div>
+    <div class="book-btn">Continue to seats</div>
+  </div>
+</section>
+<section class="features">
+  <div class="card"><h3>Live timetables</h3><p>See real sailing times and seat availability before you choose a crossing.</p></div>
+  <div class="card"><h3>One price, fees included</h3><p>The total you see is the total you pay. No booking fees added at checkout.</p></div>
+  <div class="card"><h3>Tickets by email</h3><p>Your ticket arrives in your inbox as soon as payment clears, ready to show at the quay.</p></div>
+</section>
+</main>
+<footer>
+  <span>© Ferryline 2026. All rights reserved.</span>
+  <span><a href="#" style="color:inherit">Terms</a> · <a href="#" style="color:inherit">Privacy</a></span>
+</footer>
+</body></html>

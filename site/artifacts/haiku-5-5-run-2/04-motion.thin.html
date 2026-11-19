@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>DRIFT</title>
+<style>
+  html, body {
+    margin: 0;
+    padding: 0;
+    width: 1280px;
+    height: 720px;
+    overflow: hidden;
+    background: #0b0d12;
+  }
+  #stage {
+    position: relative;
+    width: 1280px;
+    height: 720px;
+    overflow: hidden;
+    background: radial-gradient(ellipse at 50% 45%, #1a2030 0%, #0b0d12 70%);
+  }
+  .glow {
+    position: absolute;
+    width: 520px;
+    height: 520px;
+    border-radius: 50%;
+    filter: blur(60px);
+    opacity: 0.35;
+    will-change: transform;
+  }
+  #g1 { left: -140px; top: -120px; background: #3b5bdb; }
+  #g2 { right: -160px; bottom: -160px; background: #9c36b5; }
+  #word {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 1280px;
+    height: 720px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    font-weight: 800;
+    font-size: 220px;
+    letter-spacing: 0.08em;
+    color: #f1f3f8;
+    user-select: none;
+  }
+  #word span {
+    display: inline-block;
+    will-change: transform, opacity, filter;
+  }
+  #rule {
+    position: absolute;
+    left: 50%;
+    top: 500px;
+    width: 220px;
+    height: 2px;
+    margin-left: -110px;
+    background: #7aa2ff;
+    transform-origin: center;
+  }
+  #tag {
+    position: absolute;
+    left: 0;
+    width: 1280px;
+    top: 530px;
+    text-align: center;
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    font-size: 20px;
+    letter-spacing: 0.4em;
+    color: #8c96ad;
+    text-transform: uppercase;
+  }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div class="glow" id="g1"></div>
+  <div class="glow" id="g2"></div>
+  <div id="word"></div>
+  <div id="rule"></div>
+  <div id="tag">in motion</div>
+</div>
+<script>
+(function () {
+  var DURATION = 8;
+  var letters = "DRIFT".split("");
+  var wordEl = document.getElementById("word");
+  var spans = letters.map(function (ch) {
+    var s = document.createElement("span");
+    s.textContent = ch;
+    wordEl.appendChild(s);
+    return s;
+  });
+  var g1 = document.getElementById("g1");
+  var g2 = document.getElementById("g2");
+  var rule = document.getElementById("rule");
+  var tag = document.getElementById("tag");
+
+  function clamp(v, a, b) { return Math.min(b, Math.max(a, v)); }
+  function ease(x) { return x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2; }
+  function loopT(t) {
+    var m = t % DURATION;
+    if (m < 0) m += DURATION;
+    return m / DURATION;
+  }
+  function wave(p) { return Math.sin(p * Math.PI * 2); }
+
+  function render(t) {
+    var p = loopT(t);
+    var TAU = Math.PI * 2;
+
+    for (var i = 0; i < spans.length; i++) {
+      var phase = p * TAU - i * 0.45;
+      var drift = Math.sin(phase);
+      var x = drift * 26;
+      var y = Math.cos(phase * 2) * 8;
+      var rot = drift * 4;
+      var intro = clamp((p * 8 - i * 0.35) / 1.2, 0, 1);
+      var ei = ease(intro);
+      var op = 0.15 + 0.85 * ei;
+      var blur = (1 - ei) * 12 + Math.abs(drift) * 0.6;
+      var s = spans[i];
+      s.style.transform = "translate(" + x.toFixed(3) + "px," + y.toFixed(3) + "px) rotate(" + rot.toFixed(3) + "deg)";
+      s.style.opacity = op.toFixed(4);
+      s.style.filter = "blur(" + blur.toFixed(3) + "px)";
+    }
+
+    var gx1 = wave(p) * 90;
+    var gy1 = Math.cos(p * TAU) * 60;
+    g1.style.transform = "translate(" + gx1.toFixed(3) + "px," + gy1.toFixed(3) + "px)";
+    var gx2 = Math.cos(p * TAU) * -80;
+    var gy2 = wave(p + 0.25) * -70;
+    g2.style.transform = "translate(" + gx2.toFixed(3) + "px," + gy2.toFixed(3) + "px)";
+
+    var rs = 0.6 + 0.4 * ease(clamp(p * 4, 0, 1)) * (1 - ease(clamp((p - 0.75) * 4, 0, 1)));
+    var rw = 0.5 + 0.5 * (1 + wave(p * 2)) / 2;
+    rule.style.transform = "scaleX(" + (rs * (0.7 + 0.3 * rw)).toFixed(4) + ")";
+
+    tag.style.opacity = (0.4 + 0.6 * (0.5 + 0.5 * wave(p))).toFixed(4);
+  }
+
+  var playing = false;
+  var startWall = 0;
+  var offset = 0;
+  var current = 0;
+
+  function frame(now) {
+    if (!playing) return;
+    current = offset + (now - startWall) / 1000;
+    render(current);
+    requestAnimationFrame(frame);
+  }
+
+  window.__anim = {
+    duration: DURATION,
+    seek: function (t) {
+      current = Number(t) || 0;
+      offset = current;
+      render(current);
+    },
+    play: function () {
+      if (playing) return;
+      playing = true;
+      startWall = performance.now();
+      offset = current;
+      requestAnimationFrame(frame);
+    },
+    pause: function () {
+      if (!playing) return;
+      playing = false;
+      current = offset + (performance.now() - startWall) / 1000;
+      offset = current;
+    }
+  };
+
+  render(0);
+})();
+</script>
+</body>
+</html>

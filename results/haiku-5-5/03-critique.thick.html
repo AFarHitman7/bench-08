@@ -1,0 +1,40 @@
+<!--
+Diagnosis, by impact:
+1. No viewport meta tag, so phones render the page at desktop width and shrink it.
+2. Desktop-only sizing: 120px hero padding and a fixed 3-column grid push the action below the fold and squash the cards.
+3. The only action is labelled "Get started" and links to "#", so it says nothing about booking.
+4. White text at 90% opacity on a light pink-violet gradient has weak contrast.
+5. Vague, inflated copy ("seamless, modern booking experience that puts you first", "Thousands of travellers trust us") gives passengers nothing to check.
+
+Changed: added viewport meta; responsive padding and card grid that stacks on phones; CTA reads "Book a crossing" with a larger tap target; darker gradient and full-opacity text; rewrote the hero line and the Reliable card. The "#" link still needs the real booking URL.
+
+Left alone: product, three-card structure, headline, Fast and Simple cards, the "no hidden fees" claim, footer, and the brand colours.
+-->
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Ferryline — Book your crossing</title>
+<style>
+ *{box-sizing:border-box}
+ body{margin:0;font-family:Inter,system-ui,sans-serif;color:#111;background:#fff}
+ .hero{padding:72px 24px;text-align:center;background:linear-gradient(135deg,#5b21b6,#be185d);color:#fff}
+ h1{font-size:clamp(32px,6vw,56px);line-height:1.1;margin:0 0 16px}
+ p{font-size:clamp(17px,2.2vw,20px);line-height:1.5;color:#fff;max-width:640px;margin:0 auto 32px}
+ .cta{display:inline-block;min-height:52px;line-height:20px;padding:16px 32px;border-radius:999px;background:#fff;color:#5b21b6;font-weight:600;font-size:18px;text-decoration:none}
+ .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:24px;padding:48px 24px}
+ .card{border:1px solid #e5e5e5;border-radius:16px;padding:28px;background:#fafafa}
+ .card h3{margin:0 0 12px;font-size:20px}
+ .card p{opacity:1;color:#333;font-size:17px;margin:0;max-width:none}
+ footer{padding:32px 24px;text-align:center;color:#555;font-size:14px}
+</style></head>
+<body>
+<section class="hero">
+  <h1>Book your crossing in seconds</h1>
+  <p>Ferryline gets you to the islands you love, with one booking flow that works on your phone.</p>
+  <a class="cta" href="#">Book a crossing</a>
+</section>
+<section class="cards">
+  <div class="card"><h3>Fast</h3><p>Book in under a minute with our streamlined flow.</p></div>
+  <div class="card"><h3>Simple</h3><p>No hidden fees, no surprises, just clear pricing.</p></div>
+  <div class="card"><h3>Reliable</h3><p>Used every day by travellers on our island routes.</p></div>
+</section>
+<footer>© Ferryline 2026 — All rights reserved</footer>
+</body></html>

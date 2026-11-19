@@ -1,0 +1,575 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Inkwell — handwriting to LaTeX</title>
+<style>
+  :root {
+    color-scheme: light;
+    --paper: #f5f3ec;
+    --ink: #252820;
+    --muted: #77786e;
+    --line: #ddded4;
+    --green: #526552;
+    --green-dark: #3e4e3e;
+    --card: #fffefa;
+    --serif: Georgia, "Times New Roman", serif;
+    --sans: Arial, Helvetica, sans-serif;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+  }
+
+  body {
+    overflow: hidden;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--sans);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .page {
+    width: min(100%, 1440px);
+    height: 900px;
+    margin: 0 auto;
+    padding: 0 82px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  header {
+    height: 82px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    font: 600 20px var(--serif);
+    letter-spacing: -.4px;
+  }
+
+  .brand-mark {
+    width: 25px;
+    height: 25px;
+    border: 1.5px solid var(--green);
+    border-radius: 50% 50% 46% 46%;
+    display: grid;
+    place-items: center;
+    color: var(--green);
+    font: 16px var(--serif);
+    transform: rotate(-8deg);
+  }
+
+  .nav {
+    display: flex;
+    align-items: center;
+    gap: 31px;
+    color: #5e6058;
+    font-size: 13px;
+  }
+
+  .nav a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .nav .nav-cta {
+    padding: 11px 17px;
+    border: 1px solid #c9cec2;
+    color: var(--ink);
+    border-radius: 4px;
+  }
+
+  main {
+    height: 563px;
+    display: grid;
+    grid-template-columns: 0.88fr 1.12fr;
+    align-items: center;
+    gap: 55px;
+    padding: 37px 0 35px;
+  }
+
+  .intro {
+    padding-bottom: 6px;
+  }
+
+  .eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    color: var(--green);
+    text-transform: uppercase;
+    letter-spacing: 1.6px;
+    font-size: 10px;
+    font-weight: 700;
+    margin-bottom: 23px;
+  }
+
+  .eyebrow::before {
+    content: "";
+    display: block;
+    width: 22px;
+    height: 1px;
+    background: var(--green);
+  }
+
+  h1 {
+    max-width: 520px;
+    margin: 0;
+    font: 400 61px/.99 var(--serif);
+    letter-spacing: -2.7px;
+  }
+
+  h1 span {
+    color: var(--green);
+    font-style: italic;
+  }
+
+  .lede {
+    max-width: 410px;
+    margin: 23px 0 26px;
+    color: #686a61;
+    font-size: 15px;
+    line-height: 1.7;
+  }
+
+  .actions {
+    display: flex;
+    align-items: center;
+    gap: 23px;
+  }
+
+  .button-primary {
+    min-height: 47px;
+    display: inline-flex;
+    align-items: center;
+    gap: 18px;
+    padding: 0 18px;
+    background: var(--green);
+    border-radius: 4px;
+    color: white;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  .button-primary .arrow {
+    font-size: 16px;
+    font-weight: 400;
+  }
+
+  .button-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #42463d;
+    text-decoration: none;
+    font-size: 13px;
+    border-bottom: 1px solid #a7aa9e;
+    padding: 6px 0;
+  }
+
+  .button-secondary .play {
+    width: 17px;
+    height: 17px;
+    display: grid;
+    place-items: center;
+    border: 1px solid #a7aa9e;
+    border-radius: 50%;
+    font-size: 8px;
+    padding-left: 1px;
+  }
+
+  .proof-note {
+    margin-top: 24px;
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    color: #85867d;
+    font-size: 11px;
+  }
+
+  .proof-note .tiny-check {
+    width: 15px;
+    height: 15px;
+    display: grid;
+    place-items: center;
+    border: 1px solid #bfc6b8;
+    color: var(--green);
+    border-radius: 50%;
+    font-size: 9px;
+  }
+
+  .demo {
+    position: relative;
+    background: #eae9df;
+    padding: 14px;
+    border: 1px solid #d7d8ce;
+    box-shadow: 0 15px 35px rgba(47, 49, 39, .08);
+    transform: rotate(.4deg);
+  }
+
+  .demo-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1px 3px 12px;
+    color: #78796f;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+  }
+
+  .demo-top .live {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--green);
+    font-size: 9px;
+    letter-spacing: .8px;
+  }
+
+  .live::before {
+    content: "";
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #75876d;
+  }
+
+  .workbench {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    min-height: 353px;
+    background: var(--card);
+    border: 1px solid #deded5;
+  }
+
+  .pane + .pane { border-left: 1px solid #deded5; }
+
+  .pane-head {
+    height: 37px;
+    padding: 0 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #e7e7df;
+    color: #77786e;
+    font-size: 9px;
+    letter-spacing: 1px;
+    font-weight: 700;
+  }
+
+  .pane-head .file {
+    color: #9a9b91;
+    font-size: 9px;
+    font-weight: 400;
+    letter-spacing: 0;
+  }
+
+  .photo-stage {
+    height: 315px;
+    padding: 17px;
+    background: #eeede5;
+    display: grid;
+    place-items: center;
+  }
+
+  .paper {
+    width: 100%;
+    height: 100%;
+    background: #fffef8;
+    box-shadow: 0 3px 9px rgba(39, 41, 32, .13);
+    overflow: hidden;
+    transform: rotate(-1deg);
+  }
+
+  .paper svg { display: block; width: 100%; height: 100%; }
+
+  .output {
+    height: 315px;
+    padding: 23px 19px 16px;
+    color: #30342d;
+  }
+
+  .output-label {
+    color: #8d8e83;
+    font: 10px var(--sans);
+    letter-spacing: .5px;
+    margin-bottom: 17px;
+  }
+
+  .latex {
+    font: 13px/1.7 "Courier New", monospace;
+    color: #65705d;
+    white-space: nowrap;
+  }
+
+  .rendered {
+    margin: 12px 0 19px;
+    padding: 12px 8px 13px;
+    border-top: 1px solid #e9e9e2;
+    border-bottom: 1px solid #e9e9e2;
+    text-align: center;
+    font: 19px var(--serif);
+    color: #242820;
+  }
+
+  .rendered sup, .rendered sub { font-size: 11px; }
+
+  .output-table {
+    border-collapse: collapse;
+    width: 100%;
+    font: 10px var(--serif);
+    text-align: center;
+  }
+
+  .output-table th, .output-table td {
+    padding: 5px 3px;
+    border-bottom: 1px solid #e4e5dc;
+    font-weight: 400;
+  }
+
+  .output-table th {
+    border-top: 1px solid #999d8f;
+    border-bottom: 1px solid #999d8f;
+    font-style: italic;
+  }
+
+  .demo-foot {
+    height: 32px;
+    padding: 10px 3px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: #77786e;
+    font-size: 10px;
+  }
+
+  .demo-foot .saved {
+    color: var(--green);
+  }
+
+  .value {
+    height: 255px;
+    border-top: 1px solid var(--line);
+    padding-top: 30px;
+  }
+
+  .value-top {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 25px;
+  }
+
+  .value h2 {
+    margin: 0;
+    font: 400 27px var(--serif);
+    letter-spacing: -.5px;
+  }
+
+  .value-top p {
+    margin: 0;
+    color: #7d7e74;
+    font-size: 11px;
+  }
+
+  .features {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    border-top: 1px solid #dfe0d6;
+  }
+
+  .feature {
+    min-height: 108px;
+    padding: 20px 27px 0 0;
+    display: grid;
+    grid-template-columns: 31px 1fr;
+    gap: 12px;
+  }
+
+  .feature + .feature {
+    border-left: 1px solid #dfe0d6;
+    padding-left: 24px;
+  }
+
+  .feature-num {
+    color: #8b9585;
+    font: italic 14px var(--serif);
+  }
+
+  .feature h3 {
+    margin: 0 0 7px;
+    font: 600 13px var(--sans);
+    letter-spacing: -.1px;
+  }
+
+  .feature p {
+    margin: 0;
+    max-width: 280px;
+    color: #77786e;
+    font-size: 12px;
+    line-height: 1.55;
+  }
+
+  @media (max-width: 1050px) {
+    .page { padding: 0 38px; }
+    main { gap: 30px; grid-template-columns: .85fr 1.15fr; }
+    h1 { font-size: 53px; }
+    .demo { padding: 10px; }
+  }
+
+  @media (max-width: 760px) {
+    body { overflow: auto; }
+    .page { height: auto; min-height: 100vh; padding: 0 22px; overflow: visible; }
+    header { height: 66px; }
+    .nav { gap: 14px; }
+    .nav a:not(.nav-cta) { display: none; }
+    main { height: auto; display: flex; flex-direction: column; align-items: stretch; gap: 31px; padding: 46px 0 35px; }
+    h1 { font-size: clamp(45px, 12vw, 61px); }
+    .lede { margin-top: 18px; }
+    .demo { transform: none; }
+    .workbench { min-height: 300px; }
+    .photo-stage, .output { height: 265px; }
+    .value { height: auto; padding: 26px 0 35px; }
+    .value-top { display: block; }
+    .value-top p { margin-top: 8px; }
+    .features { grid-template-columns: 1fr; }
+    .feature, .feature + .feature { border-left: 0; border-bottom: 1px solid #dfe0d6; padding: 17px 0; min-height: auto; }
+  }
+
+  @media (max-width: 420px) {
+    .actions { gap: 15px; }
+    .button-primary { padding: 0 12px; gap: 9px; }
+    .button-secondary { font-size: 12px; }
+    .demo { padding: 8px; }
+    .pane-head { padding: 0 8px; font-size: 8px; }
+    .photo-stage { padding: 10px; }
+    .output { padding: 18px 10px 12px; }
+    .latex { font-size: 10px; }
+    .rendered { font-size: 16px; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+  <header>
+    <div class="brand"><span class="brand-mark">i</span>Inkwell</div>
+    <nav class="nav" aria-label="Main navigation">
+      <a href="#how">How it works</a>
+      <a href="#details">For researchers</a>
+      <a class="nav-cta" href="#try">Try a page</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="intro" aria-labelledby="headline">
+      <div class="eyebrow">Handwriting in. LaTeX out.</div>
+      <h1 id="headline">Your handwriting,<br><span>back in LaTeX.</span></h1>
+      <p class="lede">Photograph a page of notes and get clean, editable LaTeX—with the original and rendered output side by side.</p>
+      <div class="actions">
+        <a class="button-primary" id="try" href="#conversion">Try a page free <span class="arrow">→</span></a>
+        <a class="button-secondary" href="#conversion"><span class="play">▶</span> See a real conversion</a>
+      </div>
+      <div class="proof-note"><span class="tiny-check">✓</span> A page in. Source you can inspect and keep.</div>
+    </section>
+
+    <section class="demo" id="conversion" aria-label="Handwritten page converted to rendered mathematics">
+      <div class="demo-top">
+        <span>INKWELL / WORKSPACE</span>
+        <span class="live">CONVERSION COMPLETE</span>
+      </div>
+      <div class="workbench">
+        <div class="pane">
+          <div class="pane-head"><span>ORIGINAL</span><span class="file">seminar-notes_04.jpg</span></div>
+          <div class="photo-stage">
+            <div class="paper">
+              <svg viewBox="0 0 300 370" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Photographed handwritten notes with an equation and a small data table">
+                <rect width="300" height="370" fill="#fffef8"/>
+                <g stroke="#e7e8e1" stroke-width="1">
+                  <path d="M0 54H300M0 87H300M0 120H300M0 153H300M0 186H300M0 219H300M0 252H300M0 285H300M0 318H300M0 351H300"/>
+                </g>
+                <path d="M36 0V370" stroke="#e9c9bd" stroke-width="1"/>
+                <g fill="#454a43" font-family="Georgia,serif" font-style="italic">
+                  <text x="53" y="43" font-size="16" transform="rotate(-1 53 43)">Asymptotic behaviour</text>
+                  <text x="53" y="78" font-size="13" transform="rotate(-1 53 78)">For n → ∞, let us consider</text>
+                  <text x="69" y="115" font-size="17" transform="rotate(-1.5 69 115)">P(X ≥ k) = Σ   (n) p<tspan baseline-shift="super" font-size="10">j</tspan>(1−p)<tspan baseline-shift="super" font-size="10">n−j</tspan></text>
+                  <text x="171" y="107" font-size="10">j≥k</text>
+                  <text x="53" y="148" font-size="13" transform="rotate(-.8 53 148)">and, by a standard bound, this is</text>
+                  <text x="76" y="181" font-size="17" transform="rotate(-1 76 181)">≤ exp(−nD(q || p))</text>
+                  <text x="53" y="216" font-size="13" transform="rotate(-1 53 216)">Compare with the empirical rates:</text>
+                </g>
+                <g stroke="#55594f" stroke-width="1.2" fill="none">
+                  <path d="M55 235H251M55 262H251M55 289H251M55 235V289M114 235V289M180 235V289M251 235V289"/>
+                </g>
+                <g fill="#454a43" font-family="Georgia,serif" font-style="italic" font-size="12">
+                  <text x="72" y="253">n</text><text x="130" y="253">p = .2</text><text x="193" y="253">p = .5</text>
+                  <text x="72" y="280">50</text><text x="130" y="280">0.041</text><text x="193" y="280">0.176</text>
+                </g>
+                <path d="M57 313c27-5 49 3 75-1s44 1 72-2" fill="none" stroke="#77776c" stroke-width="1.1"/>
+                <text x="55" y="342" fill="#64675e" font-family="Georgia,serif" font-size="12" font-style="italic">check constants in proof</text>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <div class="pane">
+          <div class="pane-head"><span>RENDERED OUTPUT</span><span class="file">page-04.tex</span></div>
+          <div class="output">
+            <div class="output-label">Extracted LaTeX · page 4</div>
+            <div class="latex">\Pr(X \ge k) &= \sum_{j=k}^{n}</div>
+            <div class="latex">\binom{n}{j}p^j(1-p)^{n-j}</div>
+            <div class="rendered">
+              P(X ≥ k) = ∑<sub>j=k</sub><sup>n</sup> (ⁿⱼ) p<sup>j</sup>(1−p)<sup>n−j</sup>
+            </div>
+            <div class="latex">\begin{tabular}{c|cc}</div>
+            <table class="output-table" aria-label="Rendered data table">
+              <thead><tr><th>n</th><th>p = .2</th><th>p = .5</th></tr></thead>
+              <tbody><tr><td>50</td><td>0.041</td><td>0.176</td></tr></tbody>
+            </table>
+            <div class="latex" style="margin-top:7px">\end{tabular}</div>
+          </div>
+        </div>
+      </div>
+      <div class="demo-foot">
+        <span>Handwritten equation + table, preserved as editable source</span>
+        <span class="saved">✓ &nbsp;1 page converted</span>
+      </div>
+    </section>
+  </main>
+
+  <section class="value" id="details" aria-labelledby="value-title">
+    <div class="value-top">
+      <h2 id="value-title">Made for the details that matter.</h2>
+      <p>Your notes stay yours: inspect, revise, and export the source.</p>
+    </div>
+    <div class="features" id="how">
+      <article class="feature">
+        <span class="feature-num">01</span>
+        <div><h3>Equations and tables, handled</h3><p>Structured math and tabular data become editable LaTeX—not flattened images.</p></div>
+      </article>
+      <article class="feature">
+        <span class="feature-num">02</span>
+        <div><h3>Revision history per page</h3><p>Revisit earlier conversions and compare changes without losing your working version.</p></div>
+      </article>
+      <article class="feature">
+        <span class="feature-num">03</span>
+        <div><h3>Export as .tex or .pdf</h3><p>Take the source into your project, or share a clean rendered page as a PDF.</p></div>
+      </article>
+    </div>
+  </section>
+</div>
+</body>
+</html>

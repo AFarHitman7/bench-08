@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1280, initial-scale=1">
+<title>DRIFT</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{width:100%;height:100%;overflow:hidden;background:#0A0E14}
+  #stage{
+    position:absolute;top:50%;left:50%;
+    width:1280px;height:720px;
+    transform:translate(-50%,-50%);
+    background:#0A0E14;
+    overflow:hidden;
+  }
+  #world{
+    position:absolute;inset:0;
+    display:flex;align-items:center;justify-content:center;
+    transform-origin:50% 50%;
+    will-change:transform;
+  }
+  #word{
+    font-family:Georgia,'Times New Roman',serif;
+    font-size:152px;
+    font-weight:400;
+    letter-spacing:.2em;
+    margin-right:-.2em;
+    line-height:1;
+    color:#E8E3D5;
+    opacity:0;
+    transform-origin:50% 50%;
+    will-change:opacity,transform;
+    white-space:nowrap;
+  }
+  .horizon{
+    position:absolute;left:50%;width:58%;height:1px;
+    background:#E8E3D5;
+    transform:translateX(-50%);
+    opacity:0;
+  }
+  #h1{top:70%}
+  #h2{top:70.5%}
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="world">
+    <div class="horizon" id="h1"></div>
+    <div class="horizon" id="h2"></div>
+    <div id="word">DRIFT</div>
+  </div>
+</div>
+<script>
+(function(){
+  var DURATION   = 8;
+  var ARRIVE_END = 1.5;   // ferry emerges from the night
+  var SWAY_START = 4.0;   // a single swell passes under the hull
+  var SWAY_END   = 6.3;   // hull settles again
+
+  var word  = document.getElementById('word');
+  var world = document.getElementById('world');
+  var h1    = document.getElementById('h1');
+  var h2    = document.getElementById('h2');
+
+  function clamp(v,a,b){return v<a?a:(v>b?b:v)}
+  function lerp(a,b,t){return a+(b-a)*t}
+  function easeOutCubic(t){return 1-Math.pow(1-t,3)}
+  function easeInCubic(t){return t*t*t}
+
+  // Pure: state depends only on t in [0,8]. End state == start state.
+  function render(t){
+    t = clamp(t,0,DURATION);
+    var opacity,y,scale;
+
+    if(t<=ARRIVE_END){
+      var e=easeOutCubic(t/ARRIVE_END);
+      opacity=e;
+      y=lerp(24,0,e);
+      scale=lerp(.985,1,e);
+    }else if(t<SWAY_END){
+      opacity=1; y=0; scale=1;
+    }else{
+      var e=easeInCubic((t-SWAY_END)/(DURATION-SWAY_END));
+      opacity=1-e;
+      y=lerp(0,24,e);
+      scale=lerp(1,.985,e);
+    }
+
+    var sx=0,sy=0,rot=0;
+    if(t>=SWAY_START && t<SWAY_END){
+      var u=(t-SWAY_START)/(SWAY_END-SWAY_START);
+      var hump=.5-.5*Math.cos(2*Math.PI*u);   // 0 -> 1 -> 0, zero velocity at both ends
+      sx=lerp(0,14,hump);
+      sy=lerp(0,-6,hump);
+      rot=lerp(0,.9,hump);
+    }
+
+    word.style.opacity = opacity.toFixed(5);
+    word.style.transform = 'translateY('+y.toFixed(3)+'px) scale('+scale.toFixed(5)+')';
+    world.style.transform = 'translate('+sx.toFixed(3)+'px,'+sy.toFixed(3)+'px) rotate('+rot.toFixed(4)+'deg)';
+    h1.style.opacity = (opacity*.30).toFixed(4);
+    h2.style.opacity = (opacity*.13).toFixed(4);
+  }
+
+  var currentT=0,playing=false,lastNow=0,rafId=null;
+
+  function tick(now){
+    if(!playing)return;
+    var dt=(now-lastNow)/1000;
+    lastNow=now;
+    currentT=(currentT+dt)%DURATION;
+    render(currentT);
+    rafId=requestAnimationFrame(tick);
+  }
+
+  function pause(){
+    playing=false;
+    if(rafId!==null){cancelAnimationFrame(rafId);rafId=null}
+  }
+
+  var anim={
+    duration:DURATION,
+    seek:function(t){
+      pause();                                   // freeze so the rendered frame is exact
+      currentT=((t%DURATION)+DURATION)%DURATION;
+      render(currentT);
+    },
+    play:function(){
+      if(playing)return;
+      playing=true;
+      lastNow=performance.now();
+      rafId=requestAnimationFrame(tick);
+    },
+    pause:pause
+  };
+
+  window.__anim=anim;
+  render(0);
+  anim.play();
+})();
+</script>
+</body>
+</html>

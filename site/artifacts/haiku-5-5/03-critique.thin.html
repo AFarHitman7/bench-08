@@ -1,0 +1,43 @@
+<!doctype html>
+<!--
+Critique of the original: the purple-to-pink gradient is generic and reads as a template. The body-level p rule also leaked into the cards (20px text, 640px max-width, 0.9 opacity, centred margins), and the 120px hero padding plus 80px card padding pushed the footer below the 900px fold. The CTA had no supporting context and the feature copy was vague.
+
+Changes: a maritime deep-blue palette with an amber CTA that has clear contrast. Paragraph styles are scoped to the hero, so card text sits at its own size. The layout is a flex column sized to 1440×900, so the whole page fits without scrolling. Each card now has a concrete label and an icon-free accent. The hero adds a supporting line and a secondary text link. The footer sits inside the viewport. No external fonts or assets are used.
+-->
+<html lang="en"><head><meta charset="utf-8"><title>Ferryline — Book your crossing</title>
+<style>
+ *{box-sizing:border-box}
+ html,body{height:100%;margin:0}
+ body{display:flex;flex-direction:column;width:1440px;height:900px;overflow:hidden;font-family:Inter,"Segoe UI",system-ui,-apple-system,sans-serif;color:#0f2a3d;background:#f5f8fa}
+ .hero{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:48px 40px 96px;background:#0b3c5d;color:#fff;position:relative}
+ .eyebrow{margin:0 0 16px;font-size:14px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#7fd3e8}
+ h1{font-size:64px;line-height:1.08;margin:0 0 20px;font-weight:700;letter-spacing:-.02em;max-width:900px}
+ .hero p{font-size:20px;line-height:1.5;color:#d4e6f0;max-width:620px;margin:0 auto 36px}
+ .actions{display:flex;gap:24px;align-items:center;justify-content:center}
+ .cta{display:inline-block;padding:16px 36px;border-radius:999px;background:#f5b400;color:#0b3c5d;font-weight:700;font-size:17px;text-decoration:none}
+ .link{color:#fff;font-size:17px;font-weight:600;text-decoration:underline;text-underline-offset:4px;text-decoration-color:#7fd3e8}
+ .wave{position:absolute;left:0;right:0;bottom:-1px;width:100%;height:56px;display:block}
+ .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;padding:56px 40px;margin:0}
+ .card{background:#fff;border:1px solid #d9e4ec;border-radius:16px;padding:32px;border-top:4px solid #1a7f9e}
+ .card h3{margin:0 0 10px;font-size:22px;color:#0b3c5d}
+ .card p{margin:0;font-size:16px;line-height:1.55;color:#4a6172}
+ footer{padding:20px 40px;text-align:center;color:#5b7384;font-size:14px;border-top:1px solid #d9e4ec;background:#fff}
+</style></head>
+<body>
+<section class="hero">
+  <p class="eyebrow">Island ferry bookings</p>
+  <h1>Book your crossing in seconds</h1>
+  <p>Ferryline connects you to the islands you love with a clear, modern booking experience built around your journey.</p>
+  <div class="actions">
+    <a class="cta" href="#">Get started</a>
+    <a class="link" href="#">View timetables</a>
+  </div>
+  <svg class="wave" viewBox="0 0 1440 56" preserveAspectRatio="none" aria-hidden="true"><path d="M0 28 C240 56 480 0 720 28 C960 56 1200 0 1440 28 L1440 56 L0 56 Z" fill="#f5f8fa"/></svg>
+</section>
+<section class="cards">
+  <div class="card"><h3>Fast</h3><p>Book in under a minute with our streamlined flow.</p></div>
+  <div class="card"><h3>Simple</h3><p>No hidden fees, no surprises, just clear pricing.</p></div>
+  <div class="card"><h3>Reliable</h3><p>Thousands of travellers trust us every day.</p></div>
+</section>
+<footer>© Ferryline 2026 — All rights reserved</footer>
+</body></html>

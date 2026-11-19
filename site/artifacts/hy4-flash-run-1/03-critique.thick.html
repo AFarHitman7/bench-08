@@ -1,0 +1,89 @@
+<!--
+Ferryline — improvements for phone-booking passengers.
+
+Diagnosis (impact order):
+1. "Get started" linked to # — no way to book.
+2. Hero copy was brand-speak, not route/date/price info.
+3. No booking inputs; benefits were generic and unverifiable.
+4. Three fixed columns, 56px type, 120px padding broke on phones.
+5. Loud gradient, low contrast, "thousands trust us" and "all rights reserved" served the brand, not passengers.
+
+Changed: replaced the dead CTA with a working From/To/Date/Passengers search (inline confirmation); rewrote vague hero and card copy; responsive layout, readable type, high-contrast sea palette; trimmed footer.
+
+Left alone: product, name, hero→cards→footer order, all three benefits, footer itself. No results list, route directory or invented inventory added — the product has no such section.
+-->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Book your ferry crossing | Ferryline</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0}
+body{font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;color:#0b2545;background:#fff;-webkit-font-smoothing:antialiased}
+.hero{background:linear-gradient(135deg,#0b3d63,#0e6b86);color:#fff;padding:54px 24px 46px;text-align:center}
+.wrap{max-width:1040px;margin:0 auto}
+h1{font-size:clamp(30px,4.4vw,46px);line-height:1.1;letter-spacing:-.02em;margin:0 0 12px}
+.lede{font-size:17px;line-height:1.5;max-width:600px;margin:0 auto 26px;color:#eaf4fa}
+.booking{display:grid;grid-template-columns:1fr 1fr .95fr .8fr auto;gap:10px;align-items:end;background:#fff;padding:14px;border-radius:14px;box-shadow:0 10px 30px rgba(3,30,50,.25);text-align:left}
+.field{display:flex;flex-direction:column;gap:5px;min-width:0}
+.field span{font-size:12px;font-weight:700;color:#38536b;text-transform:uppercase;letter-spacing:.04em}
+.field input{width:100%;padding:11px 12px;border:1px solid #cddbe5;border-radius:8px;font:inherit;font-size:15px;color:#0b2545;background:#fff}
+.field input:focus{outline:3px solid #ffce4f;outline-offset:1px;border-color:#0b3d63}
+button{appearance:none;border:0;border-radius:9px;background:#ffce4f;color:#0b2545;font:700 15px inherit;padding:12px 18px;cursor:pointer;white-space:nowrap}
+button:hover{background:#ffd86b}
+button:focus-visible{outline:3px solid #fff;outline-offset:2px}
+.status{min-height:20px;margin:14px 0 0;font-size:14px;color:#eaf4fa}
+.cards{max-width:1040px;margin:0 auto;padding:44px 24px 40px;display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.card{background:#f5f8fa;border:1px solid #dce6ee;border-radius:14px;padding:24px}
+.card h3{margin:0 0 8px;font-size:18px;color:#0b3d63}
+.card p{margin:0;font-size:15px;line-height:1.5;color:#3c566b}
+footer{text-align:center;padding:18px 24px 26px;font-size:13px;color:#6b7f90;border-top:1px solid #eef2f5}
+@media(max-width:720px){
+ .hero{padding:40px 18px 34px}
+ .booking{grid-template-columns:1fr 1fr}
+ button{grid-column:1/-1}
+ .cards{grid-template-columns:1fr;padding:32px 18px}
+}
+</style>
+</head>
+<body>
+<section class="hero">
+  <div class="wrap">
+    <h1>Book your ferry crossing</h1>
+    <p class="lede">Choose where you're going, when, and who's travelling. Clear prices, no hidden fees.</p>
+    <form class="booking" id="booking">
+      <label class="field"><span>From</span><input name="from" type="text" placeholder="Leaving from" autocomplete="off" required></label>
+      <label class="field"><span>To</span><input name="to" type="text" placeholder="Going to" autocomplete="off" required></label>
+      <label class="field"><span>Date</span><input name="date" type="date" required></label>
+      <label class="field"><span>Passengers</span><input name="pax" type="number" min="1" max="9" value="1"></label>
+      <button type="submit">Find crossings</button>
+    </form>
+    <p class="status" id="status" role="status" aria-live="polite"></p>
+  </div>
+</section>
+
+<section class="cards">
+  <div class="card"><h3>Fast</h3><p>From search to booked in under a minute.</p></div>
+  <div class="card"><h3>Simple</h3><p>One clear price up front — no hidden fees, no surprises.</p></div>
+  <div class="card"><h3>Reliable</h3><p>A clear confirmation for the sailing you chose.</p></div>
+</section>
+
+<footer>© Ferryline 2026</footer>
+
+<script>
+(function(){
+  var f=document.getElementById('booking'), s=document.getElementById('status');
+  f.addEventListener('submit',function(e){
+    e.preventDefault();
+    var from=f.elements['from'].value.trim()||'your departure port',
+        to=f.elements['to'].value.trim()||'your destination',
+        date=f.elements['date'].value||'your chosen date',
+        pax=f.elements['pax'].value||'1';
+    s.textContent='Search ready: '+from+' → '+to+' · '+date+' · '+pax+' passenger'+(pax==='1'?'':'s')+'.';
+  });
+})();
+</script>
+</body>
+</html>

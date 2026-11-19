@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1280">
+<title>DRIFT</title>
+<style>
+html, body {
+  margin: 0;
+  width: 1280px;
+  height: 720px;
+  overflow: hidden;
+  background: #0c1822;
+}
+#stage {
+  position: relative;
+  width: 1280px;
+  height: 720px;
+  background: #0c1822;
+  overflow: hidden;
+}
+#horizon {
+  position: absolute;
+  left: 0;
+  top: 470px;
+  width: 1280px;
+  height: 1px;
+  background: #e8e0cc;
+  opacity: 0;
+}
+#light {
+  position: absolute;
+  left: 0;
+  top: 467px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #e8e0cc;
+}
+#word {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 1280px;
+  height: 720px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 180px;
+  letter-spacing: 0.12em;
+  color: #e8e0cc;
+  opacity: 0;
+  white-space: nowrap;
+}
+#word span {
+  padding-left: 0.12em;
+}
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="horizon"></div>
+  <div id="light"></div>
+  <div id="word"><span>DRIFT</span></div>
+</div>
+<script>
+(function () {
+  const D = 8;
+  const horizon = document.getElementById('horizon');
+  const light = document.getElementById('light');
+  const word = document.getElementById('word');
+
+  const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
+  const seg = (t, a, b) => clamp((t - a) / (b - a), 0, 1);
+  const outCubic = p => 1 - Math.pow(1 - p, 3);
+  const inCubic = p => p * p * p;
+  const wrap = t => ((t % D) + D) % D;
+
+  function render(t) {
+    t = wrap(t);
+
+    const hzIn = outCubic(seg(t, 0.6, 2.0));
+    const hzOut = 1 - inCubic(seg(t, 6.8, 7.6));
+    horizon.style.opacity = (0.22 * hzIn * hzOut).toFixed(4);
+
+    const lx = -60 + 1400 * (t / D);
+    light.style.transform = 'translateX(' + lx.toFixed(2) + 'px)';
+
+    const enter = seg(t, 1.2, 2.6);
+    const eo = outCubic(enter);
+    const exit = seg(t, 5.2, 7.0);
+    const xo = inCubic(exit);
+
+    const x = -30 * (1 - eo) + 40 * xo;
+    const op = eo * (1 - xo);
+    word.style.transform = 'translateX(' + x.toFixed(2) + 'px)';
+    word.style.opacity = op.toFixed(4);
+  }
+
+  let cur = 0;
+  let running = false;
+  let base = 0;
+  let stamp = 0;
+
+  function loop() {
+    if (!running) return;
+    cur = wrap(base + (performance.now() - stamp) / 1000);
+    render(cur);
+    requestAnimationFrame(loop);
+  }
+
+  window.__anim = {
+    duration: D,
+    seek(t) {
+      cur = wrap(Number(t) || 0);
+      base = cur;
+      stamp = performance.now();
+      render(cur);
+    },
+    play() {
+      if (running) return;
+      running = true;
+      base = cur;
+      stamp = performance.now();
+      requestAnimationFrame(loop);
+    },
+    pause() {
+      if (!running) return;
+      cur = wrap(base + (performance.now() - stamp) / 1000);
+      running = false;
+      render(cur);
+    }
+  };
+
+  render(0);
+  window.__anim.play();
+})();
+</script>
+</body>
+</html>

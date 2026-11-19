@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1280, height=720, initial-scale=1">
+<title>DRIFT — animated title card</title>
+<style>
+  * { box-sizing: border-box; }
+  html, body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    overflow: hidden;
+    background: #090d13;
+  }
+  body { display: grid; place-items: center; }
+  svg {
+    display: block;
+    width: min(100vw, 177.7778vh);
+    height: min(100vh, 56.25vw);
+    background: #090d13;
+  }
+  text {
+    font-family: Impact, Haettenschweiler, "Arial Narrow Bold", "Arial Black", sans-serif;
+    font-weight: 900;
+    text-anchor: middle;
+  }
+</style>
+</head>
+<body>
+<svg viewBox="0 0 1280 720" role="img" aria-label="DRIFT">
+  <defs>
+    <linearGradient id="backdrop" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#111923"/>
+      <stop offset=".52" stop-color="#090d13"/>
+      <stop offset="1" stop-color="#10151d"/>
+    </linearGradient>
+    <linearGradient id="ink" x1="0" y1="0" x2="1" y2=".2">
+      <stop offset="0" stop-color="#d9e2e4"/>
+      <stop offset=".48" stop-color="#f4f1e8"/>
+      <stop offset="1" stop-color="#9db7ba"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
+      <stop stop-color="#82d9d1" stop-opacity="0"/>
+      <stop offset=".5" stop-color="#82d9d1"/>
+      <stop offset="1" stop-color="#82d9d1" stop-opacity="0"/>
+    </linearGradient>
+    <radialGradient id="glow">
+      <stop stop-color="#32605e" stop-opacity=".25"/>
+      <stop offset="1" stop-color="#090d13" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="grid" width="48" height="48" patternUnits="userSpaceOnUse">
+      <path d="M48 0H0V48" fill="none" stroke="#a9c1c4" stroke-opacity=".035" stroke-width="1"/>
+    </pattern>
+    <filter id="softGlow" x="-.2" y="-.5" width="1.4" height="2">
+      <feGaussianBlur stdDeviation="18"/>
+    </filter>
+  </defs>
+
+  <rect width="1280" height="720" fill="url(#backdrop)"/>
+  <rect width="1280" height="720" fill="url(#grid)"/>
+  <ellipse cx="640" cy="350" rx="520" ry="250" fill="url(#glow)"/>
+
+  <g fill="none" stroke="#a8c4c5" stroke-opacity=".1">
+    <path d="M-60 196C196 142 341 175 522 142S901 95 1340 166"/>
+    <path d="M-60 216C196 162 341 195 522 162S901 115 1340 186"/>
+    <path d="M-60 537C196 591 341 558 522 591S901 638 1340 567"/>
+    <path d="M-60 557C196 611 341 578 522 611S901 658 1340 587"/>
+  </g>
+
+  <g opacity=".65" fill="none" stroke="url(#accent)">
+    <path d="M132 360h230" stroke-width="1"/>
+    <path d="M918 360h230" stroke-width="1"/>
+  </g>
+  <g fill="#a9c1c4" opacity=".55">
+    <circle cx="132" cy="360" r="2"/>
+    <circle cx="1148" cy="360" r="2"/>
+  </g>
+
+  <g id="title">
+    <text x="640" y="393" font-size="194" letter-spacing="5"
+      fill="#75cec7" opacity=".17" filter="url(#softGlow)">DRIFT</text>
+    <text x="640" y="393" font-size="194" letter-spacing="5"
+      fill="none" stroke="#a8c8c5" stroke-opacity=".18" stroke-width="1.4"
+      transform="translate(0 8)">DRIFT</text>
+    <text x="640" y="393" font-size="194" letter-spacing="5"
+      fill="url(#ink)">DRIFT</text>
+    <path d="M430 414h420" stroke="#dce8e3" stroke-opacity=".16"/>
+  </g>
+
+  <g fill="#c1cfce" font-family="Arial, sans-serif" font-size="10" letter-spacing="3">
+    <text x="80" y="82">FIELD STUDY  /  01</text>
+    <text x="1200" y="82" text-anchor="end">MOTION IN STILLNESS</text>
+    <text x="80" y="650">NORTH / 04° 18′</text>
+    <text x="1200" y="650" text-anchor="end">LOOP — 08 SECONDS</text>
+  </g>
+  <path d="M80 102h1120M80 618h1120" stroke="#afc1c2" stroke-opacity=".16"/>
+  <circle cx="640" cy="360" r="286" fill="none" stroke="#bdd2d0" stroke-opacity=".045"/>
+</svg>
+
+<script>
+(() => {
+  const duration = 8;
+  const title = document.getElementById("title");
+  const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)");
+  let frame = 0;
+  let playing = false;
+  let anchorTime = 0;
+  let anchorPosition = 0;
+  let position = 0;
+
+  function render(seconds) {
+    position = ((seconds % duration) + duration) % duration;
+    const phase = position / duration * Math.PI * 2;
+    const amplitude = reduceMotion.matches ? 0.2 : 1;
+    const x = Math.sin(phase) * 31 * amplitude;
+    const y = (Math.cos(phase) - 1) * 5 * amplitude;
+    const angle = Math.sin(phase) * 0.32 * amplitude;
+    const scale = 1 + (Math.cos(phase) - 1) * 0.006 * amplitude;
+    title.setAttribute(
+      "transform",
+      `translate(${x.toFixed(3)} ${y.toFixed(3)}) rotate(${angle.toFixed(3)} 640 360) translate(640 360) scale(${scale.toFixed(5)}) translate(-640 -360)`
+    );
+  }
+
+  function tick(now) {
+    if (!playing) return;
+    render(anchorPosition + (now - anchorTime) / 1000);
+    frame = requestAnimationFrame(tick);
+  }
+
+  window.__anim = {
+    duration,
+    seek(t) {
+      pause();
+      render(Number.isFinite(Number(t)) ? Number(t) : 0);
+    },
+    play() {
+      if (playing) return;
+      playing = true;
+      anchorTime = performance.now();
+      anchorPosition = position;
+      frame = requestAnimationFrame(tick);
+    },
+    pause() {
+      if (!playing) return;
+      playing = false;
+      cancelAnimationFrame(frame);
+      anchorPosition = position;
+    }
+  };
+
+  render(0);
+  window.__anim.play();
+})();
+</script>
+</body>
+</html>

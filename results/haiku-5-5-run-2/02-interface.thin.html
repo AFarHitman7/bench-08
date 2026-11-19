@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Inkwell: handwritten notes to LaTeX</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{width:100%;height:100%;overflow:hidden;background:#F6F1E7;color:#1B2A41;font-family:Georgia,"Times New Roman",serif}
+  .page{width:100%;height:100%;display:flex;flex-direction:column}
+
+  nav{height:76px;flex:0 0 76px;display:flex;align-items:center;justify-content:space-between;padding:0 96px;border-bottom:1px solid #D9CFBE}
+  .logo{display:flex;align-items:center;gap:10px;font-size:24px;font-weight:700;letter-spacing:-.01em}
+  .links{display:flex;gap:36px;font-size:15px;color:#4A5366;font-family:Arial,Helvetica,sans-serif}
+  .nav-right{display:flex;align-items:center;gap:24px}
+  .btn{display:inline-block;padding:14px 26px;border-radius:999px;font-family:Arial,Helvetica,sans-serif;font-size:15px;font-weight:600;text-decoration:none;white-space:nowrap}
+  .btn-ink{background:#1B2A41;color:#F6F1E7}
+  .btn-line{border:1px solid #1B2A41;color:#1B2A41}
+
+  .hero{flex:0 0 530px;display:grid;grid-template-columns:1fr 1fr;gap:64px;padding:40px 96px 0;align-items:center}
+  .eyebrow{font-family:Arial,Helvetica,sans-serif;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:#9B3D2E;font-weight:700}
+  h1{font-size:76px;line-height:1.02;letter-spacing:-.02em;font-weight:400;margin-top:20px}
+  h1 em{color:#9B3D2E;font-style:italic}
+  .lead{font-size:21px;line-height:1.5;color:#4A5366;max-width:520px;margin-top:24px}
+  .ctas{display:flex;gap:14px;margin-top:36px}
+  .micro{font-family:Arial,Helvetica,sans-serif;font-size:13px;color:#6B6358;margin-top:22px}
+
+  .sheet{position:relative;background:#FFFDF8;border:1px solid #D9CFBE;border-radius:14px;padding:36px 44px 32px;height:400px;box-shadow:0 30px 60px -30px rgba(27,42,65,.35);background-image:repeating-linear-gradient(to bottom,transparent 0 39px,#EAE2D2 39px 40px);background-position:0 84px}
+  .chip{position:absolute;top:-14px;right:28px;background:#9B3D2E;color:#FFFDF8;font-family:Arial,Helvetica,sans-serif;font-size:12px;letter-spacing:.06em;padding:6px 12px;border-radius:999px}
+  .label{font-family:Arial,Helvetica,sans-serif;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#6B6358}
+  .hand{font-family:"Segoe Script","Bradley Hand","Comic Sans MS",cursive;font-size:30px;line-height:40px;color:#1B2A41;margin-top:14px}
+  .hand .sm{font-size:24px}
+  .arrow{display:flex;justify-content:center;margin:8px 0 4px}
+  .out{padding:22px 26px;background:#1B2A41;color:#F6F1E7;border-radius:10px}
+  .math{font-family:"STIX Two Math","Cambria Math","Times New Roman",serif;font-size:32px;line-height:1.3}
+  .frac{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;font-size:.9em;line-height:1.1}
+  .frac span:first-child{border-bottom:1px solid #F6F1E7;padding:0 6px}
+  .code{font-family:Consolas,"Courier New",monospace;font-size:14px;color:#C9B98F;margin-top:14px;word-break:break-all}
+  .meta{display:flex;justify-content:space-between;font-family:Arial,Helvetica,sans-serif;font-size:12px;color:#6B6358;margin-top:14px}
+
+  .value{flex:1;min-height:0;border-top:1px solid #D9CFBE;padding:32px 96px;display:flex;flex-direction:column;justify-content:center;overflow:hidden}
+  .value-head{display:flex;justify-content:space-between;align-items:flex-end;gap:48px}
+  h2{font-size:40px;line-height:1.1;font-weight:400;letter-spacing:-.01em;margin-top:10px}
+  h2 em{color:#9B3D2E}
+  .value-head p{font-family:Arial,Helvetica,sans-serif;font-size:16px;line-height:1.55;color:#4A5366;max-width:440px}
+  .cols{display:grid;grid-template-columns:repeat(3,1fr);gap:48px;margin-top:26px}
+  .col{display:flex;gap:18px;align-items:flex-start;border-top:1px solid #E2D9C8;padding-top:20px}
+  .icon{flex:0 0 44px;height:44px;border-radius:50%;background:#EFE6D4;display:flex;align-items:center;justify-content:center;color:#9B3D2E;font-family:"STIX Two Math","Cambria Math",serif;font-size:20px}
+  .col h3{font-size:22px;font-weight:400;margin-bottom:6px}
+  .col p{font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1.55;color:#4A5366}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <nav>
+    <div class="logo">
+      <svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true"><path d="M13 2C9 8 6 12 6 16a7 7 0 0 0 14 0c0-4-3-8-7-14z" fill="#1B2A41"/><path d="M10 17c1 2 4 2 5-1" stroke="#F6F1E7" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg>
+      Inkwell
+    </div>
+    <div class="links">
+      <span>How it works</span>
+      <span>Accuracy</span>
+      <span>Pricing</span>
+      <span>Docs</span>
+    </div>
+    <div class="nav-right">
+      <span style="font-family:Arial,Helvetica,sans-serif;font-size:15px;color:#4A5366">Sign in</span>
+      <a class="btn btn-ink" href="#">Try free</a>
+    </div>
+  </nav>
+
+  <section class="hero">
+    <div>
+      <div class="eyebrow">Handwritten notes to LaTeX</div>
+      <h1>Write by hand.<br><em>Publish</em> in LaTeX.</h1>
+      <p class="lead">Photograph a page of equations, diagrams or margin scribbles. Inkwell reads your handwriting and returns clean, compilable LaTeX you can drop straight into your paper.</p>
+      <div class="ctas">
+        <a class="btn btn-ink" href="#">Convert your first page</a>
+        <a class="btn btn-line" href="#">See a sample</a>
+      </div>
+      <div class="micro">Free for 30 pages a month. Works with paper, whiteboards and tablets.</div>
+    </div>
+
+    <div class="sheet">
+      <div class="chip">Live conversion</div>
+      <div class="label">Your note</div>
+      <div class="hand">∫<span class="sm">₀</span> e<span class="sm">−x²</span> dx = √π / 2<br>
+        <span class="sm">(Gaussian, standard form)</span></div>
+
+      <div class="arrow">
+        <svg width="120" height="34" viewBox="0 0 120 34" aria-hidden="true"><path d="M4 24 C30 2, 80 2, 110 20" stroke="#9B3D2E" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M102 14 L112 21 L101 26" stroke="#9B3D2E" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+
+      <div class="out">
+        <div class="math">
+          ∫<sub style="font-size:.6em">0</sub><sup style="font-size:.6em">∞</sup>
+          e<sup style="font-size:.6em">−x²</sup> dx =
+          <span class="frac"><span>√π</span><span>2</span></span>
+        </div>
+        <div class="code">\int_0^\infty e^{-x^2}\,dx = \frac{\sqrt{\pi}}{2}</div>
+      </div>
+      <div class="meta"><span>Confidence 98.7%</span><span>Converted in 0.8 s</span></div>
+    </div>
+  </section>
+
+  <section class="value">
+    <div class="value-head">
+      <div>
+        <div class="eyebrow">Why researchers switch</div>
+        <h2>Keep thinking on paper. <em>Ship</em> clean source.</h2>
+      </div>
+      <p>Inkwell is built for the way you already work. Sketch proofs in a notebook, then get notation that compiles on the first try, with every symbol still editable.</p>
+    </div>
+
+    <div class="cols">
+      <div class="col">
+        <div class="icon" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 22 22"><path d="M4 18 L7 11 L15 3 L19 7 L11 15 Z" stroke="#9B3D2E" stroke-width="1.6" fill="none" stroke-linejoin="round"/><path d="M4 18 L6 16" stroke="#9B3D2E" stroke-width="1.6"/></svg>
+        </div>
+        <div>
+          <h3>Stays out of your way</h3>
+          <p>Write as you normally would. No special pen, no boxes to fill in, no retyping before you can continue.</p>
+        </div>
+      </div>
+      <div class="col">
+        <div class="icon" aria-hidden="true">∑</div>
+        <div>
+          <h3>Notation that is exact</h3>
+          <p>Fractions, matrices, subscripts and aligned environments come out structured, not as images you have to redo.</p>
+        </div>
+      </div>
+      <div class="col">
+        <div class="icon" aria-hidden="true" style="font-family:Consolas,'Courier New',monospace;font-size:15px">&lt;/&gt;</div>
+        <div>
+          <h3>Source you can edit</h3>
+          <p>Every conversion is plain .tex. Diff it, version it, and compile it with the toolchain you already trust.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
+</body>
+</html>

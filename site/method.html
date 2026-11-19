@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Method &amp; caveats — Bench 08</title>
+<meta name="description" content="How the Bench 08 creative benchmark was run, what was checked, and why two runs are marked as not comparable.">
+<script>
+  (function () {
+    var saved = null;
+    try { saved = localStorage.getItem('bench-theme'); } catch (e) {}
+    var params = new URLSearchParams(location.search);
+    var q = params.get('theme');
+    if (q === 'dark' || q === 'light') document.documentElement.dataset.theme = q;
+    else if (saved === 'dark' || saved === 'light') document.documentElement.dataset.theme = saved;
+    ['task', 'model', 'variant'].forEach(function (key) {
+      var value = params.get(key);
+      if (value) document.documentElement.setAttribute('data-filter-' + key, value);
+    });
+  })();
+</script>
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body data-page="method.html">
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="nav">
+  <div class="nav-inner">
+    <a class="brand" href="index.html" aria-label="Bench 08 home">
+      <span class="brand-mark">B08</span>
+      <span class="brand-name">Bench <em>08</em></span>
+    </a>
+    <nav class="nav-links" aria-label="Main">
+      <a href="index.html">Overview</a><a href="results.html">Results</a><a href="compare.html">Compare</a><a href="method.html" class="active" aria-current="page">Method</a>
+    </nav>
+    <button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch colour theme">
+      <span class="theme-glyph" aria-hidden="true"></span>
+      <span class="theme-word">Theme</span>
+    </button>
+  </div>
+</header>
+<main id="main">
+
+<section class="page-head">
+  <p class="kicker">Method &amp; caveats</p>
+  <h1>What this is, and what it is not.</h1>
+  <p class="lede">A small benchmark of one-shot creative and technical work. Eight tasks, two variants, one model per run. The caveats are part of the result.</p>
+</section>
+
+<section class="method-section">
+  <h2>The shape of the test</h2>
+  <div class="method-cols">
+    <div>
+      <p>Each run received the same sixteen prompts: eight tasks, each in a <b>thin</b> variant (intent only) and a <b>thick</b> variant (a full brief with audience, constraints and success criteria).</p>
+      <p>Subagents were asked to return exactly one self-contained file. No network requests, no external images or libraries, no build step. The orchestrator collected the reply and saved it.</p>
+    </div>
+    <div>
+      <p>The tasks are deliberately different: visual composition, interface design, critique, motion, explanation, fiction, implementation and code review. There is no single score that makes sense across all eight.</p>
+      <p>Creative work is therefore presented without a number. The parser and code-review tasks carry a short technical note because those tasks have verifiable failure modes.</p>
+    </div>
+  </div>
+</section>
+
+<section class="method-section">
+  <h2>The eight tasks</h2>
+  <div class="table-wrap">
+    <table class="data-table">
+      <thead><tr><th>Task</th><th>Format</th><th>Brief</th></tr></thead>
+      <tbody><tr>
+  <td><span class="table-num">01</span> <b>Poster</b></td>
+  <td>SVG</td>
+  <td>The Last Ferry, 11:40pm — a poster for a crossing between San Remo and the island of Vell. Two inks, one paper tone, a condensed grotesque and a monospace timetable.</td>
+</tr><tr>
+  <td><span class="table-num">02</span> <b>Interface</b></td>
+  <td>HTML</td>
+  <td>Inkwell — photograph a page of handwriting, get clean LaTeX back. The hero must show a handwritten page beside its rendered output.</td>
+</tr><tr>
+  <td><span class="table-num">03</span> <b>Critique</b></td>
+  <td>HTML</td>
+  <td>A shipped landing page is supplied as a fixture. Find the five most damaging problems, repair them, and record what changed in a note of at most 150 words.</td>
+</tr><tr>
+  <td><span class="table-num">04</span> <b>Motion</b></td>
+  <td>HTML</td>
+  <td>A title card for a short film about a night ferry crossing. The word must rest legibly for at least two seconds, and the loop seam must be invisible.</td>
+</tr><tr>
+  <td><span class="table-num">05</span> <b>Explanation</b></td>
+  <td>Markdown</td>
+  <td>Cover the problem DNS solves, what happens between typing an address and the page appearing, why answers are remembered, and what usually goes wrong.</td>
+</tr><tr>
+  <td><span class="table-num">06</span> <b>Fiction</b></td>
+  <td>Markdown</td>
+  <td>A workplace after hours, third person, one character. The clock must earn its place: something in the story depends on it.</td>
+</tr><tr>
+  <td><span class="table-num">07</span> <b>Build</b></td>
+  <td>MJS</td>
+  <td>parseDuration(&quot;1h30m&quot;) returns seconds. It accepts h, m and s in any order, rejects invalid input with TypeError, and runs its own tests with node:test.</td>
+</tr><tr>
+  <td><span class="table-num">08</span> <b>Code review</b></td>
+  <td>Markdown</td>
+  <td>The fixture is a small keyed limiter. The thick version asks for severity, location, problem, why it matters and a direction, in at most eight findings.</td>
+</tr></tbody>
+    </table>
+  </div>
+</section>
+
+<section class="method-section">
+  <h2>Run conditions</h2>
+  <p class="method-note">The runs are not identical. “Subagent tool calls” counts every tool call made by the sixteen subagents in that run. A clean run made none.</p>
+  <div class="table-wrap">
+    <table class="data-table run-table">
+      <thead><tr><th>Run</th><th>Subagent tool calls</th><th>Artifact fidelity</th><th>Status</th></tr></thead>
+      <tbody><tr>
+  <td><b>DeepSeek 4.1 Flash</b><span class="table-run">Run 1</span></td>
+  <td class="num">363</td>
+  <td>16/16 saved; run used tools</td>
+  <td><span class="health caveat"><span class="dot"></span>Tool-assisted</span><span class="table-caveat">Subagents used a browser to refine their work.</span></td>
+</tr><tr>
+  <td><b>GLM 5.3</b><span class="table-run">Run 1</span></td>
+  <td class="num">3</td>
+  <td>16/16; one CSS repair</td>
+  <td><span class="health caveat"><span class="dot"></span>One repair</span><span class="table-caveat">One malformed CSS line was repaired after saving.</span></td>
+</tr><tr>
+  <td><b>GPT 6 Luna</b><span class="table-run">Run 1</span></td>
+  <td class="num">30</td>
+  <td>14/16 exact; 2 post-edits</td>
+  <td><span class="health caveat"><span class="dot"></span>Skill-assisted</span><span class="table-caveat">Subagents loaded skills; two files were edited after saving.</span></td>
+</tr><tr>
+  <td><b>Claude Haiku 5.5</b><span class="table-run">Run 1</span></td>
+  <td class="num">0</td>
+  <td>16/16; one unfenced reply</td>
+  <td><span class="health caveat"><span class="dot"></span>One unfenced reply</span><span class="table-caveat">One review arrived without a fenced block.</span></td>
+</tr><tr>
+  <td><b>Claude Haiku 5.5</b><span class="table-run">Run 2</span></td>
+  <td class="num">0</td>
+  <td>16/16 exact; one allowed retry</td>
+  <td><span class="health clean"><span class="dot"></span>Clean run</span><span class="table-caveat">No subagent tools; one identical retry.</span></td>
+</tr><tr>
+  <td><b>HY4 Flash</b><span class="table-run">Run 1</span></td>
+  <td class="num">0</td>
+  <td>16/16 exact</td>
+  <td><span class="health clean"><span class="dot"></span>Clean run</span><span class="table-caveat">No subagent tools; all 16 files byte-exact.</span></td>
+</tr><tr>
+  <td><b>Muse Spark 1.3</b><span class="table-run">Run 1</span></td>
+  <td class="num">5</td>
+  <td>12/16 exact; 4 trimmed</td>
+  <td><span class="health broken"><span class="dot"></span>Not comparable</span><span class="table-caveat">Four visual files were saved trimmed.</span></td>
+</tr><tr>
+  <td><b>Muse Spark 1.3</b><span class="table-run">Run 2</span></td>
+  <td class="num">1</td>
+  <td>9/16 near-exact; 7 trimmed</td>
+  <td><span class="health broken"><span class="dot"></span>Not comparable</span><span class="table-caveat">Seven files saved trimmed; three prompts re-run after wording errors.</span></td>
+</tr></tbody>
+    </table>
+  </div>
+  <p class="method-note method-footnote">Muse Spark run 2 also re-ran three prompts after wording errors; the saved artifacts use the corrected prompts. Its first review attempt used a different fixture and was discarded.</p>
+</section>
+
+<section class="method-section">
+  <h2>What we checked</h2>
+  <ul class="check-list">
+    <li>Every expected artifact exists and parses as its declared format.</li>
+    <li>SVG dimensions, HTML self-containment, non-empty MJS and Markdown.</li>
+    <li>Both build tasks run their own tests with <code>node --test</code>; all saved tests pass.</li>
+    <li>Word counts for the 100-word story and the 150-word explainer; note length on the critique.</li>
+    <li>Technical notes on the two code tasks: whether the review found the planted defects, and whether the parser meets its brief.</li>
+    <li>No subagent read another task’s output; no artifact contains an external URL.</li>
+  </ul>
+</section>
+
+<section class="method-section">
+  <h2>Limitations</h2>
+  <ul class="check-list">
+    <li><b>Not a leaderboard.</b> These are eight runs, not a statistically meaningful sample. One run per model except Claude Haiku 5.5 and Muse Spark 1.3.</li>
+    <li><b>Two runs are not comparable.</b> Muse Spark’s saved files were trimmed and, in run 2, not disclosed. They are included for transparency, with a “Not comparable” badge.</li>
+    <li><b>Process differs.</b> DeepSeek’s subagents used a browser and wrote working files; GPT’s loaded skills. Those runs are marked as caveats, not hidden.</li>
+    <li><b>Creative work is unscored.</b> Posters, interfaces, motion, fiction and critique are shown as submitted. The absence of a score is deliberate, not an oversight.</li>
+  </ul>
+</section>
+
+<section class="closing method-closing">
+  <div>
+    <p class="kicker">A note on labels</p>
+    <h2>Every card names the model and the run.</h2>
+    <p>Claude Haiku 5.5 and Muse Spark 1.3 have two runs each. The run badge is part of the result, not a detail to ignore.</p>
+    <a class="btn btn-primary" href="results.html">Browse the results</a>
+  </div>
+</section>
+
+</main>
+<footer class="footer">
+  <div class="footer-inner">
+    <div>
+      <p class="footer-mark">Bench <em>08</em></p>
+      <p class="footer-note">A small, open-ended benchmark. Creative work is presented, not scored. Technical work gets a note.</p>
+    </div>
+    <div class="footer-links">
+      <a href="results.html">Results</a>
+      <a href="compare.html">Compare</a>
+      <a href="method.html">Method &amp; caveats</a>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/app.js"></script>
+</body>
+</html>
