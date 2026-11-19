@@ -14,7 +14,7 @@ Eight tasks, each in a thin and a thick variant: a poster, an interface, a criti
 - **Artifact** — one result at full scale, with its run metadata and technical note.
 - **Method** — the brief, run conditions, fidelity table and limitations.
 
-Creative work is presented without a score. The parser and code-review tasks carry a short editorial note because those tasks have verifiable failure modes.
+Creative work is presented without a score. The parser and code-review tasks carry a short editorial note because those tasks have verifiable failure modes. Every result shows how long its subagent took, and the text artifacts include a browser-native Listen button.
 
 ## Findings
 
@@ -31,6 +31,7 @@ site/                 the showcase (built static site)
   thumbs/             static previews for the results cards
   build.mjs           regenerates the pages and data.js
   thumbs.mjs          regenerates the preview images
+  timings.json        per-prompt subagent timings used by the result cards
 prompt.md             the benchmark's master prompt
 ```
 
