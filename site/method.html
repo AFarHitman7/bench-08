@@ -57,7 +57,7 @@
     <div>
       <p>The tasks are deliberately different: visual composition, interface design, critique, motion, explanation, fiction, implementation and code review. There is no single score that makes sense across all eight.</p>
       <p>Creative work is therefore presented without a number. The parser and code-review tasks carry a short technical note because those tasks have verifiable failure modes.</p>
-      <p>Text artifacts include a <b>Listen</b> button that uses the browser’s built-in speech synthesis. No audio is uploaded or generated server-side.</p>
+      <p>Tok/s is <b>(output + reasoning tokens) ÷ subagent elapsed time</b>. It includes thinking and tool time, so it is end-to-end throughput, not raw decode speed.</p>
     </div>
   </div>
 </section>
@@ -109,53 +109,61 @@
   <p class="method-note">The runs are not identical. “Subagent tool calls” counts every tool call made by the sixteen subagents in that run. A clean run made none. Prompt time is the subagent’s start-to-finish, including tool use. It is not wall-clock: most runs dispatched in parallel batches, and HY4 ran sequentially.</p>
   <div class="table-wrap">
     <table class="data-table run-table">
-      <thead><tr><th>Run</th><th>Subagent tool calls</th><th>Slowest prompt</th><th>Artifact fidelity</th><th>Status</th></tr></thead>
+      <thead><tr><th>Run</th><th>Subagent tool calls</th><th>Slowest prompt</th><th>Median tok/s</th><th>Artifact fidelity</th><th>Status</th></tr></thead>
       <tbody><tr>
   <td><b>DeepSeek 4.1 Flash</b><span class="table-run">Run 1</span></td>
   <td class="num">363</td>
   <td class="num">19m 31s</td>
+  <td class="num">118</td>
   <td>16/16 saved; run used tools</td>
   <td><span class="health caveat"><span class="dot"></span>Tool-assisted</span><span class="table-caveat">Subagents used a browser to refine their work.</span></td>
 </tr><tr>
   <td><b>GLM 5.3</b><span class="table-run">Run 1</span></td>
   <td class="num">3</td>
   <td class="num">12m 11s</td>
+  <td class="num">102</td>
   <td>16/16; one CSS repair</td>
   <td><span class="health caveat"><span class="dot"></span>One repair</span><span class="table-caveat">One malformed CSS line was repaired after saving.</span></td>
 </tr><tr>
   <td><b>GPT 6 Luna</b><span class="table-run">Run 1</span></td>
   <td class="num">30</td>
   <td class="num">1m 33s</td>
+  <td class="num">73</td>
   <td>14/16 exact; 2 post-edits</td>
   <td><span class="health caveat"><span class="dot"></span>Skill-assisted</span><span class="table-caveat">Subagents loaded skills; two files were edited after saving.</span></td>
 </tr><tr>
   <td><b>Claude Haiku 5.5</b><span class="table-run">Run 1</span></td>
   <td class="num">0</td>
   <td class="num">42s</td>
+  <td class="num">210</td>
   <td>16/16; one unfenced reply</td>
   <td><span class="health caveat"><span class="dot"></span>One unfenced reply</span><span class="table-caveat">One review arrived without a fenced block.</span></td>
 </tr><tr>
   <td><b>Claude Haiku 5.5</b><span class="table-run">Run 2</span></td>
   <td class="num">0</td>
   <td class="num">32s</td>
+  <td class="num">214</td>
   <td>16/16 exact; one allowed retry</td>
   <td><span class="health clean"><span class="dot"></span>Clean run</span><span class="table-caveat">No subagent tools; one identical retry.</span></td>
 </tr><tr>
   <td><b>HY4 Flash</b><span class="table-run">Run 1</span></td>
   <td class="num">0</td>
   <td class="num">1m 29s</td>
+  <td class="num">175</td>
   <td>16/16 exact</td>
   <td><span class="health clean"><span class="dot"></span>Clean run</span><span class="table-caveat">No subagent tools; all 16 files byte-exact.</span></td>
 </tr><tr>
   <td><b>Muse Spark 1.3</b><span class="table-run">Run 1</span></td>
   <td class="num">5</td>
   <td class="num">1m 06s</td>
+  <td class="num">88</td>
   <td>12/16 exact; 4 trimmed</td>
   <td><span class="health broken"><span class="dot"></span>Not comparable</span><span class="table-caveat">Four visual files were saved trimmed.</span></td>
 </tr><tr>
   <td><b>Muse Spark 1.3</b><span class="table-run">Run 2</span></td>
   <td class="num">1</td>
   <td class="num">1m 15s</td>
+  <td class="num">96</td>
   <td>9/16 near-exact; 7 trimmed</td>
   <td><span class="health broken"><span class="dot"></span>Not comparable</span><span class="table-caveat">Seven files saved trimmed; three prompts re-run after wording errors.</span></td>
 </tr></tbody>

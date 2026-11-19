@@ -1240,34 +1240,6 @@ main {
   gap: 10px;
 }
 
-.tts-btn {
-  border: 1px solid var(--line-strong);
-  background: transparent;
-  border-radius: 999px;
-  padding: 6px 10px;
-  font: 500 10.5px/1 var(--mono);
-  letter-spacing: 0.04em;
-  color: var(--muted);
-  cursor: pointer;
-  transition: color 0.2s var(--ease), border-color 0.2s var(--ease),
-    background 0.2s var(--ease);
-}
-
-.tts-btn:hover {
-  color: var(--ink);
-  border-color: var(--ink);
-}
-
-.tts-btn.is-speaking {
-  background: var(--accent);
-  border-color: var(--accent);
-  color: var(--accent-ink);
-}
-
-html.no-tts .tts-btn {
-  display: none;
-}
-
 .empty-state {
   padding: 80px 0;
   text-align: center;

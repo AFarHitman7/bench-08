@@ -19,9 +19,9 @@ Then open <http://localhost:8080>.
 - `results.html` — all 128 results, filterable by task, model and variant
 - `compare.html` — pick a task and two runs, side by side
 - `artifact.html` — one artifact with its run metadata and technical note
-- `method.html` — the brief, run conditions, timings and caveats
+- `method.html` — the brief, run conditions, timings, throughput and caveats
 
-Text artifacts (explanation, fiction and code review) include a **Listen** button that uses the browser's speech synthesis. Each result also carries the subagent's start-to-finish time.
+Each result carries its subagent's start-to-finish time and end-to-end output throughput in tokens per second.
 
 ## Rebuild
 

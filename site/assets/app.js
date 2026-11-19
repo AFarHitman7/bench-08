@@ -371,15 +371,12 @@
       var task = taskById(compareState.task);
       var artifact = window.BENCH.artifacts[model.id][task.id][compareState.variant];
       var compareUrl = 'compare.html?task=' + task.id + '&variant=' + compareState.variant + '&a=' + model.id + '&b=' + (model.id === compareState.a ? compareState.b : compareState.a);
-      var tts = ['05', '06', '08'].indexOf(task.id) !== -1
-        ? '<button type="button" class="tts-btn" data-tts-panel aria-pressed="false">Listen</button>'
-        : '';
       return '<header class="compare-head"><div class="compare-who"><span class="compare-model">' + esc(model.label) + '</span><span class="compare-run">' + esc(model.run) + ' · ' + esc(task.name) + ' · ' + compareState.variant + '</span></div>' + healthHtml(model) + '</header>' +
         '<p class="compare-caveat">' + esc(model.short) + '</p>' +
         (artifact.note ? '<div class="compare-note">' + noteHtml(artifact.note) + '</div>' : '') +
         '<div class="compare-media">' + mediaHtml(model, task, compareState.variant, 'compare') + '</div>' +
         '<div class="compare-body">' + chipsHtml(artifact.chips) +
-        '<div class="compare-links"><a class="text-link" href="artifact.html?m=' + model.id + '&t=' + task.id + '&v=' + compareState.variant + '">Open full <span aria-hidden="true">→</span></a><a class="text-link muted-link" href="' + artifact.path + '" target="_blank" rel="noopener">Raw file</a>' + tts + '</div></div>';
+        '<div class="compare-links"><a class="text-link" href="artifact.html?m=' + model.id + '&t=' + task.id + '&v=' + compareState.variant + '">Open full <span aria-hidden="true">→</span></a><a class="text-link muted-link" href="' + artifact.path + '" target="_blank" rel="noopener">Raw file</a></div></div>';
     }
 
     function syncCompareUrl() {
@@ -393,7 +390,6 @@
     }
 
     function renderCompare() {
-      if ('speechSynthesis' in window) window.speechSynthesis.cancel();
       document.getElementById('panelA').innerHTML = panelHtml(compareState.a);
       document.getElementById('panelB').innerHTML = panelHtml(compareState.b);
       taskSelect.value = compareState.task;
@@ -474,99 +470,11 @@
       '<header class="artifact-head"><div><p class="kicker">' + task.id + ' · ' + esc(task.name) + ' · ' + vId + '</p><h1 class="artifact-title">' + esc(model.label) + '</h1><p class="artifact-sub">' + esc(model.run) + ' — ' + esc(task.blurb) + '</p></div><div class="artifact-meta">' + healthHtml(model) + chipsHtml(artifact.chips) + '</div></header>' +
       '<div class="artifact-note">' + noteHtml(artifact.note) + '</div>' +
       '<div class="artifact-media">' + mediaHtml(model, task, vId, 'full') + '</div>' +
-      '<div class="artifact-actions"><a class="btn btn-primary" href="compare.html?task=' + task.id + '&variant=' + vId + '&a=' + model.id + '&b=' + compareOther.id + '">Compare this run</a><a class="btn btn-ghost" href="' + artifact.path + '" target="_blank" rel="noopener">Open raw file</a><a class="btn btn-ghost" href="results.html?task=' + task.id + '&model=' + model.id + '&variant=' + vId + '">Back to results</a>' + (['05', '06', '08'].indexOf(task.id) !== -1 ? '<button type="button" class="btn btn-ghost tts-btn" data-tts-artifact aria-pressed="false">Listen</button>' : '') + '</div>' +
+      '<div class="artifact-actions"><a class="btn btn-primary" href="compare.html?task=' + task.id + '&variant=' + vId + '&a=' + model.id + '&b=' + compareOther.id + '">Compare this run</a><a class="btn btn-ghost" href="' + artifact.path + '" target="_blank" rel="noopener">Open raw file</a><a class="btn btn-ghost" href="results.html?task=' + task.id + '&model=' + model.id + '&variant=' + vId + '">Back to results</a></div>' +
       '<p class="compare-foot"><b>Run caveat:</b> ' + esc(model.short) + '</p>';
 
     scheduleScale();
   }
-
-  /* ------------------------------------------------------------------
-     Text to speech
-     ------------------------------------------------------------------ */
-
-  function setupTts() {
-    if (!('speechSynthesis' in window) || !('SpeechSynthesisUtterance' in window)) {
-      document.documentElement.classList.add('no-tts');
-      return;
-    }
-
-    var active = null;
-
-    function reset(button) {
-      if (!button) return;
-      button.classList.remove('is-speaking');
-      button.textContent = 'Listen';
-      button.setAttribute('aria-pressed', 'false');
-    }
-
-    function stop() {
-      window.speechSynthesis.cancel();
-      if (active) {
-        reset(active);
-        active = null;
-      }
-    }
-
-    function plainText(scope) {
-      var node = scope.querySelector('.prose, .review');
-      if (!node) return '';
-      var clone = node.cloneNode(true);
-      clone.querySelectorAll('.sev, .note-label').forEach(function (el) { el.remove(); });
-      return (clone.innerText || clone.textContent || '').replace(/\s+/g, ' ').trim();
-    }
-
-    document.addEventListener('click', function (event) {
-      var button = event.target.closest('.tts-btn');
-      if (!button) return;
-      event.preventDefault();
-
-      if (active === button) {
-        stop();
-        return;
-      }
-
-      var scope = null;
-      if (button.hasAttribute('data-tts-card')) {
-        scope = button.closest('.result-card');
-      } else if (button.hasAttribute('data-tts-panel')) {
-        scope = button.closest('.compare-panel');
-      } else if (button.hasAttribute('data-tts-artifact')) {
-        scope = document.getElementById('artifactContent');
-      }
-
-      if (!scope) return;
-      var text = plainText(scope);
-      if (!text) return;
-
-      stop();
-      var utterance = new SpeechSynthesisUtterance(text);
-      utterance.rate = 1;
-      utterance.pitch = 1;
-      utterance.onend = function () {
-        if (active === button) {
-          reset(button);
-          active = null;
-        }
-      };
-      utterance.onerror = function () {
-        if (active === button) {
-          reset(button);
-          active = null;
-        }
-      };
-
-      active = button;
-      button.classList.add('is-speaking');
-      button.textContent = 'Stop';
-      button.setAttribute('aria-pressed', 'true');
-      window.speechSynthesis.speak(utterance);
-    });
-
-    window.addEventListener('beforeunload', stop);
-    window.addEventListener('pagehide', stop);
-  }
-
-  setupTts();
 
   /* ------------------------------------------------------------------
      Initial paint

@@ -350,6 +350,12 @@ function fictionWords(s) {
   return s.trim().split(/\s+/).filter(Boolean).length;
 }
 
+function formatTps(value) {
+  const tps = Number(value);
+  if (!Number.isFinite(tps) || tps <= 0) return '—';
+  return tps >= 10 ? `${Math.round(tps)}` : `${Math.round(tps * 10) / 10}`;
+}
+
 function formatDuration(seconds) {
   const total = Math.max(0, Math.round(Number(seconds) || 0));
   if (total < 60) return `${total}s`;
@@ -585,10 +591,18 @@ for (const model of MODELS) {
       }
       const timing = TIMINGS[model.id]?.[task.id]?.[variant];
       const seconds = timing && Number.isFinite(timing.sec) ? timing.sec : null;
+      const tps =
+        timing && Number.isFinite(timing.tps) ? timing.tps : null;
       if (seconds != null) {
         chips.push({
           text: `took ${formatDuration(seconds)}`,
           title: 'Subagent start-to-finish, including tool use',
+        });
+      }
+      if (tps != null) {
+        chips.push({
+          text: `${formatTps(tps)} tok/s`,
+          title: 'Output + reasoning tokens divided by subagent elapsed time',
         });
       }
       if (trimmed) chips.push({ text: 'trimmed', tone: 'bad' });
@@ -603,6 +617,7 @@ for (const model of MODELS) {
         trimmed,
         text,
         seconds,
+        tps,
         kind: task.kind,
       };
     }
@@ -746,9 +761,17 @@ function timingStats(id) {
     .filter((value) => typeof value === 'number' && Number.isFinite(value));
   if (!times.length) return null;
   const sorted = [...times].sort((a, b) => a - b);
+  const tpsValues = Object.values(artifacts[id])
+    .flatMap((task) => Object.values(task))
+    .map((artifact) => artifact.tps)
+    .filter((value) => typeof value === 'number' && Number.isFinite(value))
+    .sort((a, b) => a - b);
   return {
     slowest: Math.max(...times),
     median: sorted[Math.floor(sorted.length / 2)],
+    medianTps: tpsValues.length
+      ? tpsValues[Math.floor(tpsValues.length / 2)]
+      : null,
   };
 }
 
@@ -767,6 +790,14 @@ function modelCards() {
       const t = timingStats(m.id);
       return t ? formatDuration(t.slowest) : '—';
     })()}</b> slowest</span>
+    <span title="Median subagent start-to-finish"><b>${(() => {
+      const t = timingStats(m.id);
+      return t ? formatDuration(t.median) : '—';
+    })()}</b> median</span>
+    <span title="Median output + reasoning tokens per second"><b>${(() => {
+      const t = timingStats(m.id);
+      return t && t.medianTps != null ? formatTps(t.medianTps) : '—';
+    })()}</b> tok/s median</span>
     <span><b>${esc(m.fidelity.split(';')[0])}</b></span>
   </div>
   <a class="text-link" href="results.html?model=${m.id}">View results <span aria-hidden="true">→</span></a>
@@ -939,7 +970,6 @@ function resultCard(model, task, variant) {
     <div class="result-links">
       <div class="link-group">
         <a class="text-link" href="artifact.html?m=${model.id}&t=${task.id}&v=${variant}">Open full <span aria-hidden="true">→</span></a>
-        ${['05', '06', '08'].includes(task.id) ? '<button type="button" class="tts-btn" data-tts-card aria-pressed="false">Listen</button>' : ''}
       </div>
       <a class="text-link muted-link" href="compare.html?task=${task.id}&variant=${variant}&a=${model.id}&b=${
         model.id === 'haiku2' ? 'hy4' : 'haiku2'
@@ -1134,6 +1164,10 @@ function runRows() {
       const t = timingStats(m.id);
       return t ? formatDuration(t.slowest) : '—';
     })()}</td>
+  <td class="num">${(() => {
+      const t = timingStats(m.id);
+      return t && t.medianTps != null ? formatTps(t.medianTps) : '—';
+    })()}</td>
   <td>${esc(m.fidelity)}</td>
   <td><span class="health ${m.health}"><span class="dot"></span>${esc(
       m.healthLabel
@@ -1169,7 +1203,7 @@ const methodBody = `
     <div>
       <p>The tasks are deliberately different: visual composition, interface design, critique, motion, explanation, fiction, implementation and code review. There is no single score that makes sense across all eight.</p>
       <p>Creative work is therefore presented without a number. The parser and code-review tasks carry a short technical note because those tasks have verifiable failure modes.</p>
-      <p>Text artifacts include a <b>Listen</b> button that uses the browser’s built-in speech synthesis. No audio is uploaded or generated server-side.</p>
+      <p>Tok/s is <b>(output + reasoning tokens) ÷ subagent elapsed time</b>. It includes thinking and tool time, so it is end-to-end throughput, not raw decode speed.</p>
     </div>
   </div>
 </section>
@@ -1189,7 +1223,7 @@ const methodBody = `
   <p class="method-note">The runs are not identical. “Subagent tool calls” counts every tool call made by the sixteen subagents in that run. A clean run made none. Prompt time is the subagent’s start-to-finish, including tool use. It is not wall-clock: most runs dispatched in parallel batches, and HY4 ran sequentially.</p>
   <div class="table-wrap">
     <table class="data-table run-table">
-      <thead><tr><th>Run</th><th>Subagent tool calls</th><th>Slowest prompt</th><th>Artifact fidelity</th><th>Status</th></tr></thead>
+      <thead><tr><th>Run</th><th>Subagent tool calls</th><th>Slowest prompt</th><th>Median tok/s</th><th>Artifact fidelity</th><th>Status</th></tr></thead>
       <tbody>${runRows()}</tbody>
     </table>
   </div>
