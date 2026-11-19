@@ -1186,7 +1186,7 @@ const methodBody = `
 
 <section class="method-section">
   <h2>Run conditions</h2>
-  <p class="method-note">The runs are not identical. “Subagent tool calls” counts every tool call made by the sixteen subagents in that run. A clean run made none. Prompt time is the subagent’s start-to-finish, including tool use; it is not wall-clock, because each run dispatched in batches of four.</p>
+  <p class="method-note">The runs are not identical. “Subagent tool calls” counts every tool call made by the sixteen subagents in that run. A clean run made none. Prompt time is the subagent’s start-to-finish, including tool use. It is not wall-clock: most runs dispatched in parallel batches, and HY4 ran sequentially.</p>
   <div class="table-wrap">
     <table class="data-table run-table">
       <thead><tr><th>Run</th><th>Subagent tool calls</th><th>Slowest prompt</th><th>Artifact fidelity</th><th>Status</th></tr></thead>
